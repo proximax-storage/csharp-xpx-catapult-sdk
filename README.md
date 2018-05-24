@@ -1,5 +1,7 @@
 ### Nem2 (Catapult) CSharp SDK
 
+## warning :## this sdk is in alpha state and will change in the next versions
+
 ## Requirements
 .NetStandard 2.0
 
