@@ -25,7 +25,6 @@
 
 using System;
 using System.Reactive.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Blockchain;
 
@@ -62,7 +61,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>an IObservable of NetworkTypeDTO</returns>
         public IObservable<NetworkType.Types> GetNetworkType()
         {
-            return Observable.FromAsync(async ar => await NetworkRoutesApi.GetNetworkTypeAsync()).Select(e => NetworkType.GetNetwork(e.Name));
+            return Observable.FromAsync(async ar => await NetworkRoutesApi.GetNetworkTypeAsync()).Select(e => NetworkType.GetNetwork(e["name"].ToString()));
         }
     }
 }

@@ -6,7 +6,7 @@
 // Last Modified By : kailin
 // Last Modified On : 01-29-2018
 // ***********************************************************************
-// <copyright file="TransactionPayload.cs" company="Nem.io">   
+// <copyright file="CosignatureSignedTransaction.cs" company="Nem.io">   
 // Copyright 2018 NEM
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,23 +28,23 @@ using Newtonsoft.Json;
 namespace io.nem2.sdk.Infrastructure.Buffers.Model
 {
     /// <summary>
-    /// Class TransactionPayload.
+    /// Class CosignatureSignedTransactionDTO.
     /// </summary>
-    public class TransactionPayload
+    public class CosignatureSignedTransaction
     {
         /// <summary>
-        /// Gets or sets the payload.
+        /// Gets or sets the parent hash.
         /// </summary>
-        /// <value>The payload.</value>
-        [JsonProperty("payload")]
-        public string Payload { get; set; }
+        /// <value>The parent hash.</value>
+        [JsonProperty("parentHash")]
+        public string ParentHash { get; set; }
 
         /// <summary>
-        /// Gets or sets the hash.
+        /// Gets or sets the signature.
         /// </summary>
-        /// <value>The hash.</value>
-        [JsonProperty("hash")]
-        public string Hash { get; set; }
+        /// <value>The signature.</value>
+        [JsonProperty("signature")]
+        public string Signature { get; set; }
 
         /// <summary>
         /// Gets or sets the signer.

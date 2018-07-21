@@ -11,12 +11,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
 using io.nem2.sdk.Infrastructure.Mapping;
-using io.nem2.sdk.Model.Accounts;
-using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -26,153 +26,6 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
     /// </summary>
     internal interface IBlockchainRoutesApi : IApiAccessor
     {
-        #region Synchronous Operations
-        /// <summary>
-        /// Get block information
-        /// </summary>
-        /// <remarks>
-        /// Returns block information for a given block height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>BlockInfoDTO</returns>
-        BlockInfoDTO GetBlockByHeight (ulong? height, int? pageSize = null, string id = null);
-
-        /// <summary>
-        /// Get block information
-        /// </summary>
-        /// <remarks>
-        /// Returns block information for a given block height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>ApiResponse of BlockInfoDTO</returns>
-        ApiResponse<BlockInfoDTO> GetBlockByHeightWithHttpInfo (ulong? height, int? pageSize = null, string id = null);
-        /// <summary>
-        /// Get transactions from a block information
-        /// </summary>
-        /// <remarks>
-        /// Returns all transactions information for a given block height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>List&lt;Object&gt;</returns>
-        List<TransactionInfoDTO> GetBlockTransactions (ulong? height);
-
-        /// <summary>
-        /// Get transactions from a block information
-        /// </summary>
-        /// <remarks>
-        /// Returns all transactions information for a given block height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>ApiResponse of List&lt;Object&gt;</returns>
-        ApiResponse<List<TransactionInfoDTO>> GetBlockTransactionsWithHttpInfo (ulong? height);
-        /// <summary>
-        /// Get the current height of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current height of the blockchain
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>HeightDTO</returns>
-        ChainHeightDTO GetBlockchainHeight ();
-
-        /// <summary>
-        /// Get the current height of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current height of the blockchain
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of HeightDTO</returns>
-        ApiResponse<ChainHeightDTO> GetBlockchainHeightWithHttpInfo ();
-        /// <summary>
-        /// Get the current score of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current chain score
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>BlockchainScoreDTO</returns>
-        BlockchainScore GetBlockchainScore ();
-
-        /// <summary>
-        /// Get the current score of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current chain score
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of BlockchainScoreDTO</returns>
-        ApiResponse<BlockchainScore> GetBlockchainScoreWithHttpInfo ();
-        /// <summary>
-        /// Get blocks information
-        /// </summary>
-        /// <remarks>
-        /// Returns blocks information for a given block height and limit
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>List&lt;BlockInfoDTO&gt;</returns>
-        List<BlockInfoDTO> GetBlocksByHeightWithLimit (ulong? height, int? limit);
-
-        /// <summary>
-        /// Get blocks information
-        /// </summary>
-        /// <remarks>
-        /// Returns blocks information for a given block height and limit
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>ApiResponse of List&lt;BlockInfoDTO&gt;</returns>
-        ApiResponse<List<BlockInfoDTO>> GetBlocksByHeightWithLimitWithHttpInfo (ulong? height, int? limit);
-        /// <summary>
-        /// Get partial statistical information
-        /// </summary>
-        /// <remarks>
-        /// Returns statistical information for the blockchain for a set of blocks after a given height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>List&lt;BlockDTO&gt;</returns>
-        List<BlockInfo> GetDiagnosticBlocksWithLimit (ulong? height, int? limit);
-
-        /// <summary>
-        /// Get partial statistical information
-        /// </summary>
-        /// <remarks>
-        /// Returns statistical information for the blockchain for a set of blocks after a given height
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>ApiResponse of List&lt;BlockDTO&gt;</returns>
-        ApiResponse<List<BlockInfoDTO>> GetDiagnosticBlocksWithLimitWithHttpInfo (ulong? height, int? limit);
-        /// <summary>
-        /// Get the storage information
-        /// </summary>
-        /// <remarks>
-        /// Returns statistical information about the blockchain
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>BlockchainStorageInfoDTO</returns>
-        BlockchainStorageInfo GetDiagnosticStorage ();
-
-        /// <summary>
-        /// Get the storage information
-        /// </summary>
-        /// <remarks>
-        /// Returns statistical information about the blockchain
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of BlockchainStorageInfoDTO</returns>
-        ApiResponse<BlockchainStorageInfo> GetDiagnosticStorageWithHttpInfo ();
-        #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
         /// Get block information
@@ -183,7 +36,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="height">Block height</param>
         /// <returns>Task of BlockInfoDTO</returns>
-        System.Threading.Tasks.Task<BlockInfo> GetBlockByHeightAsync (ulong? height, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<JObject> GetBlockByHeightAsync (ulong? height, int? pageSize = null, string id = null);
 
         /// <summary>
         /// Get block information
@@ -194,7 +47,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="height">Block height</param>
         /// <returns>Task of ApiResponse (BlockInfoDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<BlockInfoDTO>> GetBlockByHeightAsyncWithHttpInfo (ulong? height, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockByHeightAsyncWithHttpInfo (ulong? height, int? pageSize = null, string id = null);
         /// <summary>
         /// Get transactions from a block information
         /// </summary>
@@ -224,7 +77,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of HeightDTO</returns>
-        System.Threading.Tasks.Task<ulong> GetBlockchainHeightAsync ();
+        System.Threading.Tasks.Task<JObject> GetBlockchainHeightAsync ();
 
         /// <summary>
         /// Get the current height of the chain
@@ -234,7 +87,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (HeightDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ChainHeightDTO>> GetBlockchainHeightAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockchainHeightAsyncWithHttpInfo ();
         /// <summary>
         /// Get the current score of the chain
         /// </summary>
@@ -243,7 +96,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of BlockchainScoreDTO</returns>
-        System.Threading.Tasks.Task<ulong> GetBlockchainScoreAsync ();
+        System.Threading.Tasks.Task<JObject> GetBlockchainScoreAsync ();
 
         /// <summary>
         /// Get the current score of the chain
@@ -253,7 +106,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (BlockchainScoreDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<BlockchainScore>> GetBlockchainScoreAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockchainScoreAsyncWithHttpInfo ();
         /// <summary>
         /// Get blocks information
         /// </summary>
@@ -264,7 +117,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of List&lt;BlockInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<BlockInfo>> GetBlocksByHeightWithLimitAsync (ulong? height, int? limit);
+        System.Threading.Tasks.Task<List<JObject>> GetBlocksByHeightWithLimitAsync (ulong? height, int? limit);
 
         /// <summary>
         /// Get blocks information
@@ -276,7 +129,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of ApiResponse (List&lt;BlockInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<BlockInfoDTO>>> GetBlocksByHeightWithLimitAsyncWithHttpInfo (ulong? height, int? limit);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetBlocksByHeightWithLimitAsyncWithHttpInfo (ulong? height, int? limit);
         /// <summary>
         /// Get partial statistical information
         /// </summary>
@@ -287,7 +140,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of List&lt;BlockDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<BlockInfo>> GetDiagnosticBlocksWithLimitAsync (ulong? height, int? limit);
+        System.Threading.Tasks.Task<List<JObject>> GetDiagnosticBlocksWithLimitAsync(ulong? height, int? limit);
 
         /// <summary>
         /// Get partial statistical information
@@ -299,7 +152,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of ApiResponse (List&lt;BlockDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<BlockInfoDTO>>> GetDiagnosticBlocksWithLimitAsyncWithHttpInfo (ulong? height, int? limit);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetDiagnosticBlocksWithLimitAsyncWithHttpInfo (ulong? height, int? limit);
         /// <summary>
         /// Get the storage information
         /// </summary>
@@ -308,7 +161,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of BlockchainStorageInfoDTO</returns>
-        System.Threading.Tasks.Task<BlockchainStorageInfo> GetDiagnosticStorageAsync ();
+        System.Threading.Tasks.Task<JObject> GetDiagnosticStorageAsync ();
 
         /// <summary>
         /// Get the storage information
@@ -318,7 +171,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (BlockchainStorageInfoDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<BlockchainStorageInfoDTO>> GetDiagnosticStorageAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetDiagnosticStorageAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -439,95 +292,12 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="height">Block height</param>
-        /// <returns>BlockInfoDTO</returns>
-        public BlockInfoDTO GetBlockByHeight (ulong? height, int? pageSize = null, string id = null)
-        {
-             ApiResponse<BlockInfoDTO> localVarResponse = GetBlockByHeightWithHttpInfo(height, pageSize, id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get block information Returns block information for a given block height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>ApiResponse of BlockInfoDTO</returns>
-        public ApiResponse< BlockInfoDTO > GetBlockByHeightWithHttpInfo (ulong? height, int? pageSize = null, string id = null)
-        {
-            // verify the required parameter 'height' is set
-            if (height == null)
-                throw new ApiException(400, "Missing required parameter 'height' when calling BlockchainRoutesApi->GetBlockByHeight");
-
-            var localVarPath = "/block/{height}";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (height != null) localVarPathParams.Add("height", Configuration.ApiClient.ParameterToString(height)); // path parameter
-            if (pageSize != null) localVarQueryParams.Add("pageSize", Configuration.ApiClient.ParameterToString(pageSize)); // query parameter
-            if (id != null) localVarQueryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetBlockByHeight", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<BlockInfoDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockInfoDTO)));
-        }
-
-        /// <summary>
-        /// Get block information Returns block information for a given block height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
         /// <returns>Task of BlockInfoDTO</returns>
-        public async System.Threading.Tasks.Task<BlockInfo> GetBlockByHeightAsync (ulong? height, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<JObject> GetBlockByHeightAsync (ulong? height, int? pageSize = null, string id = null)
         {
             
-             ApiResponse<BlockInfoDTO> localVarResponse = await GetBlockByHeightAsyncWithHttpInfo(height, pageSize, id);
-             var network = (int)Convert.ToInt64(localVarResponse.Data.Block.Version.ToString("X").Substring(0, 2), 16);
-             return new BlockInfo(
-                 localVarResponse.Data.Meta.Hash,
-                 localVarResponse.Data.Meta.GenerationHash,
-                 localVarResponse.Data.Meta.TotalFee,
-                 localVarResponse.Data.Meta.NumTransactions,
-                 localVarResponse.Data.Block.Signature,
-                 new PublicAccount(localVarResponse.Data.Block.Signer, NetworkType.GetRawValue(network)),
-                 NetworkType.GetRawValue(network),
-                 localVarResponse.Data.Block.Version,
-                 localVarResponse.Data.Block.Type,
-                 localVarResponse.Data.Block.Height,
-                 localVarResponse.Data.Block.Timestamp,
-                 localVarResponse.Data.Block.Difficulty,
-                 localVarResponse.Data.Block.PreviousBlockHash,
-                 localVarResponse.Data.Block.BlockTransactionsHash);
+             ApiResponse<JObject> localVarResponse = await GetBlockByHeightAsyncWithHttpInfo(height, pageSize, id);
+            return localVarResponse.Data;
 
         }
 
@@ -537,7 +307,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="height">Block height</param>
         /// <returns>Task of ApiResponse (BlockInfoDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<BlockInfoDTO>> GetBlockByHeightAsyncWithHttpInfo (ulong? height, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockByHeightAsyncWithHttpInfo (ulong? height, int? pageSize = null, string id = null)
         {
             // verify the required parameter 'height' is set
             if (height == null)
@@ -582,75 +352,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<BlockInfoDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockInfoDTO)));
-        }
-
-        /// <summary>
-        /// Get transactions from a block information Returns all transactions information for a given block height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>List&lt;Object&gt;</returns>
-        public List<TransactionInfoDTO> GetBlockTransactions (ulong? height)
-        {
-             ApiResponse<List<TransactionInfoDTO>> localVarResponse = GetBlockTransactionsWithHttpInfo(height);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get transactions from a block information Returns all transactions information for a given block height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">Block height</param>
-        /// <returns>ApiResponse of List&lt;Object&gt;</returns>
-        public ApiResponse<List<TransactionInfoDTO>> GetBlockTransactionsWithHttpInfo (ulong? height)
-        {
-            // verify the required parameter 'height' is set
-            if (height == null)
-                throw new ApiException(400, "Missing required parameter 'height' when calling BlockchainRoutesApi->GetBlockTransactions");
-
-            var localVarPath = "/block/{height}/transactions";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (height != null) localVarPathParams.Add("height", Configuration.ApiClient.ParameterToString(height)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetBlockTransactions", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<TransactionInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<TransactionInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<TransactionInfoDTO>)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
         /// <summary>
@@ -725,72 +429,17 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// Get the current height of the chain Returns the current height of the blockchain
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>HeightDTO</returns>
-        public ChainHeightDTO GetBlockchainHeight ()
-        {
-             ApiResponse<ChainHeightDTO> localVarResponse = GetBlockchainHeightWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get the current height of the chain Returns the current height of the blockchain
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of HeightDTO</returns>
-        public ApiResponse< ChainHeightDTO > GetBlockchainHeightWithHttpInfo ()
-        {
-
-            var localVarPath = "/chain/height";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetBlockchainHeight", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<ChainHeightDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ChainHeightDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ChainHeightDTO)));
-        }
-
-        /// <summary>
-        /// Get the current height of the chain Returns the current height of the blockchain
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of HeightDTO</returns>
-        public async System.Threading.Tasks.Task<ulong> GetBlockchainHeightAsync ()
+        public async System.Threading.Tasks.Task<JObject> GetBlockchainHeightAsync ()
         {
-             ApiResponse<ChainHeightDTO> localVarResponse = await GetBlockchainHeightAsyncWithHttpInfo();
-             return localVarResponse.Data.Height;
+             ApiResponse<JObject> localVarResponse = await GetBlockchainHeightAsyncWithHttpInfo();
+             return localVarResponse.Data;
 
+        }
+
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
         }
 
         /// <summary>
@@ -798,7 +447,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (HeightDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ChainHeightDTO>> GetBlockchainHeightAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockchainHeightAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/chain/height";
@@ -837,69 +486,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ChainHeightDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ChainHeightDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(ChainHeightDTO)));
-        }
-
-        /// <summary>
-        /// Get the current score of the chain Returns the current chain score
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>BlockchainScoreDTO</returns>
-        public BlockchainScore GetBlockchainScore ()
-        {
-             ApiResponse<BlockchainScore> localVarResponse = GetBlockchainScoreWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get the current score of the chain Returns the current chain score
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of BlockchainScoreDTO</returns>
-        public ApiResponse< BlockchainScore > GetBlockchainScoreWithHttpInfo ()
-        {
-
-            var localVarPath = "/chain/score";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetBlockchainScore", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<BlockchainScore>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockchainScore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockchainScore)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
         /// <summary>
@@ -907,10 +496,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of BlockchainScoreDTO</returns>
-        public async System.Threading.Tasks.Task<ulong> GetBlockchainScoreAsync ()
+        public async System.Threading.Tasks.Task<JObject> GetBlockchainScoreAsync ()
         {
-             ApiResponse<BlockchainScore> localVarResponse = await GetBlockchainScoreAsyncWithHttpInfo();
-             return localVarResponse.Data.Extract();
+             ApiResponse<JObject> localVarResponse = await GetBlockchainScoreAsyncWithHttpInfo();
+             return localVarResponse.Data;
 
         }
 
@@ -919,7 +508,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (BlockchainScoreDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<BlockchainScore>> GetBlockchainScoreAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetBlockchainScoreAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/chain/score";
@@ -958,81 +547,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<BlockchainScore>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockchainScore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockchainScore)));
-        }
-
-        /// <summary>
-        /// Get blocks information Returns blocks information for a given block height and limit
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>List&lt;BlockInfoDTO&gt;</returns>
-        public List<BlockInfoDTO> GetBlocksByHeightWithLimit (ulong? height, int? limit)
-        {
-             ApiResponse<List<BlockInfoDTO>> localVarResponse = GetBlocksByHeightWithLimitWithHttpInfo(height, limit);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get blocks information Returns blocks information for a given block height and limit
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>ApiResponse of List&lt;BlockInfoDTO&gt;</returns>
-        public ApiResponse< List<BlockInfoDTO> > GetBlocksByHeightWithLimitWithHttpInfo (ulong? height, int? limit)
-        {
-            // verify the required parameter 'height' is set
-            if (height == null)
-                throw new ApiException(400, "Missing required parameter 'height' when calling BlockchainRoutesApi->GetBlocksByHeightWithLimit");
-            // verify the required parameter 'limit' is set
-            if (limit == null)
-                throw new ApiException(400, "Missing required parameter 'limit' when calling BlockchainRoutesApi->GetBlocksByHeightWithLimit");
-
-            var localVarPath = "/blocks/{height}/limit/{limit}";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (height != null) localVarPathParams.Add("height", Configuration.ApiClient.ParameterToString(height)); // path parameter
-            if (limit != null) localVarPathParams.Add("limit", Configuration.ApiClient.ParameterToString(limit)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetBlocksByHeightWithLimit", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<BlockInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<BlockInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<BlockInfoDTO>)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
         /// <summary>
@@ -1042,25 +559,11 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of List&lt;BlockInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<BlockInfo>> GetBlocksByHeightWithLimitAsync (ulong? height, int? limit)
+        public async System.Threading.Tasks.Task<List<JObject>> GetBlocksByHeightWithLimitAsync (ulong? height, int? limit)
         {
-             ApiResponse<List<BlockInfoDTO>> localVarResponse = await GetBlocksByHeightWithLimitAsyncWithHttpInfo(height, limit);
+             ApiResponse<List<object>> localVarResponse = await GetBlocksByHeightWithLimitAsyncWithHttpInfo(height, limit);
 
-            return localVarResponse.Data.Select(e => new BlockInfo(
-                 e.Meta.Hash,
-                 e.Meta.GenerationHash,
-                 e.Meta.TotalFee,
-                 e.Meta.NumTransactions,
-                 e.Block.Signature,
-                 new PublicAccount(e.Block.Signer, NetworkType.GetRawValue((int)Convert.ToInt64(e.Block.Version.ToString("X").Substring(0, 2), 16))),
-                 NetworkType.GetRawValue((int)Convert.ToInt64(e.Block.Version.ToString("X").Substring(0, 2), 16)),
-                 e.Block.Version,
-                 e.Block.Type,
-                 e.Block.Height,
-                 e.Block.Timestamp,
-                 e.Block.Difficulty,
-                 e.Block.PreviousBlockHash,
-                 e.Block.BlockTransactionsHash)).ToList();
+            return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList();
 
         }
 
@@ -1071,7 +574,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of ApiResponse (List&lt;BlockInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<BlockInfoDTO>>> GetBlocksByHeightWithLimitAsyncWithHttpInfo (ulong? height, int? limit)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetBlocksByHeightWithLimitAsyncWithHttpInfo(ulong? height, int? limit)
         {
             // verify the required parameter 'height' is set
             if (height == null)
@@ -1118,81 +621,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<BlockInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<BlockInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<BlockInfoDTO>)));
-        }
-
-        /// <summary>
-        /// Get partial statistical information Returns statistical information for the blockchain for a set of blocks after a given height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>List&lt;BlockDTO&gt;</returns>
-        public List<BlockInfo> GetDiagnosticBlocksWithLimit (ulong? height, int? limit)
-        {
-             ApiResponse<List<BlockInfoDTO>> localVarResponse = GetDiagnosticBlocksWithLimitWithHttpInfo(height, limit);
-             return localVarResponse.Data.Select(e => new BlockInfo(e.Meta.Hash, e.Meta.GenerationHash, e.Meta.TotalFee, e.Meta.NumTransactions, e.Block.Signature, new PublicAccount(e.Block.Signer, NetworkType.GetRawValue(e.Block.Type)), NetworkType.GetRawValue(e.Block.Type), e.Block.Version, e.Block.Type, e.Block.Height, e.Block.Timestamp, e.Block.Difficulty, e.Block.PreviousBlockHash, e.Block.BlockTransactionsHash)).ToList();
-        }
-
-        /// <summary>
-        /// Get partial statistical information Returns statistical information for the blockchain for a set of blocks after a given height
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="height">The block height at which information should be returned</param>
-        /// <param name="limit">Block limit</param>
-        /// <returns>ApiResponse of List&lt;BlockDTO&gt;</returns>
-        public ApiResponse<List<BlockInfoDTO>> GetDiagnosticBlocksWithLimitWithHttpInfo (ulong? height, int? limit)
-        {
-            // verify the required parameter 'height' is set
-            if (height == null)
-                throw new ApiException(400, "Missing required parameter 'height' when calling BlockchainRoutesApi->GetDiagnosticBlocksWithLimit");
-            // verify the required parameter 'limit' is set
-            if (limit == null)
-                throw new ApiException(400, "Missing required parameter 'limit' when calling BlockchainRoutesApi->GetDiagnosticBlocksWithLimit");
-
-            var localVarPath = "/diagnostic/blocks/{height}/limit/{limit}";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (height != null) localVarPathParams.Add("height", Configuration.ApiClient.ParameterToString(height)); // path parameter
-            if (limit != null) localVarPathParams.Add("limit", Configuration.ApiClient.ParameterToString(limit)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetDiagnosticBlocksWithLimit", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<BlockInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<BlockInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<BlockInfoDTO>)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
         /// <summary>
@@ -1202,24 +633,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of List&lt;BlockDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<BlockInfo>> GetDiagnosticBlocksWithLimitAsync (ulong? height, int? limit)
+        public async System.Threading.Tasks.Task<List<JObject>> GetDiagnosticBlocksWithLimitAsync (ulong? height, int? limit)
         {
-             ApiResponse<List<BlockInfoDTO>> localVarResponse = await GetDiagnosticBlocksWithLimitAsyncWithHttpInfo(height, limit);
-             return localVarResponse.Data.Select(e => new BlockInfo(
-                 e.Meta.Hash,
-                 e.Meta.GenerationHash,
-                 e.Meta.TotalFee,
-                 e.Meta.NumTransactions,
-                 e.Block.Signature,
-                 new PublicAccount(e.Block.Signer, NetworkType.GetRawValue((int)Convert.ToInt64(e.Block.Version.ToString("X").Substring(0, 2), 16))),
-                 NetworkType.GetRawValue((int)Convert.ToInt64(e.Block.Version.ToString("X").Substring(0, 2), 16)),
-                 e.Block.Version,
-                 e.Block.Type,
-                 e.Block.Height,
-                 e.Block.Timestamp,
-                 e.Block.Difficulty,
-                 e.Block.PreviousBlockHash,
-                 e.Block.BlockTransactionsHash)).ToList();
+             ApiResponse<List<object>> localVarResponse = await GetDiagnosticBlocksWithLimitAsyncWithHttpInfo(height, limit);
+            return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList(); ;
         }
 
         /// <summary>
@@ -1229,7 +646,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <param name="height">The block height at which information should be returned</param>
         /// <param name="limit">Block limit</param>
         /// <returns>Task of ApiResponse (List&lt;BlockDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<BlockInfoDTO>>> GetDiagnosticBlocksWithLimitAsyncWithHttpInfo (ulong? height, int? limit)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetDiagnosticBlocksWithLimitAsyncWithHttpInfo (ulong? height, int? limit)
         {
             // verify the required parameter 'height' is set
             if (height == null)
@@ -1276,69 +693,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<BlockInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<BlockInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<BlockInfoDTO>)));
-        }
-
-        /// <summary>
-        /// Get the storage information Returns statistical information about the blockchain
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>BlockchainStorageInfoDTO</returns>
-        public BlockchainStorageInfo GetDiagnosticStorage ()
-        {
-             ApiResponse<BlockchainStorageInfo> localVarResponse = GetDiagnosticStorageWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get the storage information Returns statistical information about the blockchain
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of BlockchainStorageInfoDTO</returns>
-        public ApiResponse< BlockchainStorageInfo > GetDiagnosticStorageWithHttpInfo ()
-        {
-
-            var localVarPath = "/diagnostic/storage";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetDiagnosticStorage", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<BlockchainStorageInfo>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockchainStorageInfo) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockchainStorageInfo)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
         /// <summary>
@@ -1346,10 +703,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of BlockchainStorageInfoDTO</returns>
-        public async System.Threading.Tasks.Task<BlockchainStorageInfo> GetDiagnosticStorageAsync ()
+        public async System.Threading.Tasks.Task<JObject> GetDiagnosticStorageAsync ()
         {
-             ApiResponse<BlockchainStorageInfoDTO> localVarResponse = await GetDiagnosticStorageAsyncWithHttpInfo();
-             return new BlockchainStorageInfo(localVarResponse.Data.NumAccounts, localVarResponse.Data.NumBlocks, localVarResponse.Data.NumTransactions);
+             ApiResponse<JObject> localVarResponse = await GetDiagnosticStorageAsyncWithHttpInfo();
+            return localVarResponse.Data;
 
         }
 
@@ -1358,7 +715,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (BlockchainStorageInfoDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<BlockchainStorageInfoDTO>> GetDiagnosticStorageAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetDiagnosticStorageAsyncWithHttpInfo()
         {
 
             var localVarPath = "/diagnostic/storage";
@@ -1397,9 +754,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<BlockchainStorageInfoDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (BlockchainStorageInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(BlockchainStorageInfoDTO)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
     }

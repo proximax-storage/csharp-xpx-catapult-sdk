@@ -11,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
 using io.nem2.sdk.Infrastructure.Mapping;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -31,7 +31,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountId">Account address or publicKey</param>
         /// <returns>Task of AccountInfo</returns>
-        System.Threading.Tasks.Task<AccountInfoDTO> GetAccountInfoAsync(string accountId);
+        System.Threading.Tasks.Task<JObject> GetAccountInfoAsync(string accountId);
 
         /// <summary>
         /// Get account information
@@ -42,7 +42,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountId">Account address or publicKey</param>
         /// <returns>Task of ApiResponse (AccountInfo)</returns>
-        System.Threading.Tasks.Task<ApiResponse<AccountInfoDTO>> GetAccountInfoAsyncWithHttpInfo(string accountId);
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetAccountInfoAsyncWithHttpInfo(string accountId);
         /// <summary>
         /// Get account information
         /// </summary>
@@ -52,7 +52,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of MultisigAccountInfo</returns>
-        System.Threading.Tasks.Task<MultisigEntryDTO> GetAccountMultisigAsync(string publicKey);
+        System.Threading.Tasks.Task<JObject> GetAccountMultisigAsync(string publicKey);
 
         /// <summary>
         /// Get account information
@@ -63,7 +63,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of ApiResponse (MultisigAccountInfo)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MultisigEntryDTO>> GetAccountMultisigAsyncWithHttpInfo(string publicKey);
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetAccountMultisigAsyncWithHttpInfo(string publicKey);
         /// <summary>
         /// Get multisig graph information
         /// </summary>
@@ -73,7 +73,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of List&lt;MultisigAccountGraphInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<MultisigAccountGraphInfoDTO>> GetAccountMultisigGraphAsync(string publicKey);
+        System.Threading.Tasks.Task<List<JObject>> GetAccountMultisigGraphAsync(string publicKey);
 
         /// <summary>
         /// Get multisig graph information
@@ -84,7 +84,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of ApiResponse (List&lt;MultisigAccountGraphInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<MultisigAccountGraphInfoDTO>>> GetAccountMultisigGraphAsyncWithHttpInfo(string publicKey);
+        System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetAccountMultisigGraphAsyncWithHttpInfo(string publicKey);
         /// <summary>
         /// Get accounts information
         /// </summary>
@@ -94,7 +94,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountIds">Array of publicKeys and address</param>
         /// <returns>Task of List&lt;AccountInfo&gt;</returns>
-        System.Threading.Tasks.Task<List<AccountInfoDTO>> GetAccountsInfoAsync(AccountIdsDTO accountIds);
+        System.Threading.Tasks.Task<List<JObject>> GetAccountsInfoAsync(JObject accountIds);
 
         /// <summary>
         /// Get accounts information
@@ -105,7 +105,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountIds">Array of publicKeys and address</param>
         /// <returns>Task of ApiResponse (List&lt;AccountInfo&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<AccountInfoDTO>>> GetAccountsInfoAsyncWithHttpInfo(AccountIdsDTO accountIds);
+        System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetAccountsInfoAsyncWithHttpInfo(JObject accountIds);
         /// <summary>
         /// Get incoming transactions information
         /// </summary>
@@ -354,9 +354,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountId">Account address or publicKey</param>
         /// <returns>Task of AccountInfo</returns>
-        public async System.Threading.Tasks.Task<AccountInfoDTO> GetAccountInfoAsync(string accountId)
+        public async System.Threading.Tasks.Task<JObject> GetAccountInfoAsync(string accountId)
         {
-            ApiResponse<AccountInfoDTO> localVarResponse = await GetAccountInfoAsyncWithHttpInfo(accountId);
+            ApiResponse<JObject> localVarResponse = await GetAccountInfoAsyncWithHttpInfo(accountId);
             return localVarResponse.Data;
 
         }
@@ -367,7 +367,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountId">Account address or publicKey</param>
         /// <returns>Task of ApiResponse (AccountInfo)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<AccountInfoDTO>> GetAccountInfoAsyncWithHttpInfo(string accountId)
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetAccountInfoAsyncWithHttpInfo(string accountId)
         {
             // verify the required parameter 'accountId' is set
             if (accountId == null)
@@ -413,9 +413,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 }
             }
 
-            return new ApiResponse<AccountInfoDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (AccountInfoDTO)Configuration.ApiClient.Deserialize(localVarResponse, typeof(AccountInfoDTO)));
+                (JObject)Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
         /// <summary>
@@ -424,9 +424,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountId">The multisig account id key for which information should be retreived.</param>
         /// <returns>Task of MultisigAccountInfo</returns>
-        public async System.Threading.Tasks.Task<MultisigEntryDTO> GetAccountMultisigAsync(string accountId)
+        public async System.Threading.Tasks.Task<JObject> GetAccountMultisigAsync(string accountId)
         {
-            ApiResponse<MultisigEntryDTO> localVarResponse = await GetAccountMultisigAsyncWithHttpInfo(accountId);
+            ApiResponse<JObject> localVarResponse = await GetAccountMultisigAsyncWithHttpInfo(accountId);
             return localVarResponse.Data;
 
         }
@@ -437,7 +437,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of ApiResponse (MultisigAccountInfo)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<MultisigEntryDTO>> GetAccountMultisigAsyncWithHttpInfo(string accountId)
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetAccountMultisigAsyncWithHttpInfo(string accountId)
         {
             // verify the required parameter 'publicKey' is set
             if (accountId == null)
@@ -480,9 +480,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<MultisigEntryDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (MultisigEntryDTO)Configuration.ApiClient.Deserialize(localVarResponse, typeof(MultisigEntryDTO)));
+                (JObject)Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
         /// <summary>
@@ -491,9 +491,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of List&lt;MultisigAccountGraphInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<MultisigAccountGraphInfoDTO>> GetAccountMultisigGraphAsync(string publicKey)
+        public async System.Threading.Tasks.Task<List<JObject>> GetAccountMultisigGraphAsync(string publicKey)
         {
-            ApiResponse<List<MultisigAccountGraphInfoDTO>> localVarResponse = await GetAccountMultisigGraphAsyncWithHttpInfo(publicKey);
+            ApiResponse<List<JObject>> localVarResponse = await GetAccountMultisigGraphAsyncWithHttpInfo(publicKey);
             return localVarResponse.Data;
 
         }
@@ -504,7 +504,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The multisig account public key for which information should be retreived.</param>
         /// <returns>Task of ApiResponse (List&lt;MultisigAccountGraphInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<MultisigAccountGraphInfoDTO>>> GetAccountMultisigGraphAsyncWithHttpInfo(string publicKey)
+        public async System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetAccountMultisigGraphAsyncWithHttpInfo(string publicKey)
         {
             // verify the required parameter 'publicKey' is set
             if (publicKey == null)
@@ -547,11 +547,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            var a = new ApiResponse<List<MultisigAccountGraphInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<JObject>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<MultisigAccountGraphInfoDTO>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<MultisigAccountGraphInfoDTO>)));
-
-            return a;
+                (List<JObject>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<JObject>)));
         }
      
         /// <summary>
@@ -560,9 +558,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountIds">Array of publicKeys and address</param>
         /// <returns>Task of List&lt;AccountInfo&gt;</returns>
-        public async System.Threading.Tasks.Task<List<AccountInfoDTO>> GetAccountsInfoAsync(AccountIdsDTO accountIds)
+        public async System.Threading.Tasks.Task<List<JObject>> GetAccountsInfoAsync(JObject accountIds)
         {
-            ApiResponse<List<AccountInfoDTO>> localVarResponse = await GetAccountsInfoAsyncWithHttpInfo(accountIds);
+            ApiResponse<List<JObject>> localVarResponse = await GetAccountsInfoAsyncWithHttpInfo(accountIds);
             return localVarResponse.Data;
 
         }
@@ -573,7 +571,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="accountIds">Array of publicKeys and address</param>
         /// <returns>Task of ApiResponse (List&lt;AccountInfo&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<AccountInfoDTO>>> GetAccountsInfoAsyncWithHttpInfo(AccountIdsDTO accountIds)
+        public async System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetAccountsInfoAsyncWithHttpInfo(JObject accountIds)
         {
             // verify the required parameter 'accountIds' is set
             if (accountIds == null)
@@ -623,9 +621,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<AccountInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<JObject>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<AccountInfoDTO>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<AccountInfoDTO>)));
+                (List<JObject>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<JObject>)));
         }
 
         /// <summary>

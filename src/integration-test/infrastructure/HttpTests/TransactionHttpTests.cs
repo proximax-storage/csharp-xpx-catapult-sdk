@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,9 +30,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetTransaction()
         {
-            var expected = "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA";
+            var expected = "80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0";
            
-            var a = await new TransactionHttp(host).GetTransaction("5AFB147D88336A00015C7E0A");
+            var a = await new TransactionHttp(host).GetTransaction("5B5272534156C3000134798A");
 
             Assert.AreEqual(expected, a.TransactionInfo.Hash);
         }
@@ -39,9 +40,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetTransactions()
         {
-            var expected = "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA";
+            var expected = "80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0";
 
-            var a = await new TransactionHttp(host).GetTransactions(new TransactionIds { transactionIds = new[] { "5AFB147D88336A00015C7E0A" } });
+            var a = await new TransactionHttp(host).GetTransactions(new List<string> { "5B5272534156C3000134798A"});
            
             Assert.AreEqual(expected, a[0].TransactionInfo.Hash);
         }
@@ -49,9 +50,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetTransactionStatus()
         {
-            var expected = "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA";
+            var expected = "80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0";
 
-            var a = await new TransactionHttp(host).GetTransactionStatus("72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA");
+            var a = await new TransactionHttp(host).GetTransactionStatus("80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0");
 
             Assert.AreEqual(expected, a.Hash);
         }
@@ -59,9 +60,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetTransactionStatuses()
         {
-            var expected = "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA";
+            var expected = "80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0";
 
-            var a = await new TransactionHttp(host).GetTransactionStatuses(new TransactionHashes { hashes = new[] { "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA" } });
+            var a = await new TransactionHttp(host).GetTransactionStatuses(new List<string>() { "80293A007FDC873424A315DCCC109BDA62BA5B48912B8D6065AD44F1467F07A0" });
 
             Assert.AreEqual(expected, a[0].Hash);
         }

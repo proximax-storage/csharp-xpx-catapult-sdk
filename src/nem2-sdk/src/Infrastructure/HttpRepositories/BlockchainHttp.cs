@@ -25,11 +25,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
+using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SimpleJson;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -68,6 +74,27 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             BlockchainRoutesApi = new BlockchainRoutesApi(Url);
         }
 
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
+        }
+
+        internal int ExtractInteger(JsonObject input, string identifier)
+        {
+            return int.Parse(input[identifier].ToString());
+        }
+
+        internal int ExtractVersion(int version)
+        {
+            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
+        }
+
+        internal NetworkType.Types ExtractNetworkType(int version)
+        {
+            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
+
+            return NetworkType.GetRawValue(networkType);
+        }
 
         /// <summary>
         /// Gets the blockchain score.
@@ -75,7 +102,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>IObservable&lt;BlockchainScore&gt;.</returns>
         public IObservable<ulong> GetBlockchainScore()
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainScoreAsync());
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainScoreAsync())
+                .Select(i => new[]
+                {
+                    BitConverter.ToInt32(BitConverter.GetBytes(ExtractBigInteger(i, "scoreLow")), 0),
+                    BitConverter.ToInt32(BitConverter.GetBytes(ExtractBigInteger(i, "scoreHigh")), 0)
+                }.FromInt8Array());
         }
 
         /// <summary>
@@ -84,7 +116,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>An IObservable of ChainHeightDTO</returns>
         public IObservable<ulong> GetBlockchainHeight()
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainHeightAsync());
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainHeightAsync()).Select(i => ExtractBigInteger(i, "height"));
         }
 
         /// <summary>
@@ -94,8 +126,22 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>An IObservable of BlockInfoDTO</returns>
         public IObservable<BlockInfo> GetBlockByHeight(ulong height)
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockByHeightAsync(height));
-
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockByHeightAsync(height))
+                .Select(i => new BlockInfo(
+                    i["meta"]["hash"].ToString(),
+                    i["meta"]["generationHash"].ToString(),
+                    ExtractBigInteger(i["meta"], "totalFee"),
+                    int.Parse(i["meta"]["numTransactions"].ToString()),
+                    i["block"]["signature"].ToString(),
+                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
+                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
+                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    int.Parse(i["block"]["type"].ToString()),
+                    ExtractBigInteger(i["block"], "height"),
+                    ExtractBigInteger(i["block"], "timestamp"),
+                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"]["previousBlockHash"].ToString(),
+                    i["block"]["blockTransactionsHash"].ToString()));
         }
 
         /// <summary>
@@ -107,7 +153,22 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         public IObservable<List<BlockInfo>> GetBlockByHeightWithLimit(ulong height, int limit = 100)
         {
             return Observable.FromAsync(async ar =>
-                await BlockchainRoutesApi.GetBlocksByHeightWithLimitAsync(height, limit));
+                await BlockchainRoutesApi.GetBlocksByHeightWithLimitAsync(height, limit)).Select(e => 
+                e.Select(i => new BlockInfo(
+                    i["meta"]["hash"].ToString(),
+                    i["meta"]["generationHash"].ToString(),
+                    ExtractBigInteger(i["meta"], "totalFee"),
+                    int.Parse(i["meta"]["numTransactions"].ToString()),
+                    i["block"]["signature"].ToString(),
+                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
+                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
+                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    int.Parse(i["block"]["type"].ToString()),
+                    ExtractBigInteger(i["block"], "height"),
+                    ExtractBigInteger(i["block"], "timestamp"),
+                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"]["previousBlockHash"].ToString(),
+                    i["block"]["blockTransactionsHash"].ToString())).ToList()); 
 
         }
 
@@ -141,7 +202,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>An IObservable of BlockchainStorageInfo</returns>
         public IObservable<BlockchainStorageInfo> GetBlockchainDiagnosticStorage()
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetDiagnosticStorageAsync());
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetDiagnosticStorageAsync()).Select(i =>
+                    new BlockchainStorageInfo(int.Parse(i["numAccounts"].ToString()), int.Parse(i["numBlocks"].ToString()), int.Parse(i["numTransactions"].ToString())
+            ));
         }
 
         /// <summary>
@@ -152,7 +215,22 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>IObservable&lt;List&lt;BlockInfoDTO&gt;&gt;.</returns>
         public IObservable<List<BlockInfo>> GetBlockchainDiagnosticBlocksWithLimit(ulong height, int limit = 100)
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetDiagnosticBlocksWithLimitAsync(height, limit));
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetDiagnosticBlocksWithLimitAsync(height, limit)).Select(e =>
+                e.Select(i => new BlockInfo(
+                    i["meta"]["hash"].ToString(),
+                    i["meta"]["generationHash"].ToString(),
+                    ExtractBigInteger(i["meta"], "totalFee"),
+                    int.Parse(i["meta"]["numTransactions"].ToString()),
+                    i["block"]["signature"].ToString(),
+                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
+                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
+                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    int.Parse(i["block"]["type"].ToString()),
+                    ExtractBigInteger(i["block"], "height"),
+                    ExtractBigInteger(i["block"], "timestamp"),
+                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"]["previousBlockHash"].ToString(),
+                    i["block"]["blockTransactionsHash"].ToString())).ToList());
         }
     }
 }

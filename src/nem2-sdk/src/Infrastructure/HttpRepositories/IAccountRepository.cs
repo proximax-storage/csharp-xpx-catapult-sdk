@@ -48,14 +48,14 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="accountIds">The account ids for which account information should be returned.</param>
         /// <returns>An IObservable of a List of AccountInfoDTO</returns>
-        IObservable<List<AccountInfo>> GetAccountsInfo(PublicKeysDTO accountIds);
+        IObservable<List<AccountInfo>> GetAccountsInfo(List<PublicAccount> accountIds);
 
         /// <summary>
         /// Get account information.
         /// </summary>
         /// <param name="accountIds">The account ids for which account information should be returned.</param>
         /// <returns>An IObservable of a List of AccountInfoDTO</returns>
-        IObservable<List<AccountInfo>> GetAccountsInfo(AddressesDTO accountIds);
+        IObservable<List<AccountInfo>> GetAccountsInfo(List<Address> accountIds);
 
         /// <summary>
         /// Get multisig account information.

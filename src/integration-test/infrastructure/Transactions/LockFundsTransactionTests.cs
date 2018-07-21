@@ -32,24 +32,25 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .Subscribe(
                     e =>
                     {
-                        Assert.Fail(e.Status);
+                        Console.WriteLine(e.Status);
+
                     });
         }
 
         [TestMethod, Timeout(20000)]
         public async Task LockFundsTransactionTest()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
-
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
+            var innerSigner1 = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate3);
             var aggregateTransaction = AggregateTransaction.CreateBonded(
                 NetworkType.Types.MIJIN_TEST,
                     Deadline.CreateHours(2),
                     new List<Transaction>
                     {
                         TransferTransactionTests.CreateInnerTransferTransaction(
-                            "nem:xem").ToAggregate(PublicAccount.CreateFromPublicKey("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", NetworkType.Types.MIJIN_TEST)),
+                            "nem:xem").ToAggregate(PublicAccount.CreateFromPublicKey(signer.PublicKeyString, NetworkType.Types.MIJIN_TEST)),
                         TransferTransactionTests.CreateInnerTransferTransaction(
-                            "nem:xem").ToAggregate(PublicAccount.CreateFromPublicKey("A8FCF4371B9C4B26CE19A407BA803D3813647608D57ABC1550925A54AEE2C9EA", NetworkType.Types.MIJIN_TEST))
+                            "nem:xem").ToAggregate(PublicAccount.CreateFromPublicKey(innerSigner1.PublicKeyString, NetworkType.Types.MIJIN_TEST))
                     },
                     null)
                 .SignWith(signer);
@@ -61,7 +62,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 new Mosaic(new MosaicId("nem:xem"), 10000000), 
                 10000,
                 aggregateTransaction)
-                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain));
+                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1));
 
             WatchForFailure(hashLock);
 

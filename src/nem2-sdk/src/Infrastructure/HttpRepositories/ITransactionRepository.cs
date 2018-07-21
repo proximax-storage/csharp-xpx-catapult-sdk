@@ -48,7 +48,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="transactionId">The transaction identifier.</param>
         /// <returns>IObservable&lt;List&lt;TransactionInfoDTO&gt;&gt;.</returns>
-        IObservable<List<Transaction>> GetTransactions(TransactionIds transactionId);
+        IObservable<List<Transaction>> GetTransactions(List<string> transactionId);
 
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="hash">The hash.</param>
         /// <returns>IObservable&lt;TransactionStatusDTO&gt;.</returns>
-        IObservable<TransactionStatusDTO> GetTransactionStatus(string hash);
+        IObservable<TransactionStatus> GetTransactionStatus(string hash);
 
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="hashes">The hashes.</param>
         /// <returns>IObservable&lt;List&lt;TransactionStatusDTO&gt;&gt;.</returns>
-        IObservable<List<TransactionStatusDTO>> GetTransactionStatuses(TransactionHashes hashes);
+        IObservable<List<TransactionStatus>> GetTransactionStatuses(List<string> hashes);
 
 
         /// <summary>
@@ -88,6 +88,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="payload">The payload.</param>
         /// <returns>IObservable&lt;TransactionAnnounceResponse&gt;.</returns>
-        IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignature(CosignatureSignedTransactionDTO payload);
+        IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignature(CosignatureSignedTransaction payload);
     }
 }

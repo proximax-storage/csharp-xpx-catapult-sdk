@@ -77,13 +77,13 @@ namespace io.nem2.sdk.Model.Transactions
         /// <param name="account">The account.</param>
         /// <returns>CosignatureSignedTransactionDTO.</returns>
         /// <exception cref="ArgumentNullException">account</exception>
-        public CosignatureSignedTransactionDTO SignWith(KeyPair account)
+        public CosignatureSignedTransaction SignWith(KeyPair account)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
             var bytes = Hash.FromHex();
             var signatureBytes = TransactionExtensions.SignHash(account, bytes);
 
-            return new CosignatureSignedTransactionDTO{ ParentHash = Hash, Signature = signatureBytes.ToHexLower(), Signer = account.PublicKeyString};
+            return new CosignatureSignedTransaction{ ParentHash = Hash, Signature = signatureBytes.ToHexLower(), Signer = account.PublicKeyString};
         }      
     }
 }

@@ -144,7 +144,6 @@ namespace io.nem2.sdk.Model.Mosaics
         /// </exception>
         public MosaicInfo(bool active, int index, string metaId, NamespaceId namespaceId, MosaicId mosaicId, ulong supply, ulong height, PublicAccount owner, MosaicProperties properties)
         {
-            Console.WriteLine(namespaceId.HexId);
             IsActive = active;
             Index = index;
             MetaId = metaId;

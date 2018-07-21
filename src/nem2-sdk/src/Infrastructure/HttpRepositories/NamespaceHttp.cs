@@ -28,12 +28,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Namespace;
 using io.nem2.sdk.Model.Namespace.io.nem2.sdk.Model.Mosaics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -89,19 +92,26 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespaceAsync(namespaceId.HexId))
-                .Select(e => 
-                new NamespaceInfo(
-                    e.Meta.Active,
-                    e.Meta.Index,
-                    e.Meta.Id,
-                    NamespaceTypes.GetRawValue(e.Namespace.Type),
-                    e.Namespace.Depth,
-                    ExtractLevels(e.Namespace),
-                    new NamespaceId(e.Namespace.ParentId),
-                    e.Namespace.StartHeight,
-                    e.Namespace.EndHeight,
-                    new PublicAccount(e.Namespace.Owner, networkTypeResolve.Wait())
-                    ));
+                .Select(e =>
+                {
+                    Console.WriteLine(e);
+                    return new NamespaceInfo(
+                        bool.Parse(e["meta"]["active"].ToString()),
+                        int.Parse(e["meta"]["index"].ToString()),
+                        e["meta"]["id"].ToString(),
+                        NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
+                        int.Parse(e["namespace"]["depth"].ToString()),
+                        ExtractLevels(e["namespace"]),
+                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
+                        ExtractBigInteger(e["namespace"], "startHeight"),
+                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
+                    );
+                });
+        }
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
         }
 
         /// <summary>
@@ -147,18 +157,19 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesFromAccountAsync(account.Plain, query.GetPageSize(), query.GetId()))
-                .Select(i => i.Select(e =>  new NamespaceInfo(
-                    e.Meta.Active,
-                    e.Meta.Index,
-                    e.Meta.Id,
-                    NamespaceTypes.GetRawValue(e.Namespace.Type),
-                    e.Namespace.Depth,
-                    ExtractLevels(e.Namespace),
-                    new NamespaceId(e.Namespace.ParentId),
-                    e.Namespace.StartHeight,
-                    e.Namespace.EndHeight,
-                    new PublicAccount(e.Namespace.Owner, networkTypeResolve.Wait())
-                )).ToList());
+                .Select(i => i.Select(e =>
+                    new NamespaceInfo(
+                        bool.Parse(e["meta"]["active"].ToString()),
+                        int.Parse(e["meta"]["index"].ToString()),
+                        e["meta"]["id"].ToString(),
+                        NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
+                        int.Parse(e["namespace"]["depth"].ToString()),
+                        ExtractLevels(e["namespace"]),
+                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
+                        ExtractBigInteger(e["namespace"], "startHeight"),
+                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
+                    )).ToList());
         }
 
         /// <summary>
@@ -178,18 +189,19 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesFromAccountAsync(account.PublicKey, query.GetPageSize(), query.GetId()))
-                .Select(i => i.Select(e => new NamespaceInfo(
-                e.Meta.Active,
-                e.Meta.Index,
-                e.Meta.Id,
-                NamespaceTypes.GetRawValue(e.Namespace.Type),
-                e.Namespace.Depth,
-                ExtractLevels(e.Namespace),
-                new NamespaceId(e.Namespace.ParentId),
-                e.Namespace.StartHeight,
-                e.Namespace.EndHeight,
-                new PublicAccount(e.Namespace.Owner, networkTypeResolve.Wait())
-            )).ToList());
+                .Select(i => i.Select(e =>
+                    new NamespaceInfo(
+                        bool.Parse(e["meta"]["active"].ToString()),
+                        int.Parse(e["meta"]["index"].ToString()),
+                        e["meta"]["id"].ToString(),
+                        NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
+                        int.Parse(e["namespace"]["depth"].ToString()),
+                        ExtractLevels(e["namespace"]),
+                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
+                        ExtractBigInteger(e["namespace"], "startHeight"),
+                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
+                    )).ToList());
         }
 
         /// <summary>
@@ -225,69 +237,77 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <summary>
         /// Gets the namespaces from accounts.
         /// </summary>
-        /// <param name="accounts">The accounts.</param>
+        /// <param name="publicKeys">The accounts.</param>
         /// <param name="query">The query.</param>
         /// <returns>IObservable&lt;List&lt;NamespaceInfoDTO&gt;&gt;.</returns>
         /// <exception cref="ArgumentNullException">accounts
         /// or
         /// query</exception>
         /// <exception cref="ArgumentException">Value cannot be an empty collection. - accounts</exception>
-        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccounts(List<PublicAccount> accounts, QueryParams query)
+        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccounts(List<PublicAccount> publicKeys, QueryParams query)
         {
-            if (accounts == null) throw new ArgumentNullException(nameof(accounts));
+            if (publicKeys == null) throw new ArgumentNullException(nameof(publicKeys));
             if (query == null) throw new ArgumentNullException(nameof(query));
-            if (accounts.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(accounts));
+            if (publicKeys.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(publicKeys));
 
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesFromAccountsAsync(
-                new PublicKeysDTO { PublicKeys = accounts.Select(e => e.PublicKey).ToArray() }, query.GetPageSize(), query.GetId()
-            )).Select(i => i.Select(e => new NamespaceInfo(
-                e.Meta.Active,
-                e.Meta.Index,
-                e.Meta.Id,
-                NamespaceTypes.GetRawValue(e.Namespace.Type),
-                e.Namespace.Depth,
-                ExtractLevels(e.Namespace),
-                new NamespaceId(e.Namespace.ParentId),
-                e.Namespace.StartHeight,
-                e.Namespace.EndHeight,
-                new PublicAccount(e.Namespace.Owner, networkTypeResolve.Wait())
-            )).ToList()); ;
+                    JObject.FromObject(new
+                    {
+                        publicKeys = publicKeys.Select(i => i.PublicKey)
+                    }), query.GetPageSize(), query.GetId()))
+                .Select(i => i.Select(e =>
+                new NamespaceInfo(
+                    bool.Parse(e["meta"]["active"].ToString()),
+                    int.Parse(e["meta"]["index"].ToString()),
+                    e["meta"]["id"].ToString(),
+                    NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
+                    int.Parse(e["namespace"]["depth"].ToString()),
+                    ExtractLevels(e["namespace"]),
+                    new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
+                    ExtractBigInteger(e["namespace"], "startHeight"),
+                    ExtractBigInteger(e["namespace"], "endHeight"),
+                    new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
+                )).ToList());
         }
 
         /// <summary>
         /// Gets the namespaces from accounts.
         /// </summary>
-        /// <param name="accounts">The accounts.</param>
+        /// <param name="addresses">The addresses</param>
         /// <param name="query">The query.</param>
         /// <returns>IObservable&lt;List&lt;NamespaceInfoDTO&gt;&gt;.</returns>
         /// <exception cref="ArgumentNullException">accounts
         /// or
         /// query</exception>
         /// <exception cref="ArgumentException">Value cannot be an empty collection. - accounts</exception>
-        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccounts(List<Address> accounts, QueryParams query)
+        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccounts(List<Address> addresses, QueryParams query)
         {
-            if (accounts == null) throw new ArgumentNullException(nameof(accounts));
+            if (addresses == null) throw new ArgumentNullException(nameof(addresses));
             if (query == null) throw new ArgumentNullException(nameof(query));
-            if (accounts.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(accounts));
+            if (addresses.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(addresses));
 
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesFromAccountsAsync(
-                new AddressesDTO { Addresses = accounts.Select(e => e.Plain).ToArray() }, query.GetPageSize(), query.GetId()
-            )).Select(i => i.Select(e => new NamespaceInfo(
-                e.Meta.Active,
-                e.Meta.Index,
-                e.Meta.Id,
-                NamespaceTypes.GetRawValue(e.Namespace.Type),
-                e.Namespace.Depth,
-                ExtractLevels(e.Namespace),
-                new NamespaceId(e.Namespace.ParentId),
-                e.Namespace.StartHeight,
-                e.Namespace.EndHeight,
-                new PublicAccount(e.Namespace.Owner, networkTypeResolve.Wait())
-            )).ToList()); ;
+                    JObject.FromObject(new
+                    {
+                        addresses = addresses.Select(i => i.Plain)
+                    }), query.GetPageSize(), query.GetId()))
+                .Select(i => i.Select(e =>
+                new NamespaceInfo(
+                    bool.Parse(e["meta"]["active"].ToString()),
+                    int.Parse(e["meta"]["index"].ToString()),
+                    e["meta"]["id"].ToString(),
+                    NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
+                    int.Parse(e["namespace"]["depth"].ToString()),
+                    ExtractLevels(e["namespace"]),
+                    new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
+                    ExtractBigInteger(e["namespace"], "startHeight"),
+                    ExtractBigInteger(e["namespace"], "endHeight"),
+                    new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
+                )).ToList());
         }
 
         /// <summary>
@@ -299,14 +319,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <exception cref="ArgumentException">Value cannot be an empty collection. - namespaceIds
         /// or
         /// Collection contains invalid id.</exception>
-        public IObservable<List<NamespaceNameDTO>> GetNamespacesNames(List<NamespaceId> namespaceIds)
+        public IObservable<List<NamespaceId>> GetNamespacesNames(List<NamespaceId> namespaceIds)
         {
 
             if (namespaceIds == null) throw new ArgumentNullException(nameof(namespaceIds));
             if (namespaceIds.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(namespaceIds));
             if(namespaceIds.Any(e => e.HexId.Length != 16 || !Regex.IsMatch(e.HexId, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains invalid id.");
 
-            return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesNamesAsync(new NamespaceIds(){namespaceIds = namespaceIds.Select(e => e.HexId).ToList()}));
+            return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesNamesAsync(JObject.FromObject(new
+                {
+                    addresses = namespaceIds.Select(i => i.HexId)
+                }))).Select(i => i.Select(e => new NamespaceId(e["name"].ToString())).ToList());
         }
 
         /// <summary>
@@ -314,22 +337,22 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="namespaceDTO">The namespace dto.</param>
         /// <returns>List&lt;NamespaceId&gt;.</returns>
-        private List<NamespaceId> ExtractLevels(NamespaceDTO namespaceDTO)
+        private List<NamespaceId> ExtractLevels(JToken namespaceDTO)
         {
             List<NamespaceId> levels = new List<NamespaceId>();
-            if (namespaceDTO.Level0 != 0)
+            if (namespaceDTO.Contains("level0"))
             {
-                levels.Add(new NamespaceId(namespaceDTO.Level0));
+                levels.Add(new NamespaceId(ExtractBigInteger(namespaceDTO, "level0")));
             }
 
-            if (namespaceDTO.Level1 != 0)
+            if (namespaceDTO.Contains("level1"))
             {
-                levels.Add(new NamespaceId(namespaceDTO.Level1));
+                levels.Add(new NamespaceId(ExtractBigInteger(namespaceDTO, "level1")));
             }
 
-            if (namespaceDTO.Level2 != 0)
+            if (namespaceDTO.Contains("level2"))
             {
-                levels.Add(new NamespaceId(namespaceDTO.Level2));
+                levels.Add(new NamespaceId(namespaceDTO["level2"].ToString()));
             }
 
             return levels;

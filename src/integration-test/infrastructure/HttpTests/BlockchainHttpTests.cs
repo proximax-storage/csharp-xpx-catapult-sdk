@@ -24,6 +24,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
     public class BlockchainHttpTests
     {
         readonly string host = "http://" + Config.Domain + ":3000";
+
         [TestMethod, Timeout(20000)]
         public async Task GetHeight()
         {
@@ -37,7 +38,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var a = await new BlockchainHttp(host).GetBlockByHeight(3);
            
-            Assert.AreEqual("CE6B3124DF98010E7B53E5182EE0C699FFCE2F90D75DACFF5430CF224A138E80", a.Hash);
+            Assert.AreEqual("D70DF7FD6FC7B3AD31C0EBCCAE0F6881CE39555BF72179472A31DEE5AB6A926B", a.Hash);
         }
 
         [TestMethod, Timeout(20000)]
@@ -45,7 +46,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var a = await new BlockchainHttp(host).GetBlockByHeightWithLimit(2, 10);
 
-            Assert.AreEqual("A3EB6D8DC3980BCF390F65321899F34197A2778F7B288E31BC512B37E50E7C5E", a[0].Hash);
+            Assert.AreEqual("32305811E9173FC5ED6897462E301B0495AD95F871A66341D95485FB4A59C8F5", a[0].Hash);
         }
 
         [TestMethod, Timeout(20000)]
@@ -53,7 +54,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var a = await new BlockchainHttp(host).GetBlockTransactions(1);
 
-            Assert.AreEqual("1644E712A9E183C58397B7790253B8971D3274811ED82E432672C8A821ECF621", a[0].TransactionInfo.Hash);
+            Assert.AreEqual("124ACC56AF5055CEE7E134D0A6E809C45B1054C0FA96C31838669206030EDD2C", a[0].TransactionInfo.Hash);
         }
 
         [TestMethod, Timeout(20000)]
@@ -61,7 +62,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var a = await new BlockchainHttp(host).GetBlockchainDiagnosticBlocksWithLimit(2, 10);
 
-            Assert.AreEqual("58F7244D49DA757EF72EAF3B7FB6E545DC7410708986F168C1AEEA6B67A0668A", a[0].Hash);
+            Assert.AreEqual("5277C6AF6CA15943A0F27A90C2232B989C4D62CEC212F0673B7F8B5D4F0C1834", a[0].Hash);
         }
 
         [TestMethod, Timeout(20000)]
@@ -87,5 +88,6 @@ namespace IntegrationTests.Infrastructure.HttpTests
 
             Assert.IsTrue(a > 1);
         }
+
     }
 }

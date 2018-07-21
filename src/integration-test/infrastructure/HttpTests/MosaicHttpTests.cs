@@ -30,7 +30,6 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetMosaic()
         {
-
             var a = await new MosaicHttp(host).GetMosaic(Xem.Id.HexId);
 
             Assert.AreEqual(Xem.NamespaceId.HexId, a.NamespaceId.HexId);           

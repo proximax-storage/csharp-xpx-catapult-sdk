@@ -6,7 +6,7 @@
 // Last Modified By : kailin
 // Last Modified On : 01-29-2018
 // ***********************************************************************
-// <copyright file="CosignatureDTO.cs" company="Nem.io">   
+// <copyright file="TransactionStatusDTO.cs" company="Nem.io">   
 // Copyright 2018 NEM
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,27 +23,23 @@
 // <summary></summary>
 // ***********************************************************************
 
-using Newtonsoft.Json;
-
 namespace io.nem2.sdk.Infrastructure.Buffers.Model
 {
-    /// <summary>
-    /// Class CosignatureDTO.
-    /// </summary>
-    public class CosignatureDTO
+    public class TransactionStatus
     {
-        /// <summary>
-        /// Gets or sets the signer.
-        /// </summary>
-        /// <value>The signer.</value>
-        [JsonProperty("signer")]
-        public string Signer { get; set; }
+        public TransactionStatus(string group, string status, string hash, ulong deadline, ulong? height)
+        {
+            Group = group;
+            Status = status;
+            Hash = hash;
+            Deadline = deadline;
+            Height = height;
+        }
 
-        /// <summary>
-        /// Gets or sets the signature.
-        /// </summary>
-        /// <value>The signature.</value>
-        [JsonProperty("signature")]
-        public string Signature { get; set; }
+        public string Group { get; }
+        public string Status { get; }
+        public string Hash { get; }
+        public ulong Deadline { get; }
+        public ulong? Height { get; }
     }
 }

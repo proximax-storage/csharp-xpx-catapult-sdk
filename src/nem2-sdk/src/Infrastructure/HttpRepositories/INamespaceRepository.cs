@@ -79,6 +79,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// </summary>
         /// <param name="namespaceIds">The namespace ids.</param>
         /// <returns>IObservable&lt;List&lt;NamespaceNameDTO&gt;&gt;.</returns>
-        IObservable<List<NamespaceNameDTO>> GetNamespacesNames(List<NamespaceId> namespaceIds);
+        IObservable<List<NamespaceId>> GetNamespacesNames(List<NamespaceId> namespaceIds);
     }
 }

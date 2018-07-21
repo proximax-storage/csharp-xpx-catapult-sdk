@@ -32,6 +32,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Mapping;
 using io.nem2.sdk.Model.Accounts;
@@ -39,6 +40,7 @@ using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Transactions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SimpleJson;
 
 namespace io.nem2.sdk.Infrastructure.Listeners
 {
@@ -172,28 +174,47 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         public IObservable<BlockInfo> NewBlock()
         {
             SubscribeToChannel("block");
-            
+
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("block")))
-               .Select(e =>
-                {
-                    var block = JsonConvert.DeserializeObject<BlockInfoDTO>(e);
-                    var network = (int)Convert.ToInt64(block.Block.Version.ToString("X").Substring(0, 2), 16);
-                    return new BlockInfo(
-                        block.Meta.Hash,
-                        block.Meta.GenerationHash,
-                        block.Meta.TotalFee,
-                        block.Meta.NumTransactions,
-                        block.Block.Signature,
-                        new PublicAccount(block.Block.Signer, NetworkType.GetRawValue(network)),
-                        NetworkType.GetRawValue(network),
-                        block.Block.Version,
-                        block.Block.Type,
-                        block.Block.Height,
-                        block.Block.Timestamp,
-                        block.Block.Difficulty,
-                        block.Block.PreviousBlockHash,
-                        block.Block.BlockTransactionsHash);
-                });
+                .Select(JObject.Parse)
+                .Select(i => new BlockInfo(
+                    i["meta"]["hash"].ToString(),
+                    i["meta"]["generationHash"].ToString(),
+                    i["meta"]["totalFee"] == null ? 0 : ExtractBigInteger(i["meta"], "totalFee"),
+                    i["meta"]["numTransactions"] == null ? 0 : int.Parse(i["meta"]["numTransactions"].ToString()),
+                    i["block"]["signature"].ToString(),
+                    new PublicAccount(i["block"]["signer"].ToString(),
+                        ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
+                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
+                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    int.Parse(i["block"]["type"].ToString()),
+                    ExtractBigInteger(i["block"], "height"),
+                    ExtractBigInteger(i["block"], "timestamp"),
+                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"]["previousBlockHash"].ToString(),
+                    i["block"]["blockTransactionsHash"].ToString()));
+        }
+
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
+        }
+
+        internal int ExtractInteger(JsonObject input, string identifier)
+        {
+            return int.Parse(input[identifier].ToString());
+        }
+
+        internal int ExtractVersion(int version)
+        {
+            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
+        }
+
+        internal NetworkType.Types ExtractNetworkType(int version)
+        {
+            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
+
+            return NetworkType.GetRawValue(networkType);
         }
 
         /// <summary>
@@ -210,7 +231,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
            
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("confirmedAdded")))
                .Where(e => TransactionFromAddress(new TransactionMapping().Apply(e), address))          
-               .Select(new TransactionMapping().Apply);
+               .Select(i => new TransactionMapping().Apply(i));
         }
 
         /// <summary>
@@ -287,14 +308,18 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         /// <param name="address">The address.</param>
         /// <returns>IObservable&lt;TransactionStatusDTO&gt;.</returns>
         /// <exception cref="ArgumentNullException">address</exception>
-        public IObservable<TransactionStatusDTO> TransactionStatus(Address address)
+        public IObservable<TransactionStatus> TransactionStatus(Address address)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
 
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Name.ToString().Contains("status")))          
-                .Select(JsonConvert.DeserializeObject<TransactionStatusDTO>);
+                .Select(i => new TransactionStatus(null,
+                    JObject.Parse(i)["status"].ToString(),
+                    JObject.Parse(i)["hash"].ToString(),
+                    ExtractBigInteger(JObject.Parse(i), "deadline"),
+                    null));
         }
 
         /// <summary>
@@ -303,14 +328,14 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         /// <param name="address">The address.</param>
         /// <returns>IObservable&lt;CosignatureSignedTransactionDTO&gt;.</returns>
         /// <exception cref="ArgumentNullException">address</exception>
-        public IObservable<CosignatureSignedTransactionDTO> CosignatureAdded(Address address)
+        public IObservable<CosignatureSignedTransaction> CosignatureAdded(Address address)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
 
             SubscribeToChannel(string.Concat("cosignature/", address.Plain));
 
             return _subject.Where(e => JObject.Parse(e).Properties().ToArray().Any(i => i.Value.ToString().Contains("cosignature")))
-                .Select(JsonConvert.DeserializeObject<CosignatureSignedTransactionDTO>);
+                .Select(JsonConvert.DeserializeObject<CosignatureSignedTransaction>);
         }
 
         /// <summary>
@@ -323,11 +348,24 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             var transactionFromAddress = TransactionHasSignerOrReceptor(transaction, address);
 
-            if (!transactionFromAddress && transaction.TransactionType.GetValue() == TransactionTypes.Types.AggregateComplete.GetValue() && ((AggregateTransaction)transaction).Cosignatures != null)
+            if (!transactionFromAddress && typeof(AggregateTransaction) == transaction.GetType())
             {
-                transactionFromAddress = ((AggregateTransaction)transaction).Cosignatures.Any(e => Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain);
+                
+                ((AggregateTransaction)transaction).Cosignatures?.ForEach(e =>
+                {
+                    if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain)
+                    {
+                        transactionFromAddress = true;
+                    }
+                });
+                ((AggregateTransaction)transaction).InnerTransactions.ForEach(e =>
+                {
+                    if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkByte).Plain == address.Plain)
+                    {
+                        transactionFromAddress = true;
+                    }
+                });
             }
-
 
             return transactionFromAddress;
         }
@@ -367,5 +405,6 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             return Uid.UID;
         }
+
     }
 }

@@ -122,7 +122,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// </summary>
         /// <param name="cosignatureTransaction">The cosignature transaction.</param>
         /// <returns>CosignatureSignedTransaction.</returns>
-        public CosignatureSignedTransactionDTO SignCosignatureTransaction(CosignatureTransaction cosignatureTransaction)
+        public CosignatureSignedTransaction SignCosignatureTransaction(CosignatureTransaction cosignatureTransaction)
         {
             return cosignatureTransaction.SignWith(KeyPair);
         }

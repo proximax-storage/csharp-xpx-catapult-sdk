@@ -43,7 +43,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task MosaicSupplyIncreaseTransction()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction =  MosaicSupplyChangeTransaction.Create(
                     NetworkType.Types.MIJIN_TEST,
@@ -64,7 +64,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task MosaicSupplyDecreaseTransction()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = MosaicSupplyChangeTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
@@ -81,13 +81,13 @@ namespace IntegrationTests.Infrastructure.Transactions
 
             var status = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.MIJIN_TEST)).Take(1);
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", status.Signer.PublicKey);
+            Assert.AreEqual("E7E2B3BD88301718FA0AB4F10FC49AD8E547C8150F94817C84C56AC6A3BEF648", status.Signer.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task MutableMosaicCreationTransaction()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = MosaicDefinitionTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
@@ -107,7 +107,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task ImmutableMosaicCreationTransaction()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
        
             var transaction = MosaicDefinitionTransaction.Create(
                     NetworkType.Types.MIJIN_TEST,
@@ -131,19 +131,21 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task MosaicSupplyIncreaseShouldFailImmutableSupply()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = MosaicSupplyChangeTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                     Deadline.CreateHours(2),
-                    new MosaicId("happy:test3"),                
+                    new MosaicId("happy:test4"),                
                     MosaicSupplyType.Type.INCREASE,
                     10000)
                 .SignWith(signer);
 
             await new TransactionHttp(host).Announce(transaction);
-            listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(signer.PublicKeyString,
-                NetworkType.Types.MIJIN_TEST)).Subscribe(e => Console.WriteLine(e.TransactionInfo.Hash));
+
+            listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(signer.PublicKeyString,NetworkType.Types.MIJIN_TEST))
+                .Subscribe(e => Console.WriteLine(e.TransactionInfo.Hash));
+
             var status = await listener.TransactionStatus(Address.CreateFromPublicKey(signer.PublicKeyString, NetworkType.Types.MIJIN_TEST)).Where(e => e.Hash == transaction.Hash).Take(1);
 
             Assert.AreEqual("Failure_Mosaic_Supply_Immutable", status.Status);

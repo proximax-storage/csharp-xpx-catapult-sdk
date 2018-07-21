@@ -11,8 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -22,27 +22,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
     /// </summary>
     internal interface INetworkRoutesApi : IApiAccessor
     {
-        #region Synchronous Operations
-        /// <summary>
-        /// Get the current network type of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current network type
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>NetworkTypeDTO</returns>
-        NetworkTypeDTO GetNetworkType ();
-
-        /// <summary>
-        /// Get the current network type of the chain
-        /// </summary>
-        /// <remarks>
-        /// Returns the current network type
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of NetworkTypeDTO</returns>
-        ApiResponse<NetworkTypeDTO> GetNetworkTypeWithHttpInfo ();
-        #endregion Synchronous Operations
+       
         #region Asynchronous Operations
         /// <summary>
         /// Get the current network type of the chain
@@ -52,7 +32,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of NetworkTypeDTO</returns>
-        System.Threading.Tasks.Task<NetworkTypeDTO> GetNetworkTypeAsync ();
+        System.Threading.Tasks.Task<JObject> GetNetworkTypeAsync ();
 
         /// <summary>
         /// Get the current network type of the chain
@@ -62,7 +42,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </remarks>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (NetworkTypeDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<NetworkTypeDTO>> GetNetworkTypeAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<object>> GetNetworkTypeAsyncWithHttpInfo ();
         #endregion Asynchronous Operations
     }
 
@@ -185,71 +165,11 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// Get the current network type of the chain Returns the current network type
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>NetworkTypeDTO</returns>
-        public NetworkTypeDTO GetNetworkType ()
-        {
-             ApiResponse<NetworkTypeDTO> localVarResponse = GetNetworkTypeWithHttpInfo();
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get the current network type of the chain Returns the current network type
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <returns>ApiResponse of NetworkTypeDTO</returns>
-        public ApiResponse< NetworkTypeDTO > GetNetworkTypeWithHttpInfo ()
-        {
-
-            var localVarPath = "/network";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetNetworkType", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<NetworkTypeDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (NetworkTypeDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(NetworkTypeDTO)));
-        }
-
-        /// <summary>
-        /// Get the current network type of the chain Returns the current network type
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of NetworkTypeDTO</returns>
-        public async System.Threading.Tasks.Task<NetworkTypeDTO> GetNetworkTypeAsync ()
+        public async System.Threading.Tasks.Task<JObject> GetNetworkTypeAsync ()
         {
-             ApiResponse<NetworkTypeDTO> localVarResponse = await GetNetworkTypeAsyncWithHttpInfo();
-             return localVarResponse.Data;
+             ApiResponse<object> localVarResponse = await GetNetworkTypeAsyncWithHttpInfo();
+             return JObject.Parse(localVarResponse.Data.ToString());
 
         }
 
@@ -258,7 +178,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (NetworkTypeDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<NetworkTypeDTO>> GetNetworkTypeAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<object>> GetNetworkTypeAsyncWithHttpInfo ()
         {
 
             var localVarPath = "/network";
@@ -297,9 +217,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<NetworkTypeDTO>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (NetworkTypeDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(NetworkTypeDTO)));
+                (object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
     }

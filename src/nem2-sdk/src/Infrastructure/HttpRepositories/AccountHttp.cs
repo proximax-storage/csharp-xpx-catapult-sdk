@@ -27,13 +27,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -83,13 +85,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountInfoAsync(address.Plain))
                 .Select(accountInfo  => new AccountInfo(
-                    Address.CreateFromEncoded(accountInfo.Account.Address),
-                    accountInfo.Account.AddressHeight,
-                    accountInfo.Account.PublicKey,
-                    accountInfo.Account.PublicKeyHeight,
-                    accountInfo.Account.Importance,
-                    accountInfo.Account.ImportanceHeight, 
-                    accountInfo.Account.Mosaics.Select(mosaic => new Mosaic(new MosaicId(BitConverter.ToUInt64( mosaic.MosaicId.FromHex().Reverse().ToArray(), 0)), mosaic.Amount)).ToList()));
+                    Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
+                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"]["publicKey"].ToString(),
+                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
+                    ExtractBigInteger(accountInfo["account"], "importance"),
+                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList()));
         }
 
         /// <summary>
@@ -104,70 +106,65 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountInfoAsync(account.PublicKey))
                 .Select(accountInfo => new AccountInfo(
-                    Address.CreateFromEncoded(accountInfo.Account.Address),
-                    accountInfo.Account.AddressHeight,
-                    accountInfo.Account.PublicKey,
-                    accountInfo.Account.PublicKeyHeight,
-                    accountInfo.Account.Importance,
-                    accountInfo.Account.ImportanceHeight,
-                    accountInfo.Account.Mosaics.Select(
-                        mosaic => new Mosaic(new MosaicId(
-                                BitConverter.ToUInt64(mosaic.MosaicId.FromHex().Reverse().ToArray(), 0)),
-                            mosaic.Amount)
-                    ).ToList()));
+                    Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
+                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"]["publicKey"].ToString(),
+                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
+                    ExtractBigInteger(accountInfo["account"], "importance"),
+                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList()));
         }
 
         /// <summary>
         /// Get account information.
         /// </summary>
-        /// <param name="accountIds">The account ids for which account information should be returned.</param>
+        /// <param name="addresses">The account ids for which account information should be returned.</param>
         /// <returns>An IObservable of a List of AccountInfoDTO</returns>
         /// <exception cref="ArgumentNullException">accountIds</exception>
-        public IObservable<List<AccountInfo>> GetAccountsInfo(AddressesDTO accountIds)
+        public IObservable<List<AccountInfo>> GetAccountsInfo(List<Address> addresses)
         {
-            if (accountIds == null) throw new ArgumentNullException(nameof(accountIds));
+            if (addresses == null) throw new ArgumentNullException(nameof(addresses));
 
-            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountsInfoAsync(accountIds)).Select(e =>                      
+            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountsInfoAsync(JObject.FromObject(new
+            {
+                addresses = addresses.Select(i => i.Plain)
+            }))).Select(e =>                      
             e.Select(accountInfo =>
             {
                 return new AccountInfo(
-                    Address.CreateFromEncoded(accountInfo.Account.Address),
-                    accountInfo.Account.AddressHeight,
-                    accountInfo.Account.PublicKey,
-                    accountInfo.Account.PublicKeyHeight,
-                    accountInfo.Account.Importance,
-                    accountInfo.Account.ImportanceHeight,
-                    accountInfo.Account.Mosaics.Select(
-                        mosaic => new Mosaic(new MosaicId(
-                                BitConverter.ToUInt64(mosaic.MosaicId.FromHex().Reverse().ToArray(), 0)),
-                            mosaic.Amount)
-                    ).ToList());
+                    Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
+                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"]["publicKey"].ToString(),
+                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
+                    ExtractBigInteger(accountInfo["account"], "importance"),
+                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList());
             }).ToList());
         }
 
         /// <summary>
         /// Get account information.
         /// </summary>
-        /// <param name="accountIds">The account ids for which account information should be returned.</param>
+        /// <param name="publicAccounts">The account ids for which account information should be returned.</param>
         /// <returns>An IObservable of a List of AccountInfoDTO</returns>
         /// <exception cref="ArgumentNullException">accountIds</exception>
-        public IObservable<List<AccountInfo>> GetAccountsInfo(PublicKeysDTO accountIds)
+        public IObservable<List<AccountInfo>> GetAccountsInfo(List<PublicAccount> publicAccounts)
         {
-            if (accountIds == null) throw new ArgumentNullException(nameof(accountIds));
+            if (publicAccounts == null) throw new ArgumentNullException(nameof(publicAccounts));
 
-            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountsInfoAsync(accountIds)).Select(e =>
-                e.Select(accountInfo => new AccountInfo(
-                    Address.CreateFromEncoded(accountInfo.Account.Address),
-                    accountInfo.Account.AddressHeight,
-                    accountInfo.Account.PublicKey,
-                    accountInfo.Account.PublicKeyHeight,
-                    accountInfo.Account.Importance,
-                    accountInfo.Account.ImportanceHeight,
-                    accountInfo.Account.Mosaics.Select(
-                        mosaic => new Mosaic(new MosaicId(
-                                BitConverter.ToUInt64(mosaic.MosaicId.FromHex().Reverse().ToArray(), 0)),
-                            mosaic.Amount)
-                    ).ToList())
+            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountsInfoAsync(
+                JObject.FromObject(new
+                {
+                    publicKeys = publicAccounts.Select(i => i.PublicKey)
+                }))).Select(e =>
+                e.Select(accountInfo =>  new AccountInfo(
+                    Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
+                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"]["publicKey"].ToString(),
+                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
+                    ExtractBigInteger(accountInfo["account"], "importance"),
+                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList())
                 ).ToList());
         }
 
@@ -186,18 +183,18 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountMultisigAsync(account.PublicKey))
                 .Select(entry => new MultisigAccountInfo(
                     new PublicAccount(
-                        entry.Multisig.Account, 
+                        entry["multisig"]["account"].ToString(), 
                         networkTypeResolve.Wait()),
-                        entry.Multisig.MinApproval, 
-                        entry.Multisig.MinRemoval,
-                        entry.Multisig.Cosignatories.Select(
+                        int.Parse(entry["multisig"]["minApproval"].ToString()),
+                        int.Parse(entry["multisig"]["minRemoval"].ToString()),
+                        entry["multisig"]["cosignatories"].Select(
                               cosig => new PublicAccount(
-                                cosig,
+                                cosig.ToString(),
                                 networkTypeResolve.Wait())
                                 ).ToList(),
-                        entry.Multisig.MultisigAccounts.Select(
-                              cosig => new PublicAccount(
-                                cosig,
+                        entry["multisig"]["multisigAccounts"].Select(
+                              multisigAcc => new PublicAccount(
+                                multisigAcc.ToString(),
                                 networkTypeResolve.Wait())
                                 ).ToList())).Take(1);
         }
@@ -214,22 +211,26 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
-            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountMultisigAsync(account.Plain)).Select(entry => new MultisigAccountInfo(
+            return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountMultisigAsync(account.Plain))
+                .Select(entry => new MultisigAccountInfo(
                     new PublicAccount(
-                        entry.Multisig.Account,
+                        entry["multisig"]["account"].ToString(),
                         networkTypeResolve.Wait()),
-                        entry.Multisig.MinApproval,
-                        entry.Multisig.MinRemoval,
-                        entry.Multisig.Cosignatories.Select(
-                            cosig => new PublicAccount(
-                                cosig,
-                                networkTypeResolve.Wait())
-                            ).ToList(),
-                        entry.Multisig.MultisigAccounts.Select(
-                            cosig => new PublicAccount(
-                                cosig,
-                                networkTypeResolve.Wait())
-                            ).ToList()));
+                        int.Parse(entry["multisig"]["minApproval"].ToString()),
+                        int.Parse(entry["multisig"]["minRemoval"].ToString()),
+                        entry["multisig"]["cosignatories"].Select(
+                        cosig =>
+                        {
+                            Console.WriteLine(cosig);
+                            return new PublicAccount(
+                                    cosig.ToString(),
+                                    networkTypeResolve.Wait());
+                        }).ToList(),
+                        entry["multisig"]["multisigAccounts"].Select(
+                        cosig => new PublicAccount(
+                            cosig.ToString(),
+                            networkTypeResolve.Wait())
+                            ).ToList())).Take(1);
         }
 
         /// <summary>
@@ -248,22 +249,24 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     Dictionary<int, List<MultisigAccountInfo>> graphInfoMap = new Dictionary<int, List<MultisigAccountInfo>>();
 
                     entry.ForEach(item => graphInfoMap.Add(
-                        item.Level,
-                        item.MultisigEntries.Select(i => 
+                        int.Parse(item["level"].ToString()),
+                        item["multisigEntries"].Select(i => 
                         new MultisigAccountInfo(
                             PublicAccount.CreateFromPublicKey(
-                                i.Multisig.Account,
+                                i["multisig"]["account"].ToString(),
                                 GetNetworkTypeObservable().Wait()
                                 ),
-                            i.Multisig.MinApproval, 
-                            i.Multisig.MinRemoval,
-                            i.Multisig.Cosignatories.Select(
-                                e => PublicAccount.CreateFromPublicKey(
-                                    e, GetNetworkTypeObservable().Wait()
+                            int.Parse(i["multisig"]["minApproval"].ToString()),
+                            int.Parse(i["multisig"]["minRemoval"].ToString()),
+                            i["multisig"]["cosignatories"].Select(
+                                cosig => PublicAccount.CreateFromPublicKey(
+                                    cosig.ToString(), 
+                                    GetNetworkTypeObservable().Wait()
                                     )).ToList(), 
-                            i.Multisig.MultisigAccounts.Select(
-                                o => PublicAccount.CreateFromPublicKey(
-                                    o, GetNetworkTypeObservable().Wait()
+                            i["multisig"]["multisigAccounts"].Select(
+                                multisigAcc => PublicAccount.CreateFromPublicKey(
+                                    multisigAcc.ToString(), 
+                                    GetNetworkTypeObservable().Wait()
                                     )).ToList() ) ).ToList()));
 
                     return new MultisigAccountGraphInfo(graphInfoMap);
@@ -286,22 +289,24 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     Dictionary<int, List<MultisigAccountInfo>> graphInfoMap = new Dictionary<int, List<MultisigAccountInfo>>();
 
                     entry.ForEach(item => graphInfoMap.Add(
-                        item.Level,
-                        item.MultisigEntries.Select(i =>
+                        int.Parse(item["level"].ToString()),
+                        item["multisigEntries"].Select(i =>
                             new MultisigAccountInfo(
                                 PublicAccount.CreateFromPublicKey(
-                                    i.Multisig.Account,
+                                    i["multisig"]["account"].ToString(),
                                     GetNetworkTypeObservable().Wait()
                                 ),
-                                i.Multisig.MinApproval,
-                                i.Multisig.MinRemoval,
-                                i.Multisig.Cosignatories.Select(
-                                    e => PublicAccount.CreateFromPublicKey(
-                                        e, GetNetworkTypeObservable().Wait()
+                                int.Parse(i["multisig"]["minApproval"].ToString()),
+                                int.Parse(i["multisig"]["minRemoval"].ToString()),
+                                i["multisig"]["cosignatories"].Select(
+                                    cosig => PublicAccount.CreateFromPublicKey(
+                                        cosig.ToString(),
+                                        GetNetworkTypeObservable().Wait()
                                     )).ToList(),
-                                i.Multisig.MultisigAccounts.Select(
-                                    o => PublicAccount.CreateFromPublicKey(
-                                        o, GetNetworkTypeObservable().Wait()
+                                i["multisig"]["multisigAccounts"].Select(
+                                    multisigAcc => PublicAccount.CreateFromPublicKey(
+                                        multisigAcc.ToString(),
+                                        GetNetworkTypeObservable().Wait()
                                     )).ToList())).ToList()));
 
                     return new MultisigAccountGraphInfo(graphInfoMap);
@@ -447,6 +452,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             if (query == null) throw new ArgumentNullException(nameof(query));
 
             return Observable.FromAsync(async ar => await AccountRoutesApi.TransactionsAsync(account.PublicKey, query.GetPageSize(), query.GetId()));
+        }
+
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
         }
     }
 }

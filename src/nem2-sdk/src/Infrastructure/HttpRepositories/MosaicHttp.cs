@@ -28,13 +28,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
-using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Namespace;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -75,6 +76,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             MosaicRoutesApi = new MosaicRoutesApi(host);
         }
 
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
+        }
+
         /// <summary>
         /// Gets the mosaic.
         /// </summary>
@@ -91,15 +97,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicAsync(mosaicId))
                 .Select(mosaic => new MosaicInfo(
-                        mosaic.Meta.Active,
-                        mosaic.Meta.Index,
-                        mosaic.Meta.Id,
-                        new NamespaceId( Convert.ToUInt64(mosaic.Mosaic.NamespaceId, 16)),
-                        new MosaicId(Convert.ToUInt64(mosaic.Mosaic.MosaicId, 16)),
-                        mosaic.Mosaic.Supply,
-                        mosaic.Mosaic.Height,
-                        new PublicAccount(mosaic.Mosaic.Owner, networkTypeResolve.Wait()),
-                        ExtractMosaicProperties(mosaic.Mosaic.Properties)));
+                    bool.Parse(mosaic["meta"]["active"].ToString()),
+                    int.Parse(mosaic["meta"]["index"].ToString()),
+                    mosaic["meta"]["id"].ToString(),
+                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
+                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
+                    ExtractBigInteger(mosaic["mosaic"], "supply"),
+                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
+                    ExtractMosaicProperties(JsonConvert
+                        .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
+                        .FromUInt8ArrayArray())));
 
             
             
@@ -139,17 +147,22 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             IObservable<NetworkType.Types> networkTypeResolve = GetNetworkTypeObservable().Take(1);
 
-            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsAsync(new MosaicIds(){mosaicIds = mosaicIds}))
-                .Select(e =>e. Select(mosaic => new MosaicInfo(
-                    mosaic.Meta.Active,
-                    mosaic.Meta.Index,
-                    mosaic.Meta.Id,
-                    new NamespaceId(BitConverter.ToUInt64(mosaic.Mosaic.NamespaceId.FromHex(), 0)),
-                    new MosaicId(BitConverter.ToUInt64(mosaic.Mosaic.MosaicId.FromHex(), 0)),
-                    mosaic.Mosaic.Supply,
-                    mosaic.Mosaic.Height,
-                    new PublicAccount(mosaic.Mosaic.Owner, networkTypeResolve.Wait()),
-                    ExtractMosaicProperties(mosaic.Mosaic.Properties))).ToList());
+            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsAsync(JObject.FromObject(new
+                {
+                    mosaicIds = mosaicIds.Select(i => i)
+                })))
+                .Select(e =>e.Select(mosaic => new MosaicInfo(
+                    bool.Parse(mosaic["meta"]["active"].ToString()),
+                    int.Parse(mosaic["meta"]["index"].ToString()),
+                    mosaic["meta"]["id"].ToString(),
+                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
+                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
+                    ExtractBigInteger(mosaic["mosaic"], "supply"),
+                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
+                    ExtractMosaicProperties(JsonConvert
+                        .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
+                        .FromUInt8ArrayArray()))).ToList());
         }
 
         /// <summary>
@@ -168,15 +181,17 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsFromNamespaceAsync(namespaceId.HexId))
                 .Select(e => e.Select(mosaic => new MosaicInfo(
-                    mosaic.Meta.Active,
-                    mosaic.Meta.Index,
-                    mosaic.Meta.Id,
-                    new NamespaceId(BitConverter.ToUInt64(mosaic.Mosaic.NamespaceId.FromHex(), 0)),
-                    new MosaicId(BitConverter.ToUInt64(mosaic.Mosaic.MosaicId.FromHex(), 0)),
-                    mosaic.Mosaic.Supply,
-                    mosaic.Mosaic.Height,
-                    new PublicAccount(mosaic.Mosaic.Owner, networkTypeResolve.Wait()),
-                    ExtractMosaicProperties(mosaic.Mosaic.Properties))).ToList());
+                    bool.Parse(mosaic["meta"]["active"].ToString()),
+                    int.Parse(mosaic["meta"]["index"].ToString()),
+                    mosaic["meta"]["id"].ToString(),
+                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
+                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
+                    ExtractBigInteger(mosaic["mosaic"], "supply"),
+                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
+                    ExtractMosaicProperties(JsonConvert
+                        .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
+                        .FromUInt8ArrayArray()))).ToList());
         }
 
         /// <summary>
@@ -194,8 +209,11 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             if (mosaicIds.Count == 0) throw new ArgumentException("Value cannot be an empty collection.", nameof(mosaicIds));
             if (mosaicIds.Any(e => e.Length != 16 || !Regex.IsMatch(e, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains invalid id.");
 
-            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsNameAsync(new MosaicIds() { mosaicIds = mosaicIds }))
-                .Select(e => e.Select(mosaic => new MosaicName(new MosaicId(mosaic.MosaicId), mosaic.Name, new NamespaceId(mosaic.ParentId))).ToList());
+            return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsNameAsync(JObject.FromObject(new
+                {
+                    mosaicIds = mosaicIds.Select(i => i)
+                })))
+                .Select(e => e.Select(mosaic => new MosaicName(new MosaicId(ExtractBigInteger(mosaic, "mosaicId")), mosaic["name"].ToString(), new NamespaceId(ExtractBigInteger(mosaic, "parentId")))).ToList());
         }  
     } 
 }

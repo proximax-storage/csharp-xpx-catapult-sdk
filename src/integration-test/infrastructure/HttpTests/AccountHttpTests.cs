@@ -13,6 +13,7 @@
 // limitations under the License.
 // 
 
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,9 +33,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetAccountInfo()
         {
-            var expected = "SARNASAS2BIAB6LMFA3FPMGBPGIJGK6IJETM3ZSP";
+            var expected = "SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV";
 
-            var response = await new AccountHttp(host).GetAccountInfo(new PublicAccount("B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF", NetworkType.Types.MIJIN_TEST));
+            var response = await new AccountHttp(host).GetAccountInfo(new PublicAccount("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", NetworkType.Types.MIJIN_TEST));
 
             Assert.AreEqual(expected, response.Address.Plain);
         }
@@ -42,10 +43,10 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetAccountInfoFromAddress()
         {
-            var expected = "SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR";
+            var expected = "SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S";
 
-            var response = await new AccountHttp(host).GetAccountInfo(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"));
-
+            var response = await new AccountHttp(host).GetAccountInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
+            
             Assert.AreEqual(expected, response.Address.Plain);
 
             Assert.AreEqual("D525AD41D95FCF29", response.Mosaics[0].MosaicId.HexId);
@@ -54,14 +55,11 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetAccountsInfoPublicKeys()
         {
-            var expected1 = "SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR";
+            var expected1 = "SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV";
 
-            var accounts = new PublicKeysDTO()
+            var accounts = new List<PublicAccount>()
             {
-                PublicKeys = new[]
-                {
-                    "B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE"
-                }
+                new PublicAccount("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", NetworkType.Types.MIJIN_TEST)
             };
 
             var response = await new AccountHttp(host).GetAccountsInfo(accounts);
@@ -72,14 +70,11 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetAccountsInfoAddresses()
         {
-            var expected1 = "SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR";
+            var expected1 = "SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV";
 
-            var accounts = new AddressesDTO()
+            var accounts = new List<Address>()
             {
-                Addresses = new[]
-                {
-                    "SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"
-                }
+                Address.CreateFromEncoded("SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV")
             };
 
             var response = await new AccountHttp(host).GetAccountsInfo(accounts);
@@ -90,9 +85,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetIncomingTransactions()
         {
-            var expected = "SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR";
+            var expected = "SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV";
 
-            var response = await new AccountHttp(host).IncomingTransactions(new PublicAccount("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", NetworkType.Types.MIJIN_TEST));
+            var response = await new AccountHttp(host).IncomingTransactions(new PublicAccount("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", NetworkType.Types.MIJIN_TEST));
 
             Assert.AreEqual(expected, ((TransferTransaction)response[0]).Address.Plain);
         }
@@ -100,9 +95,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetOutgoingTransactions()
         {
-            var expected = "B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF";
+            var expected = "D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779";
 
-            var response = await new AccountHttp(host).OutgoingTransactions(new PublicAccount("B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF", NetworkType.Types.MIJIN_TEST));
+            var response = await new AccountHttp(host).OutgoingTransactions(new PublicAccount("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", NetworkType.Types.MIJIN_TEST));
 
             Assert.AreEqual(expected, response[0].Signer.PublicKey);
         }
@@ -110,45 +105,45 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetTransactions()
         {
-            var expected = "72B4DC358676BFED48DA63AF13727377E55DB5072FC6150D4A101367E93A78FA";
+            var expected = "93A73126673750942371293E4C7A28A5E68763605A97CDC5E0B373E6F281F251";
 
-            var response = await new AccountHttp(host).Transactions(new PublicAccount("b4f12e7c9f6946091e2cb8b6d3a12b50d17ccbbf646386ea27ce2946a7423dcf", NetworkType.Types.MIJIN_TEST));
+            var response = await new AccountHttp(host).Transactions(new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST));
 
             var trans = (TransferTransaction) response[0];
 
             Assert.AreEqual(expected, trans.TransactionInfo.Hash);
-            Assert.AreEqual(Address.CreateFromEncoded("SBIN2SDQWFD47RFB3IOJ4IVA4GTCKHIC6YIHR3XX").Plain, trans.Address.Plain);
+            Assert.AreEqual(Address.CreateFromEncoded("SA6VBFEOYF4CWLMARDQQT5FH2D3P4KNL4SJKBT3N").Plain, trans.Address.Plain);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigGraphInfo()
         {
-            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(new PublicAccount(KeyPair.CreateFromPrivateKey("9abcd1bd50b994799f8a2e27f7ffd952831ef16a443a48241f1f78942322d5c6").PublicKeyString, NetworkType.Types.MIJIN_TEST));
+            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(new PublicAccount(KeyPair.CreateFromPrivateKey("F8E3C9B17923889138F262494E53D7E4604658CEECEFC67DF6A4BD30D421C0B0").PublicKeyString, NetworkType.Types.MIJIN_TEST));
 
             Assert.AreEqual(2, response.MultisigAccounts[0][0].MinApproval);
             Assert.AreEqual(2, response.MultisigAccounts[0][0].MinRemoval);
-            Assert.AreEqual("A8FCF4371B9C4B26CE19A407BA803D3813647608D57ABC1550925A54AEE2C9EA", response.MultisigAccounts[0][0].Account.PublicKey);
+            Assert.AreEqual("205B8C27461DCBD9EAF8BB2A8C673E72638A079378F3BF290C406F92EC3A9EB8", response.MultisigAccounts[0][0].Account.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigGraphInfoAddress()
         {
-            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(Address.CreateFromEncoded("SBHQVG3J27J47X7YQJF6WE7KGUP76DBASFNOZGEO"));
+            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
 
-            Assert.AreEqual(0, response.MultisigAccounts[0][0].MinApproval);
+            Assert.AreEqual(2, response.MultisigAccounts[0][0].MinApproval);
 
-            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", response.MultisigAccounts[0][0].Account.PublicKey);
+            Assert.AreEqual("205B8C27461DCBD9EAF8BB2A8C673E72638A079378F3BF290C406F92EC3A9EB8", response.MultisigAccounts[0][0].Account.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigInfo()
         {
-             var keyPair = KeyPair.CreateFromPrivateKey("9abcd1bd50b994799f8a2e27f7ffd952831ef16a443a48241f1f78942322d5c6");
+             var keyPair = KeyPair.CreateFromPrivateKey("F8E3C9B17923889138F262494E53D7E4604658CEECEFC67DF6A4BD30D421C0B0");
 
             var response = await new AccountHttp(host).GetMultisigAccountInfo(new PublicAccount(keyPair.PublicKeyString, NetworkType.Types.MIJIN_TEST));
 
-            Assert.AreEqual("A8FCF4371B9C4B26CE19A407BA803D3813647608D57ABC1550925A54AEE2C9EA", response.Account.PublicKey);
-            Assert.AreEqual("SA4UASX7UPK3WM375H5CCGBCCDXEBTQIMYWPSO3X", response.Account.Address.Plain);
+            Assert.AreEqual("205B8C27461DCBD9EAF8BB2A8C673E72638A079378F3BF290C406F92EC3A9EB8", response.Account.PublicKey);
+            Assert.AreEqual("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S", response.Account.Address.Plain);
             Assert.AreEqual(2, response.MinApproval);
             Assert.AreEqual(2, response.MinRemoval);
         }
@@ -156,11 +151,11 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigInfoAddress()
         {
-            var response = await new AccountHttp(host).GetMultisigAccountInfo(Address.CreateFromEncoded("SBHQVG3J27J47X7YQJF6WE7KGUP76DBASFNOZGEO"));
+            var response = await new AccountHttp(host).GetMultisigAccountInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
 
-            Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", response.Account.PublicKey);
-            Assert.AreEqual(0, response.MinApproval);
-            Assert.AreEqual(0, response.MinRemoval);
+            Assert.AreEqual("205B8C27461DCBD9EAF8BB2A8C673E72638A079378F3BF290C406F92EC3A9EB8", response.Account.PublicKey);
+            Assert.AreEqual(2, response.MinApproval);
+            Assert.AreEqual(2, response.MinRemoval);
         }
     }
 }

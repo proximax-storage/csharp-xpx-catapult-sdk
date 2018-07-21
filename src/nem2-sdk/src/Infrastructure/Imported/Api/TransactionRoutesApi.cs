@@ -16,6 +16,7 @@ using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
 using io.nem2.sdk.Infrastructure.Mapping;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -25,155 +26,6 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
     /// </summary>
     internal interface ITransactionRoutesApi : IApiAccessor
     {
-        #region Synchronous Operations
-        /// <summary>
-        /// Creates cosignature transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a cosignature transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>Object</returns>
-        object AnnounceCosignatureTransaction (CosignatureSignedTransactionDTO payload);
-
-        /// <summary>
-        /// Creates cosignature transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a cosignature transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>ApiResponse of Object</returns>
-        ApiResponse<object> AnnounceCosignatureTransactionWithHttpInfo (CosignatureSignedTransactionDTO payload);
-        /// <summary>
-        /// Creates partial transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a partial transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>Object</returns>
-        TransactionAnnounceResponse AnnouncePartialTransaction (SignedTransaction payload);
-
-        /// <summary>
-        /// Creates partial transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a partial transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>ApiResponse of Object</returns>
-        ApiResponse<TransactionAnnounceResponse> AnnouncePartialTransactionWithHttpInfo (SignedTransaction payload);
-        /// <summary>
-        /// Creates new transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>Object</returns>
-        object AnnounceTransaction (SignedTransaction payload);
-
-        /// <summary>
-        /// Creates new transaction
-        /// </summary>
-        /// <remarks>
-        /// Announce a transaction to the network
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="payload">Transaction payload</param>
-        /// <returns>ApiResponse of Object</returns>
-        ApiResponse<object> AnnounceTransactionWithHttpInfo (SignedTransaction payload);
-        /// <summary>
-        /// Get ransaction information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionId">Transaction id or hash</param>
-        /// <returns>Object</returns>
-        object GetTransaction (string transactionId);
-
-        /// <summary>
-        /// Get ransaction information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionId">Transaction id or hash</param>
-        /// <returns>ApiResponse of Object</returns>
-        ApiResponse<object> GetTransactionWithHttpInfo (string transactionId);
-        /// <summary>
-        /// Get transaction status
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction status for a given transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="hash">Transaction hash</param>
-        /// <returns>TransactionStatusDTO</returns>
-        TransactionStatusDTO GetTransactionStatus (string hash);
-
-        /// <summary>
-        /// Get transaction status
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction status for a given transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="hash">Transaction hash</param>
-        /// <returns>ApiResponse of TransactionStatusDTO</returns>
-        ApiResponse<TransactionStatusDTO> GetTransactionStatusWithHttpInfo (string hash);
-        /// <summary>
-        /// Get transactions information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given set of transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionIds">Array of transaction ids or hashes</param>
-        /// <returns>List&lt;Object&gt;</returns>
-        List<object> GetTransactions (TransactionIds transactionIds);
-
-        /// <summary>
-        /// Get transactions information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given set of transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionIds">Array of transaction ids or hashes</param>
-        /// <returns>ApiResponse of List&lt;Object&gt;</returns>
-        ApiResponse<List<object>> GetTransactionsWithHttpInfo (TransactionIds transactionIds);
-        /// <summary>
-        /// Get transactions information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given set of transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionHashes">Array of transaction ids or hashes</param>
-        /// <returns>List&lt;TransactionStatusDTO&gt;</returns>
-        List<TransactionStatusDTO> GetTransactionsStatuses (TransactionHashes transactionHashes);
-
-        /// <summary>
-        /// Get transactions information
-        /// </summary>
-        /// <remarks>
-        /// Returns transaction information for a given set of transaction id or hash
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionHashes">Array of transaction ids or hashes</param>
-        /// <returns>ApiResponse of List&lt;TransactionStatusDTO&gt;</returns>
-        ApiResponse<List<TransactionStatusDTO>> GetTransactionsStatusesWithHttpInfo (TransactionHashes transactionHashes);
-        #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
         /// Creates cosignature transaction
@@ -184,7 +36,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>Task of Object</returns>
-        System.Threading.Tasks.Task<TransactionAnnounceResponse> AnnounceCosignatureTransactionAsync (CosignatureSignedTransactionDTO payload);
+        System.Threading.Tasks.Task<TransactionAnnounceResponse> AnnounceCosignatureTransactionAsync (CosignatureSignedTransaction payload);
 
         /// <summary>
         /// Creates cosignature transaction
@@ -195,7 +47,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TransactionAnnounceResponse>> AnnounceCosignatureTransactionAsyncWithHttpInfo (CosignatureSignedTransactionDTO payload);
+        System.Threading.Tasks.Task<ApiResponse<TransactionAnnounceResponse>> AnnounceCosignatureTransactionAsyncWithHttpInfo (CosignatureSignedTransaction payload);
         /// <summary>
         /// Creates partial transaction
         /// </summary>
@@ -268,7 +120,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of TransactionStatusDTO</returns>
-        System.Threading.Tasks.Task<TransactionStatusDTO> GetTransactionStatusAsync (string hash);
+        System.Threading.Tasks.Task<TransactionStatus> GetTransactionStatusAsync (string hash);
 
         /// <summary>
         /// Get transaction status
@@ -279,7 +131,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of ApiResponse (TransactionStatusDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TransactionStatusDTO>> GetTransactionStatusAsyncWithHttpInfo (string hash);
+        System.Threading.Tasks.Task<ApiResponse<TransactionStatus>> GetTransactionStatusAsyncWithHttpInfo (string hash);
         /// <summary>
         /// Get transactions information
         /// </summary>
@@ -289,7 +141,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionIds">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;Object&gt;</returns>
-        System.Threading.Tasks.Task<List<Transaction>> GetTransactionsAsync (TransactionIds transactionIds);
+        System.Threading.Tasks.Task<List<Transaction>> GetTransactionsAsync (JObject transactionIds);
 
         /// <summary>
         /// Get transactions information
@@ -300,7 +152,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionIds">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;Object&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetTransactionsAsyncWithHttpInfo (TransactionIds transactionIds);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetTransactionsAsyncWithHttpInfo (JObject transactionIds);
         /// <summary>
         /// Get transactions information
         /// </summary>
@@ -310,7 +162,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;TransactionStatusDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<TransactionStatusDTO>> GetTransactionsStatusesAsync (TransactionHashes transactionHashes);
+        System.Threading.Tasks.Task<List<TransactionStatus>> GetTransactionsStatusesAsync (JObject transactionHashes);
 
         /// <summary>
         /// Get transactions information
@@ -321,7 +173,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;TransactionStatusDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<TransactionStatusDTO>>> GetTransactionsStatusesAsyncWithHttpInfo (TransactionHashes transactionHashes);
+        System.Threading.Tasks.Task<ApiResponse<List<TransactionStatus>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes);
         #endregion Asynchronous Operations
     }
 
@@ -443,7 +295,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>Object</returns>
-        public object AnnounceCosignatureTransaction (CosignatureSignedTransactionDTO payload)
+        public object AnnounceCosignatureTransaction (CosignatureSignedTransaction payload)
         {
              ApiResponse<object> localVarResponse = AnnounceCosignatureTransactionWithHttpInfo(payload);
              return localVarResponse.Data;
@@ -455,7 +307,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>ApiResponse of Object</returns>
-        public ApiResponse< object > AnnounceCosignatureTransactionWithHttpInfo (CosignatureSignedTransactionDTO payload)
+        public ApiResponse< object > AnnounceCosignatureTransactionWithHttpInfo (CosignatureSignedTransaction payload)
         {
             // verify the required parameter 'payload' is set
             if (payload == null)
@@ -516,7 +368,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>Task of Object</returns>
-        public async System.Threading.Tasks.Task<TransactionAnnounceResponse> AnnounceCosignatureTransactionAsync (CosignatureSignedTransactionDTO payload)
+        public async System.Threading.Tasks.Task<TransactionAnnounceResponse> AnnounceCosignatureTransactionAsync (CosignatureSignedTransaction payload)
         {
              ApiResponse<TransactionAnnounceResponse> localVarResponse = await AnnounceCosignatureTransactionAsyncWithHttpInfo(payload);
              return localVarResponse.Data;
@@ -529,7 +381,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="payload">Transaction payload</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TransactionAnnounceResponse>> AnnounceCosignatureTransactionAsyncWithHttpInfo (CosignatureSignedTransactionDTO payload)
+        public async System.Threading.Tasks.Task<ApiResponse<TransactionAnnounceResponse>> AnnounceCosignatureTransactionAsyncWithHttpInfo (CosignatureSignedTransaction payload)
         {
             // verify the required parameter 'payload' is set
             if (payload == null)
@@ -1019,9 +871,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>TransactionStatusDTO</returns>
-        public TransactionStatusDTO GetTransactionStatus (string hash)
+        public TransactionStatus GetTransactionStatus (string hash)
         {
-             ApiResponse<TransactionStatusDTO> localVarResponse = GetTransactionStatusWithHttpInfo(hash);
+             ApiResponse<TransactionStatus> localVarResponse = GetTransactionStatusWithHttpInfo(hash);
              return localVarResponse.Data;
         }
 
@@ -1031,7 +883,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>ApiResponse of TransactionStatusDTO</returns>
-        public ApiResponse< TransactionStatusDTO > GetTransactionStatusWithHttpInfo (string hash)
+        public ApiResponse< TransactionStatus > GetTransactionStatusWithHttpInfo (string hash)
         {
             // verify the required parameter 'hash' is set
             if (hash == null)
@@ -1074,9 +926,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<TransactionStatusDTO>(localVarStatusCode,
+            return new ApiResponse<TransactionStatus>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (TransactionStatusDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(TransactionStatusDTO)));
+                (TransactionStatus) Configuration.ApiClient.Deserialize(localVarResponse, typeof(TransactionStatus)));
         }
 
         /// <summary>
@@ -1085,9 +937,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of TransactionStatusDTO</returns>
-        public async System.Threading.Tasks.Task<TransactionStatusDTO> GetTransactionStatusAsync (string hash)
+        public async System.Threading.Tasks.Task<TransactionStatus> GetTransactionStatusAsync (string hash)
         {
-             ApiResponse<TransactionStatusDTO> localVarResponse = await GetTransactionStatusAsyncWithHttpInfo(hash);
+             ApiResponse<TransactionStatus> localVarResponse = await GetTransactionStatusAsyncWithHttpInfo(hash);
              return localVarResponse.Data;
 
         }
@@ -1098,7 +950,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of ApiResponse (TransactionStatusDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TransactionStatusDTO>> GetTransactionStatusAsyncWithHttpInfo (string hash)
+        public async System.Threading.Tasks.Task<ApiResponse<TransactionStatus>> GetTransactionStatusAsyncWithHttpInfo (string hash)
         {
             // verify the required parameter 'hash' is set
             if (hash == null)
@@ -1141,91 +993,19 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<TransactionStatusDTO>(localVarStatusCode,
+            return new ApiResponse<TransactionStatus>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (TransactionStatusDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(TransactionStatusDTO)));
+                (TransactionStatus) Configuration.ApiClient.Deserialize(localVarResponse, typeof(TransactionStatus)));
         }
 
-        /// <summary>
-        /// Get transactions information Returns transaction information for a given set of transaction id or hash
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionIds">Array of transaction ids or hashes</param>
-        /// <returns>List&lt;Object&gt;</returns>
-        public List<object> GetTransactions (TransactionIds transactionIds)
-        {
-             ApiResponse<List<object>> localVarResponse = GetTransactionsWithHttpInfo(transactionIds);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get transactions information Returns transaction information for a given set of transaction id or hash
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionIds">Array of transaction ids or hashes</param>
-        /// <returns>ApiResponse of List&lt;Object&gt;</returns>
-        public ApiResponse< List<object> > GetTransactionsWithHttpInfo (TransactionIds transactionIds)
-        {
-            // verify the required parameter 'transactionIds' is set
-            if (transactionIds == null)
-                throw new ApiException(400, "Missing required parameter 'transactionIds' when calling TransactionRoutesApi->GetTransactions");
-
-            var localVarPath = "/transaction";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (transactionIds != null && transactionIds.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(transactionIds); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = transactionIds; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetTransactions", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<object>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
-        }
-
+       
         /// <summary>
         /// Get transactions information Returns transaction information for a given set of transaction id or hash
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionIds">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;Object&gt;</returns>
-        public async System.Threading.Tasks.Task<List<Transaction>> GetTransactionsAsync (TransactionIds transactionIds)
+        public async System.Threading.Tasks.Task<List<Transaction>> GetTransactionsAsync (JObject transactionIds)
         {
              ApiResponse<List<object>> localVarResponse = await GetTransactionsAsyncWithHttpInfo(transactionIds);
              return localVarResponse.Data.Select(e => new TransactionMapping().Apply(e.ToString())).ToList();
@@ -1238,7 +1018,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionIds">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;Object&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetTransactionsAsyncWithHttpInfo (TransactionIds transactionIds)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetTransactionsAsyncWithHttpInfo (JObject transactionIds)
         {
             // verify the required parameter 'transactionIds' is set
             if (transactionIds == null)
@@ -1293,88 +1073,16 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
-        /// <summary>
-        /// Get transactions information Returns transaction information for a given set of transaction id or hash
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionHashes">Array of transaction ids or hashes</param>
-        /// <returns>List&lt;TransactionStatusDTO&gt;</returns>
-        public List<TransactionStatusDTO> GetTransactionsStatuses (TransactionHashes transactionHashes)
-        {
-             ApiResponse<List<TransactionStatusDTO>> localVarResponse = GetTransactionsStatusesWithHttpInfo(transactionHashes);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get transactions information Returns transaction information for a given set of transaction id or hash
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="transactionHashes">Array of transaction ids or hashes</param>
-        /// <returns>ApiResponse of List&lt;TransactionStatusDTO&gt;</returns>
-        public ApiResponse< List<TransactionStatusDTO> > GetTransactionsStatusesWithHttpInfo (TransactionHashes transactionHashes)
-        {
-            // verify the required parameter 'transactionHashes' is set
-            if (transactionHashes == null)
-                throw new ApiException(400, "Missing required parameter 'transactionHashes' when calling TransactionRoutesApi->GetTransactionsStatuses");
-
-            var localVarPath = "/transaction/statuses";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (transactionHashes != null && transactionHashes.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(transactionHashes); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = transactionHashes; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetTransactionsStatuses", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<TransactionStatusDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<TransactionStatusDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<TransactionStatusDTO>)));
-        }
-
+       
         /// <summary>
         /// Get transactions information Returns transaction information for a given set of transaction id or hash
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;TransactionStatusDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<TransactionStatusDTO>> GetTransactionsStatusesAsync (TransactionHashes transactionHashes)
+        public async System.Threading.Tasks.Task<List<TransactionStatus>> GetTransactionsStatusesAsync (JObject transactionHashes)
         {
-             ApiResponse<List<TransactionStatusDTO>> localVarResponse = await GetTransactionsStatusesAsyncWithHttpInfo(transactionHashes);
+             ApiResponse<List<TransactionStatus>> localVarResponse = await GetTransactionsStatusesAsyncWithHttpInfo(transactionHashes);
              return localVarResponse.Data;
 
         }
@@ -1385,7 +1093,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;TransactionStatusDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<TransactionStatusDTO>>> GetTransactionsStatusesAsyncWithHttpInfo (TransactionHashes transactionHashes)
+        public async System.Threading.Tasks.Task<ApiResponse<List<TransactionStatus>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes)
         {
             // verify the required parameter 'transactionHashes' is set
             if (transactionHashes == null)
@@ -1435,9 +1143,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<TransactionStatusDTO>>(localVarStatusCode,
+            return new ApiResponse<List<TransactionStatus>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<TransactionStatusDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<TransactionStatusDTO>)));
+                (List<TransactionStatus>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<TransactionStatus>)));
         }
 
     }

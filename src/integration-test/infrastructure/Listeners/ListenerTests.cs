@@ -39,7 +39,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             var block = await listener.NewBlock().Take(1);
             
-            Assert.AreEqual(36867, block.Version);
+            Assert.AreEqual(3, block.Version);
         }
 
         [TestMethod, Timeout(20000)]
@@ -55,13 +55,13 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             var result = await tx;
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Signer.PublicKey);
+            Assert.AreEqual("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", result.Signer.PublicKey);
         }
 
-        //[TestMethod, Timeout(20000)]
+        [TestMethod, Timeout(40000)]
         public async Task ListenForPartialTransactionAdded()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var aggregateTransaction = AggregateTransaction.CreateBonded(
                 NetworkType.Types.MIJIN_TEST,
@@ -74,7 +74,7 @@ namespace IntegrationTests.Infrastructure.Listeners
             ).SignWith(keyPair);
 
             var hashLock = LockFundsTransaction.Create(NetworkType.Types.MIJIN_TEST, Deadline.CreateHours(2), 0, duration: 10000, mosaic: new Mosaic(new MosaicId("nem:xem"), 10000000), transaction: aggregateTransaction)
-                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain));
+                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1));
 
            await new TransactionHttp("http://" + Config.Domain + ":3000").Announce(hashLock);
 
@@ -94,7 +94,7 @@ namespace IntegrationTests.Infrastructure.Listeners
                NetworkType.Types.MIJIN_TEST)
            ).Take(1);
 
-           Assert.AreEqual("10CC07742437C205D9A0BC0434DC5B4879E002114753DE70CDC4C4BD0D93A64A", result.Signer);
+           Assert.AreEqual("E7E2B3BD88301718FA0AB4F10FC49AD8E547C8150F94817C84C56AC6A3BEF648", result.Signer.PublicKey);
         }
 
 
@@ -126,7 +126,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             var result = await tx;
 
-            Assert.AreEqual("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", result.Signer.PublicKey);
+            Assert.AreEqual("D49C902E2FBAC09AF732D0A10DB8481E41C8D71B12B76D04DCC2869C1E549779", result.Signer.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]

@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
 {
@@ -102,7 +103,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <param name="signedTransaction">The signed transaction.</param>
         /// <returns>IObservable&lt;TransactionAnnounceResponse&gt;.</returns>
         /// <exception cref="ArgumentNullException">signedTransaction</exception>
-        public IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignature(CosignatureSignedTransactionDTO signedTransaction)
+        public IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignature(CosignatureSignedTransaction signedTransaction)
         {
             if (signedTransaction == null) throw new ArgumentNullException(nameof(signedTransaction));
 
@@ -127,16 +128,19 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <summary>
         /// Gets the transactions.
         /// </summary>
-        /// <param name="transactionId">The transaction identifier.</param>
+        /// <param name="transactionIds">The transaction identifier.</param>
         /// <returns>IObservable&lt;List&lt;Transaction&gt;&gt;.</returns>
         /// <exception cref="ArgumentNullException">transactionId</exception>
         /// <exception cref="ArgumentException">Collection contains one or more invalid ids.</exception>
-        public IObservable<List<Transaction>> GetTransactions(TransactionIds transactionId)
+        public IObservable<List<Transaction>> GetTransactions(List<string> transactionIds)
         {
-            if (transactionId == null) throw new ArgumentNullException(nameof(transactionId));
-            if (transactionId.transactionIds.Any(hash => hash.Length != 24 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains one or more invalid ids.");
+            if (transactionIds == null) throw new ArgumentNullException(nameof(transactionIds));
+            if (transactionIds.Any(hash => hash.Length != 24 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains one or more invalid ids.");
 
-            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsAsync(transactionId));
+            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsAsync(JObject.FromObject(new
+            {
+                transactionIds = transactionIds.Select(i => i)
+            })));
         }
 
         /// <summary>
@@ -147,7 +151,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <exception cref="ArgumentException">Value cannot be null or empty. - hash
         /// or
         /// Invalid hash.</exception>
-        public IObservable<TransactionStatusDTO> GetTransactionStatus(string hash)
+        public IObservable<TransactionStatus> GetTransactionStatus(string hash)
         {
             if (string.IsNullOrEmpty(hash)) throw new ArgumentException("Value cannot be null or empty.", nameof(hash));
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");        
@@ -162,12 +166,15 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>IObservable&lt;List&lt;TransactionStatusDTO&gt;&gt;.</returns>
         /// <exception cref="ArgumentNullException">hashes</exception>
         /// <exception cref="ArgumentException">Collection contains one or more invalid hashes.</exception>
-        public IObservable<List<TransactionStatusDTO>> GetTransactionStatuses(TransactionHashes hashes)
+        public IObservable<List<TransactionStatus>> GetTransactionStatuses(List<string> hashes)
         {
             if (hashes == null) throw new ArgumentNullException(nameof(hashes));
-            if (hashes.hashes.Any(hash => hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains one or more invalid hashes.");
+            if (hashes.Any(hash => hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z"))) throw new ArgumentException("Collection contains one or more invalid hashes.");
 
-            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsStatusesAsync(hashes));
+            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsStatusesAsync(JObject.FromObject(new
+            {
+                hashes = hashes.Select(i => i)
+            })));
         }
     }
 }

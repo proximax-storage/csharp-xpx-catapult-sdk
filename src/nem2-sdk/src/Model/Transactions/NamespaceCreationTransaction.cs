@@ -100,7 +100,7 @@ namespace io.nem2.sdk.Model.Transactions
         /// <exception cref="ArgumentNullException">parentId</exception>
         /// <exception cref="InvalidEnumArgumentException">type</exception>
         /// <exception cref="ArgumentOutOfRangeException">namespaceType</exception>
-        public RegisterNamespaceTransaction(NetworkType.Types type, int version, Deadline deadline, ulong fee, byte namespaceType, ulong duration, NamespaceId parentId, NamespaceId namespaceName, PublicAccount signer, string signature, TransactionInfo transactionInfo)
+        public RegisterNamespaceTransaction(NetworkType.Types type, int version, Deadline deadline, ulong fee, byte namespaceType, ulong duration, NamespaceId parentId, NamespaceId namespaceName, string signature, PublicAccount signer,  TransactionInfo transactionInfo)
         {
             if (parentId == null && namespaceName == null) throw new ArgumentNullException(nameof(parentId) + " and " + nameof(namespaceName) + " cannot both be null");
             if (!Enum.IsDefined(typeof(NetworkType.Types), type)) throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(NetworkType.Types));

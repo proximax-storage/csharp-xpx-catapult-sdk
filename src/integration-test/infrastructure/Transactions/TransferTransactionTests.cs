@@ -44,7 +44,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task AnnounceTransaction(ulong amount = 10)
         {
             var keyPair =
-                KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+                KeyPair.CreateFromPrivateKey(Config.PrivateKeyTransfer);
 
             var transaction =  TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
@@ -57,18 +57,18 @@ namespace IntegrationTests.Infrastructure.Transactions
              await new TransactionHttp("http://" + Config.Domain + ":3000").Announce(transaction);
         }
 
-        [TestMethod, Timeout(20000)]
+        [TestMethod, Timeout(40000)]
         public async Task AnnounceTransferTransactionWithMosaicWithMessage()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyTransfer);
 
-            var account = new Account("E45030D2A22D97FDC4C78923C4BBF7602BBAC3B018FFAD2ED278FB49CD6F218C", NetworkType.Types.MIJIN_TEST);
+            var account = new Account(Config.PrivateKeyTransfer, NetworkType.Types.MIJIN_TEST);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
                 account.Address,
-                new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", 100000000000) },
+                new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", 1000000) },
                 PlainMessage.Create("hello")
             ).SignWith(keyPair);
 
@@ -88,14 +88,14 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task AnnounceTransferTransactionWithMosaicWithSecureMessage()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
                 Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                 new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", 10) },
-                SecureMessage.Create("hello2", Config.PrivateKeyMain, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
+                SecureMessage.Create("hello2", Config.PrivateKeyAggregate1, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
                 ).SignWith(keyPair);
 
             await new TransactionHttp("http://" + Config.Domain + ":3000").Announce(transaction);
@@ -112,7 +112,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task AnnounceTransferTransactionWithMultipleMosaicsWithSecureMessage()
         {
             var keyPair =
-                KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+                KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
@@ -120,8 +120,9 @@ namespace IntegrationTests.Infrastructure.Transactions
                 Address.CreateFromEncoded("SAOV4Y5W627UXLIYS5O43SVU23DD6VNRCFP222P2"),
                 new List<Mosaic>()
                 {
-                    Mosaic.CreateFromIdentifier("nem:xem", 1000000000000),
-                    //Mosaic.CreateFromIdentifier("happy:test2", 10),
+                    Mosaic.CreateFromIdentifier("happy:test4", 10),
+                    Mosaic.CreateFromIdentifier("nem:xem", 100),
+                    
                 },
                 SecureMessage.Create("hello2", Config.PrivateKeyMain, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
                 
@@ -138,7 +139,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task AnnounceTransferTransactionWithMultipleMosaicsWithoutMessage()
         {
             var keyPair =
-                KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+                KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,

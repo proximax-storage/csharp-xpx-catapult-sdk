@@ -30,7 +30,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task SecretProofTransactionTest()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var secretHash = new byte[64];
 
@@ -47,8 +47,8 @@ namespace IntegrationTests.Infrastructure.Transactions
                     "5D8BEBBE80D7EA3B0088E59308D8671099781429")
                 .SignWith(signer);
 
-            listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(signer.PublicKeyString,
-                NetworkType.Types.MIJIN_TEST)).Subscribe(e => Console.WriteLine(e.TransactionInfo.Hash));
+            listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(signer.PublicKeyString, NetworkType.Types.MIJIN_TEST))
+                .Subscribe(e => Console.WriteLine(e.TransactionInfo.Hash));
 
             await new TransactionHttp(host).Announce(trans);
 

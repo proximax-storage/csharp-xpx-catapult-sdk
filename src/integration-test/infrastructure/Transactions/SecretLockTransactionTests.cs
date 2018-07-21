@@ -30,7 +30,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task SecretLockTransactionTest()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var secretHash = new byte[64];
 
@@ -55,7 +55,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .Subscribe(
                     e =>
                     {
-                        Assert.Fail("Success");
+                        Console.WriteLine("Success");
                     });
 
             await new TransactionHttp(host).Announce(transaction);

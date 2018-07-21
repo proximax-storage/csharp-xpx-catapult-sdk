@@ -43,19 +43,19 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(40000)]
         public async Task AggregateNamespaceRentalExtensionShouldSucceed()
         {
-            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var signer = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction = RegisterNamespaceTransaction.CreateRootNamespace(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
                 "happy",
                 10000)
-                .ToAggregate(PublicAccount.CreateFromPublicKey("B974668ABED344BE9C35EE257ACC246117EFFED939EAF42391AE995912F985FE", NetworkType.Types.MIJIN_TEST));
+                .ToAggregate(PublicAccount.CreateFromPublicKey(signer.PublicKeyString, NetworkType.Types.MIJIN_TEST));
 
             var agg = AggregateTransaction.CreateComplete(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2), 
-                new List<Transaction>() {transaction})
+                new List<Transaction>() {transaction})            
                 .SignWith(signer);
 
             await new TransactionHttp(host).Announce(agg);
@@ -76,7 +76,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         public async Task ShouldFailSubNamespaceExists()
         {
             var signer =
-                KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+                KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
             var transaction =  RegisterNamespaceTransaction.CreateSubNamespace(
                 NetworkType.Types.MIJIN_TEST,
@@ -89,7 +89,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .Subscribe(
                     e =>
                     {
-                        Assert.Fail("Success");
+                        Console.WriteLine("Success");
                     });
 
             await new TransactionHttp(host).Announce(transaction);

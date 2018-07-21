@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -23,92 +23,6 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
     /// </summary>
     internal interface IMosaicRoutesApi : IApiAccessor
     {
-        #region Synchronous Operations
-        /// <summary>
-        /// Get mosaic information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given mosaicId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
-        /// <returns>MosaicInfoDTO</returns>
-        MosaicInfoDTO GetMosaic (string mosaicId);
-
-        /// <summary>
-        /// Get mosaic information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given mosaicId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
-        /// <returns>ApiResponse of MosaicInfoDTO</returns>
-        ApiResponse<MosaicInfoDTO> GetMosaicWithHttpInfo (string mosaicId);
-        /// <summary>
-        /// Get information for a set of mosaics
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given set of mosaicIds
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>List&lt;MosaicInfoDTO&gt;</returns>
-        List<MosaicInfoDTO> GetMosaics (MosaicIds mosaicIds);
-
-        /// <summary>
-        /// Get information for a set of mosaics
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given set of mosaicIds
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>ApiResponse of List&lt;MosaicInfoDTO&gt;</returns>
-        ApiResponse<List<MosaicInfoDTO>> GetMosaicsWithHttpInfo (MosaicIds mosaicIds);
-        /// <summary>
-        /// Get mosaics information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given namespaceId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
-        /// <returns>List&lt;MosaicInfoDTO&gt;</returns>
-        List<MosaicInfoDTO> GetMosaicsFromNamespace (string namespaceId);
-
-        /// <summary>
-        /// Get mosaics information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given namespaceId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
-        /// <returns>ApiResponse of List&lt;MosaicInfoDTO&gt;</returns>
-        ApiResponse<List<MosaicInfoDTO>> GetMosaicsFromNamespaceWithHttpInfo (string namespaceId);
-        /// <summary>
-        /// Get readable names for a set of mosaics
-        /// </summary>
-        /// <remarks>
-        /// Returns names for mosaics
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>List&lt;MosaicNameDTO&gt;</returns>
-        MosaicNameDTO[] GetMosaicsName (MosaicIds mosaicIds);
-
-        /// <summary>
-        /// Get readable names for a set of mosaics
-        /// </summary>
-        /// <remarks>
-        /// Returns names for mosaics
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>ApiResponse of List&lt;MosaicNameDTO&gt;</returns>
-        ApiResponse<MosaicNameDTO[]> GetMosaicsNameWithHttpInfo (MosaicIds mosaicIds);
-        #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
         /// Get mosaic information
@@ -119,7 +33,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
         /// <returns>Task of MosaicInfoDTO</returns>
-        System.Threading.Tasks.Task<MosaicInfoDTO> GetMosaicAsync (string mosaicId);
+        System.Threading.Tasks.Task<JObject> GetMosaicAsync (string mosaicId);
 
         /// <summary>
         /// Get mosaic information
@@ -130,7 +44,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
         /// <returns>Task of ApiResponse (MosaicInfoDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MosaicInfoDTO>> GetMosaicAsyncWithHttpInfo (string mosaicId);
+        System.Threading.Tasks.Task<ApiResponse<object>> GetMosaicAsyncWithHttpInfo (string mosaicId);
         /// <summary>
         /// Get information for a set of mosaics
         /// </summary>
@@ -140,7 +54,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of List&lt;MosaicInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<MosaicInfoDTO>> GetMosaicsAsync (MosaicIds mosaicIds);
+        System.Threading.Tasks.Task<List<JObject>> GetMosaicsAsync (JObject mosaicIds);
 
         /// <summary>
         /// Get information for a set of mosaics
@@ -151,7 +65,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<MosaicInfoDTO>>> GetMosaicsAsyncWithHttpInfo (MosaicIds mosaicIds);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsAsyncWithHttpInfo (JObject mosaicIds);
         /// <summary>
         /// Get mosaics information
         /// </summary>
@@ -161,7 +75,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
         /// <returns>Task of List&lt;MosaicInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<MosaicInfoDTO>> GetMosaicsFromNamespaceAsync (string namespaceId);
+        System.Threading.Tasks.Task<List<JObject>> GetMosaicsFromNamespaceAsync (string namespaceId);
 
         /// <summary>
         /// Get mosaics information
@@ -172,7 +86,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<MosaicInfoDTO>>> GetMosaicsFromNamespaceAsyncWithHttpInfo (string namespaceId);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsFromNamespaceAsyncWithHttpInfo (string namespaceId);
         /// <summary>
         /// Get readable names for a set of mosaics
         /// </summary>
@@ -182,10 +96,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of List&lt;MosaicNameDTO&gt;</returns>
-        System.Threading.Tasks.Task<MosaicNameDTO[]> GetMosaicsNameAsync (MosaicIds mosaicIds);
+        System.Threading.Tasks.Task<List<JObject>> GetMosaicsNameAsync (JObject mosaicIds);
 
         /// <summary>
-        /// Get readable names for a set of mosaics
+        /// Get readable names for a set of mosadics
         /// </summary>
         /// <remarks>
         /// Returns names for mosaics
@@ -193,7 +107,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicNameDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MosaicNameDTO[]>> GetMosaicsNameAsyncWithHttpInfo (MosaicIds mosaicIds);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsNameAsyncWithHttpInfo (JObject mosaicIds);
         #endregion Asynchronous Operations
     }
 
@@ -314,78 +228,12 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
-        /// <returns>MosaicInfoDTO</returns>
-        public MosaicInfoDTO GetMosaic (string mosaicId)
-        {
-             ApiResponse<MosaicInfoDTO> localVarResponse = GetMosaicWithHttpInfo(mosaicId);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get mosaic information Returns information for a given mosaicId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
-        /// <returns>ApiResponse of MosaicInfoDTO</returns>
-        public ApiResponse< MosaicInfoDTO > GetMosaicWithHttpInfo (string mosaicId)
-        {
-            // verify the required parameter 'mosaicId' is set
-            if (mosaicId == null)
-                throw new ApiException(400, "Missing required parameter 'mosaicId' when calling MosaicRoutesApi->GetMosaic");
-
-            var localVarPath = "/mosaic/{mosaicId}";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (mosaicId != null) localVarPathParams.Add("mosaicId", Configuration.ApiClient.ParameterToString(mosaicId)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetMosaic", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<MosaicInfoDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (MosaicInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(MosaicInfoDTO)));
-        }
-
-        /// <summary>
-        /// Get mosaic information Returns information for a given mosaicId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
         /// <returns>Task of MosaicInfoDTO</returns>
-        public async System.Threading.Tasks.Task<MosaicInfoDTO> GetMosaicAsync (string mosaicId)
+        public async System.Threading.Tasks.Task<JObject> GetMosaicAsync (string mosaicId)
         {
-             ApiResponse<MosaicInfoDTO> localVarResponse = await GetMosaicAsyncWithHttpInfo(mosaicId);
+             ApiResponse<object> localVarResponse = await GetMosaicAsyncWithHttpInfo(mosaicId);
 
-             return localVarResponse.Data;
+             return JObject.Parse(localVarResponse.Data.ToString());
 
         }
 
@@ -395,7 +243,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicId">The mosaic id for which information should be retreived</param>
         /// <returns>Task of ApiResponse (MosaicInfoDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<MosaicInfoDTO>> GetMosaicAsyncWithHttpInfo (string mosaicId)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> GetMosaicAsyncWithHttpInfo (string mosaicId)
         {
             // verify the required parameter 'mosaicId' is set
             if (mosaicId == null)
@@ -438,94 +286,22 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<MosaicInfoDTO>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (MosaicInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(MosaicInfoDTO)));
+                (object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
-        /// <summary>
-        /// Get information for a set of mosaics Returns information for a given set of mosaicIds
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>List&lt;MosaicInfoDTO&gt;</returns>
-        public List<MosaicInfoDTO> GetMosaics (MosaicIds mosaicIds)
-        {
-             ApiResponse<List<MosaicInfoDTO>> localVarResponse = GetMosaicsWithHttpInfo(mosaicIds);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get information for a set of mosaics Returns information for a given set of mosaicIds
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>ApiResponse of List&lt;MosaicInfoDTO&gt;</returns>
-        public ApiResponse< List<MosaicInfoDTO> > GetMosaicsWithHttpInfo (MosaicIds mosaicIds)
-        {
-            // verify the required parameter 'mosaicIds' is set
-            if (mosaicIds == null)
-                throw new ApiException(400, "Missing required parameter 'mosaicIds' when calling MosaicRoutesApi->GetMosaics");
-
-            var localVarPath = "/mosaic";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (mosaicIds != null && mosaicIds.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(mosaicIds); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = mosaicIds; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetMosaics", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<MosaicInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<MosaicInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<MosaicInfoDTO>)));
-        }
-
+     
         /// <summary>
         /// Get information for a set of mosaics Returns information for a given set of mosaicIds
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of List&lt;MosaicInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<MosaicInfoDTO>> GetMosaicsAsync (MosaicIds mosaicIds)
+        public async System.Threading.Tasks.Task<List<JObject>> GetMosaicsAsync(JObject mosaicIds)
         {
-             ApiResponse<List<MosaicInfoDTO>> localVarResponse = await GetMosaicsAsyncWithHttpInfo(mosaicIds);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetMosaicsAsyncWithHttpInfo(mosaicIds);
+            return localVarResponse.Data.ToList().Select(i => JObject.Parse(i.ToString())).ToList();
 
         }
 
@@ -535,7 +311,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<MosaicInfoDTO>>> GetMosaicsAsyncWithHttpInfo (MosaicIds mosaicIds)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsAsyncWithHttpInfo (JObject mosaicIds)
         {
             // verify the required parameter 'mosaicIds' is set
             if (mosaicIds == null)
@@ -585,75 +361,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<MosaicInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<MosaicInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<MosaicInfoDTO>)));
-        }
-
-        /// <summary>
-        /// Get mosaics information Returns information for a given namespaceId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
-        /// <returns>List&lt;MosaicInfoDTO&gt;</returns>
-        public List<MosaicInfoDTO> GetMosaicsFromNamespace (string namespaceId)
-        {
-             ApiResponse<List<MosaicInfoDTO>> localVarResponse = GetMosaicsFromNamespaceWithHttpInfo(namespaceId);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get mosaics information Returns information for a given namespaceId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
-        /// <returns>ApiResponse of List&lt;MosaicInfoDTO&gt;</returns>
-        public ApiResponse< List<MosaicInfoDTO> > GetMosaicsFromNamespaceWithHttpInfo (string namespaceId)
-        {
-            // verify the required parameter 'namespaceId' is set
-            if (namespaceId == null)
-                throw new ApiException(400, "Missing required parameter 'namespaceId' when calling MosaicRoutesApi->GetMosaicsFromNamespace");
-
-            var localVarPath = "/namespace/{namespaceId}/mosaics";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (namespaceId != null) localVarPathParams.Add("namespaceId", Configuration.ApiClient.ParameterToString(namespaceId)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetMosaicsFromNamespace", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<MosaicInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<MosaicInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<MosaicInfoDTO>)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
         /// <summary>
@@ -662,10 +372,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
         /// <returns>Task of List&lt;MosaicInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<MosaicInfoDTO>> GetMosaicsFromNamespaceAsync (string namespaceId)
+        public async System.Threading.Tasks.Task<List<JObject>> GetMosaicsFromNamespaceAsync(string namespaceId)
         {
-             ApiResponse<List<MosaicInfoDTO>> localVarResponse = await GetMosaicsFromNamespaceAsyncWithHttpInfo(namespaceId);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetMosaicsFromNamespaceAsyncWithHttpInfo(namespaceId);
+             return localVarResponse.Data.ToList().Select(i => JObject.Parse(i.ToString())).ToList();
 
         }
 
@@ -675,7 +385,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which mosaics information should be retreived</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<MosaicInfoDTO>>> GetMosaicsFromNamespaceAsyncWithHttpInfo (string namespaceId)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsFromNamespaceAsyncWithHttpInfo (string namespaceId)
         {
             // verify the required parameter 'namespaceId' is set
             if (namespaceId == null)
@@ -718,82 +428,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<MosaicInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<MosaicInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<MosaicInfoDTO>)));
-        }
-
-        /// <summary>
-        /// Get readable names for a set of mosaics Returns names for mosaics
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>List&lt;MosaicNameDTO&gt;</returns>
-        public MosaicNameDTO[] GetMosaicsName (MosaicIds mosaicIds)
-        {
-             ApiResponse<MosaicNameDTO[]> localVarResponse = GetMosaicsNameWithHttpInfo(mosaicIds);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get readable names for a set of mosaics Returns names for mosaics
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="mosaicIds">Array of mosaicIds</param>
-        /// <returns>ApiResponse of List&lt;MosaicNameDTO&gt;</returns>
-        public ApiResponse< MosaicNameDTO[] > GetMosaicsNameWithHttpInfo (MosaicIds mosaicIds)
-        {
-            // verify the required parameter 'mosaicIds' is set
-            if (mosaicIds == null)
-                throw new ApiException(400, "Missing required parameter 'mosaicIds' when calling MosaicRoutesApi->GetMosaicsName");
-
-            var localVarPath = "/mosaic/names";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (mosaicIds != null && mosaicIds.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(mosaicIds); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = mosaicIds; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetMosaicsName", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<MosaicNameDTO[]>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (MosaicNameDTO[]) Configuration.ApiClient.Deserialize(localVarResponse, typeof(MosaicNameDTO[])));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
         /// <summary>
@@ -802,10 +439,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of List&lt;MosaicNameDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<MosaicNameDTO[]> GetMosaicsNameAsync (MosaicIds mosaicIds)
+        public async System.Threading.Tasks.Task<List<JObject>> GetMosaicsNameAsync (JObject mosaicIds)
         {
-             ApiResponse<MosaicNameDTO[]> localVarResponse = await GetMosaicsNameAsyncWithHttpInfo(mosaicIds);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetMosaicsNameAsyncWithHttpInfo(mosaicIds);
+             return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList();
 
         }
 
@@ -815,7 +452,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="mosaicIds">Array of mosaicIds</param>
         /// <returns>Task of ApiResponse (List&lt;MosaicNameDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<MosaicNameDTO[]>> GetMosaicsNameAsyncWithHttpInfo (MosaicIds mosaicIds)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetMosaicsNameAsyncWithHttpInfo (JObject mosaicIds)
         {
             // verify the required parameter 'mosaicIds' is set
             if (mosaicIds == null)
@@ -865,9 +502,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<MosaicNameDTO[]>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (MosaicNameDTO[]) Configuration.ApiClient.Deserialize(localVarResponse, typeof(MosaicNameDTO[])));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
     }

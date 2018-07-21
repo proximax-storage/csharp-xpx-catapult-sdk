@@ -11,9 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Imported.Api.Client;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace io.nem2.sdk.Infrastructure.Imported.Api
@@ -23,92 +23,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
     /// </summary>
     internal interface INamespaceRoutesApi : IApiAccessor
     {
-        #region Synchronous Operations
-        /// <summary>
-        /// Get namespace information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given namespaceId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which information should be retreived</param>
-        /// <returns>NamespaceInfoDTO</returns>
-        NamespaceInfoDTO GetNamespace (string namespaceId);
-
-        /// <summary>
-        /// Get namespace information
-        /// </summary>
-        /// <remarks>
-        /// Returns information for a given namespaceId
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which information should be retreived</param>
-        /// <returns>ApiResponse of NamespaceInfoDTO</returns>
-        ApiResponse<NamespaceInfoDTO> GetNamespaceWithHttpInfo (string namespaceId);
-        /// <summary>
-        /// Get namespaces an account owns
-        /// </summary>
-        /// <remarks>
-        /// Returns information about the namespaces an account owns
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
-        /// <returns>List&lt;NamespaceInfoDTO&gt;</returns>
-        List<NamespaceInfoDTO> GetNamespacesFromAccount (string publicKey, int? pageSize = null, string id = null);
-
-        /// <summary>
-        /// Get namespaces an account owns
-        /// </summary>
-        /// <remarks>
-        /// Returns information about the namespaces an account owns
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
-        /// <returns>ApiResponse of List&lt;NamespaceInfoDTO&gt;</returns>
-        ApiResponse<List<NamespaceInfoDTO>> GetNamespacesFromAccountWithHttpInfo (string publicKey, int? pageSize = null, string id = null);
-        /// <summary>
-        /// Get namespaces information
-        /// </summary>
-        /// <remarks>
-        /// Returns namespaces information for a given set of publicKeys
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKeys">Accounts public key array</param>
-        /// <returns>List&lt;NamespaceInfoDTO&gt;</returns>
-        List<NamespaceInfoDTO> GetNamespacesFromAccounts (PublicKeysDTO publicKeys, int? pageSize = null, string id = null);
-
-        /// <summary>
-        /// Get namespaces information
-        /// </summary>
-        /// <remarks>
-        /// Returns namespaces information for a given set of publicKeys
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKeys">Accounts public key array</param>
-        /// <returns>ApiResponse of List&lt;NamespaceInfoDTO&gt;</returns>
-        ApiResponse<List<NamespaceInfoDTO>> GetNamespacesFromAccountsWithHttpInfo (PublicKeysDTO publicKeys, int? pageSize = null, string id = null);
-        /// <summary>
-        /// Get readable names for a set of namespaces
-        /// </summary>
-        /// <remarks>
-        /// Returns names for namespaces
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceIds">Array of namespaceIds</param>
-        /// <returns>List&lt;NamespaceNameDTO&gt;</returns>
-        List<NamespaceNameDTO> GetNamespacesNames (NamespaceIds namespaceIds);
-
-        /// <summary>
-        /// Get readable names for a set of namespaces
-        /// </summary>
-        /// <remarks>
-        /// Returns names for namespaces
-        /// </remarks>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceIds">Array of namespaceIds</param>
-        /// <returns>ApiResponse of List&lt;NamespaceNameDTO&gt;</returns>
-        ApiResponse<List<NamespaceNameDTO>> GetNamespacesNamesWithHttpInfo (NamespaceIds namespaceIds);
-        #endregion Synchronous Operations
+        
         #region Asynchronous Operations
         /// <summary>
         /// Get namespace information
@@ -119,7 +34,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which information should be retreived</param>
         /// <returns>Task of NamespaceInfoDTO</returns>
-        System.Threading.Tasks.Task<NamespaceInfoDTO> GetNamespaceAsync (string namespaceId);
+        System.Threading.Tasks.Task<JObject> GetNamespaceAsync (string namespaceId);
 
         /// <summary>
         /// Get namespace information
@@ -130,7 +45,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which information should be retreived</param>
         /// <returns>Task of ApiResponse (NamespaceInfoDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<NamespaceInfoDTO>> GetNamespaceAsyncWithHttpInfo (string namespaceId);
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetNamespaceAsyncWithHttpInfo (string namespaceId);
         /// <summary>
         /// Get namespaces an account owns
         /// </summary>
@@ -140,7 +55,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
         /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<NamespaceInfoDTO>> GetNamespacesFromAccountAsync (string publicKey, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<List<JObject>> GetNamespacesFromAccountAsync (string publicKey, int? pageSize = null, string id = null);
 
         /// <summary>
         /// Get namespaces an account owns
@@ -151,7 +66,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<NamespaceInfoDTO>>> GetNamespacesFromAccountAsyncWithHttpInfo (string publicKey, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesFromAccountAsyncWithHttpInfo (string publicKey, int? pageSize = null, string id = null);
         /// <summary>
         /// Get namespaces information
         /// </summary>
@@ -161,7 +76,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKeys">Accounts public key array</param>
         /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<NamespaceInfoDTO>> GetNamespacesFromAccountsAsync (PublicKeysDTO publicKeys, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<List<JObject>> GetNamespacesFromAccountsAsync (JArray publicKeys, int? pageSize = null, string id = null);
 
         /// <summary>
         /// Get namespaces information
@@ -172,7 +87,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKeys">Accounts public key array</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceInfoDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<NamespaceInfoDTO>>> GetNamespacesFromAccountsAsyncWithHttpInfo (PublicKeysDTO publicKeys, int? pageSize = null, string id = null);
+        System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesFromAccountsAsyncWithHttpInfo (JArray publicKeys, int? pageSize = null, string id = null);
         /// <summary>
         /// Get readable names for a set of namespaces
         /// </summary>
@@ -182,7 +97,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceIds">Array of namespaceIds</param>
         /// <returns>Task of List&lt;NamespaceNameDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<NamespaceNameDTO>> GetNamespacesNamesAsync (NamespaceIds namespaceIds);
+        System.Threading.Tasks.Task<List<JObject>> GetNamespacesNamesAsync (JObject namespaceIds);
 
         /// <summary>
         /// Get readable names for a set of namespaces
@@ -193,7 +108,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceIds">Array of namespaceIds</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceNameDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<NamespaceNameDTO>>> GetNamespacesNamesAsyncWithHttpInfo (NamespaceIds namespaceIds);
+        System.Threading.Tasks.Task<ApiResponse<List<Object>>> GetNamespacesNamesAsyncWithHttpInfo (JObject namespaceIds);
         #endregion Asynchronous Operations
     }
 
@@ -309,71 +224,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
             Configuration.AddDefaultHeader(key, value);
         }
 
-        /// <summary>
-        /// Get namespace information Returns information for a given namespaceId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which information should be retreived</param>
-        /// <returns>NamespaceInfoDTO</returns>
-        public NamespaceInfoDTO GetNamespace (string namespaceId)
-        {
-             ApiResponse<NamespaceInfoDTO> localVarResponse = GetNamespaceWithHttpInfo(namespaceId);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get namespace information Returns information for a given namespaceId
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceId">The namespace id for which information should be retreived</param>
-        /// <returns>ApiResponse of NamespaceInfoDTO</returns>
-        public ApiResponse< NamespaceInfoDTO > GetNamespaceWithHttpInfo (string namespaceId)
-        {
-            // verify the required parameter 'namespaceId' is set
-            if (namespaceId == null)
-                throw new ApiException(400, "Missing required parameter 'namespaceId' when calling NamespaceRoutesApi->GetNamespace");
-
-            var localVarPath = "/namespace/{namespaceId}";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (namespaceId != null) localVarPathParams.Add("namespaceId", Configuration.ApiClient.ParameterToString(namespaceId)); // path parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetNamespace", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<NamespaceInfoDTO>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (NamespaceInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(NamespaceInfoDTO)));
-        }
+       
 
         /// <summary>
         /// Get namespace information Returns information for a given namespaceId
@@ -381,9 +232,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which information should be retreived</param>
         /// <returns>Task of NamespaceInfoDTO</returns>
-        public async System.Threading.Tasks.Task<NamespaceInfoDTO> GetNamespaceAsync (string namespaceId)
+        public async System.Threading.Tasks.Task<JObject> GetNamespaceAsync (string namespaceId)
         {
-             ApiResponse<NamespaceInfoDTO> localVarResponse = await GetNamespaceAsyncWithHttpInfo(namespaceId);
+             ApiResponse<JObject> localVarResponse = await GetNamespaceAsyncWithHttpInfo(namespaceId);
              return localVarResponse.Data;
 
         }
@@ -394,7 +245,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceId">The namespace id for which information should be retreived</param>
         /// <returns>Task of ApiResponse (NamespaceInfoDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<NamespaceInfoDTO>> GetNamespaceAsyncWithHttpInfo (string namespaceId)
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetNamespaceAsyncWithHttpInfo (string namespaceId)
         {
             // verify the required parameter 'namespaceId' is set
             if (namespaceId == null)
@@ -437,77 +288,12 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<NamespaceInfoDTO>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (NamespaceInfoDTO) Configuration.ApiClient.Deserialize(localVarResponse, typeof(NamespaceInfoDTO)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
-        /// <summary>
-        /// Get namespaces an account owns Returns information about the namespaces an account owns
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
-        /// <returns>List&lt;NamespaceInfoDTO&gt;</returns>
-        public List<NamespaceInfoDTO> GetNamespacesFromAccount (string publicKey, int? pageSize = null, string id = null)
-        {
-             ApiResponse<List<NamespaceInfoDTO>> localVarResponse = GetNamespacesFromAccountWithHttpInfo(publicKey, pageSize, id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get namespaces an account owns Returns information about the namespaces an account owns
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
-        /// <returns>ApiResponse of List&lt;NamespaceInfoDTO&gt;</returns>
-        public ApiResponse< List<NamespaceInfoDTO> > GetNamespacesFromAccountWithHttpInfo (string publicKey, int? pageSize = null, string id = null)
-        {
-            // verify the required parameter 'publicKey' is set
-            if (publicKey == null)
-                throw new ApiException(400, "Missing required parameter 'publicKey' when calling NamespaceRoutesApi->GetNamespacesFromAccount");
-
-            var localVarPath = "/account/{publicKey}/namespaces";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (publicKey != null) localVarPathParams.Add("publicKey", Configuration.ApiClient.ParameterToString(publicKey)); // path parameter
-            if (pageSize != null) localVarQueryParams.Add("pageSize", Configuration.ApiClient.ParameterToString(pageSize)); // query parameter
-            if (id != null) localVarQueryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetNamespacesFromAccount", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<NamespaceInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceInfoDTO>)));
-        }
+       
 
         /// <summary>
         /// Get namespaces an account owns Returns information about the namespaces an account owns
@@ -515,10 +301,10 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
         /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<NamespaceInfoDTO>> GetNamespacesFromAccountAsync (string publicKey, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<List<JObject>> GetNamespacesFromAccountAsync(string publicKey, int? pageSize = null, string id = null)
         {
-             ApiResponse<List<NamespaceInfoDTO>> localVarResponse = await GetNamespacesFromAccountAsyncWithHttpInfo(publicKey, pageSize, id);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetNamespacesFromAccountAsyncWithHttpInfo(publicKey, pageSize, id);
+             return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList();
 
         }
 
@@ -528,7 +314,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKey">The account public key for which namespaces should be retrieved</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<NamespaceInfoDTO>>> GetNamespacesFromAccountAsyncWithHttpInfo (string publicKey, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesFromAccountAsyncWithHttpInfo (string publicKey, int? pageSize = null, string id = null)
         {
             // verify the required parameter 'publicKey' is set
             if (publicKey == null)
@@ -572,110 +358,26 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<NamespaceInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceInfoDTO>)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
-        /// <summary>
-        /// Get namespaces information Returns namespaces information for a given set of publicKeys
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKeys">Accounts public key array</param>
-        /// <returns>List&lt;NamespaceInfoDTO&gt;</returns>
-        public List<NamespaceInfoDTO> GetNamespacesFromAccounts (PublicKeysDTO publicKeys,int? pageSize = null, string id = null)
-        {
-             ApiResponse<List<NamespaceInfoDTO>> localVarResponse = GetNamespacesFromAccountsWithHttpInfo(publicKeys, pageSize, id);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get namespaces information Returns namespaces information for a given set of publicKeys
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKeys">Accounts public key array</param>
-        /// <returns>ApiResponse of List&lt;NamespaceInfoDTO&gt;</returns>
-        public ApiResponse< List<NamespaceInfoDTO> > GetNamespacesFromAccountsWithHttpInfo (PublicKeysDTO publicKeys, int? pageSize = null, string id = null)
-        {
-            // verify the required parameter 'publicKeys' is set
-            if (publicKeys == null)
-                throw new ApiException(400, "Missing required parameter 'publicKeys' when calling NamespaceRoutesApi->GetNamespacesFromAccounts");
-
-            var localVarPath = "/account/namespaces";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)  localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-            if (pageSize != null) localVarQueryParams.Add("pageSize", Configuration.ApiClient.ParameterToString(pageSize)); // query parameter
-            if (id != null) localVarQueryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
-
-            if (publicKeys != null && publicKeys.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(publicKeys); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = publicKeys; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetNamespacesFromAccounts", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<NamespaceInfoDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceInfoDTO>)));
-        }
-
+       
         /// <summary>
         /// Get namespaces information Returns namespaces information for a given set of publicKeys
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKeys">Accounts public key array</param>
         /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<NamespaceInfoDTO>> GetNamespacesFromAccountsAsync (PublicKeysDTO publicKeys, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<List<JObject>> GetNamespacesFromAccountsAsync(JArray publicKeys, int? pageSize = null, string id = null)
         {
-             ApiResponse<List<NamespaceInfoDTO>> localVarResponse = await GetNamespacesFromAccountsAsyncWithHttpInfo(publicKeys, pageSize, id);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetNamespacesFromAccountsAsyncWithHttpInfo(publicKeys, pageSize, id);
+             return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList(); ;
 
         }
 
-        /// <summary>
-        /// Get namespaces information Returns namespaces information for a given set of publicKeys
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="publicKeys">Accounts public key array</param>
-        /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<NamespaceInfoDTO>> GetNamespacesFromAccountsAsync(AddressesDTO addresses, int? pageSize = null, string id = null)
-        {
-            ApiResponse<List<NamespaceInfoDTO>> localVarResponse = await GetNamespacesFromAccountsAsyncWithHttpInfo(addresses, pageSize, id);
-            return localVarResponse.Data;
 
-        }
 
         /// <summary>
         /// Get namespaces information Returns namespaces information for a given set of publicKeys
@@ -683,7 +385,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKeys">Accounts public key array</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<NamespaceInfoDTO>>> GetNamespacesFromAccountsAsyncWithHttpInfo (PublicKeysDTO publicKeys, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesFromAccountsAsyncWithHttpInfo (JArray publicKeys, int? pageSize = null, string id = null)
         {
             // verify the required parameter 'publicKeys' is set
             if (publicKeys == null)
@@ -733,9 +435,23 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<NamespaceInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceInfoDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceInfoDTO>)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
+        }
+
+
+        /// <summary>
+        /// Get namespaces information Returns namespaces information for a given set of publicKeys
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="publicKeys">Accounts public key array</param>
+        /// <returns>Task of List&lt;NamespaceInfoDTO&gt;</returns>
+        public async System.Threading.Tasks.Task<List<JObject>> GetNamespacesFromAccountsAsync(JObject addresses, int? pageSize = null, string id = null)
+        {
+            ApiResponse<List<object>> localVarResponse = await GetNamespacesFromAccountsAsyncWithHttpInfo(addresses, pageSize, id);
+            return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList();
+
         }
 
         /// <summary>
@@ -744,7 +460,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="publicKeys">Accounts public key array</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceInfoDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<NamespaceInfoDTO>>> GetNamespacesFromAccountsAsyncWithHttpInfo(AddressesDTO addresses, int? pageSize = null, string id = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesFromAccountsAsyncWithHttpInfo(JObject addresses, int? pageSize = null, string id = null)
         {
             // verify the required parameter 'publicKeys' is set
             if (addresses == null)
@@ -794,94 +510,22 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<NamespaceInfoDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceInfoDTO>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceInfoDTO>)));
+                (List<object>)Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
-        /// <summary>
-        /// Get readable names for a set of namespaces Returns names for namespaces
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceIds">Array of namespaceIds</param>
-        /// <returns>List&lt;NamespaceNameDTO&gt;</returns>
-        public List<NamespaceNameDTO> GetNamespacesNames (NamespaceIds namespaceIds)
-        {
-             ApiResponse<List<NamespaceNameDTO>> localVarResponse = GetNamespacesNamesWithHttpInfo(namespaceIds);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        /// Get readable names for a set of namespaces Returns names for namespaces
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="namespaceIds">Array of namespaceIds</param>
-        /// <returns>ApiResponse of List&lt;NamespaceNameDTO&gt;</returns>
-        public ApiResponse< List<NamespaceNameDTO> > GetNamespacesNamesWithHttpInfo (NamespaceIds namespaceIds)
-        {
-            // verify the required parameter 'namespaceIds' is set
-            if (namespaceIds == null)
-                throw new ApiException(400, "Missing required parameter 'namespaceIds' when calling NamespaceRoutesApi->GetNamespacesNames");
-
-            var localVarPath = "/namespace/names";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json"
-            };
-            string localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-
-            if (localVarHttpHeaderAccept != null) localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            if (namespaceIds != null && namespaceIds.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = Configuration.ApiClient.Serialize(namespaceIds); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = namespaceIds; // byte array
-            }
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
-
-            if (ExceptionFactory != null)
-            {
-                Exception exception = ExceptionFactory("GetNamespacesNames", localVarResponse);
-                if (exception != null) throw exception;
-            }
-
-            return new ApiResponse<List<NamespaceNameDTO>>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceNameDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceNameDTO>)));
-        }
-
+        
         /// <summary>
         /// Get readable names for a set of namespaces Returns names for namespaces
         /// </summary>
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceIds">Array of namespaceIds</param>
         /// <returns>Task of List&lt;NamespaceNameDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<NamespaceNameDTO>> GetNamespacesNamesAsync (NamespaceIds namespaceIds)
+        public async System.Threading.Tasks.Task<List<JObject>> GetNamespacesNamesAsync(JObject namespaceIds)
         {
-             ApiResponse<List<NamespaceNameDTO>> localVarResponse = await GetNamespacesNamesAsyncWithHttpInfo(namespaceIds);
-             return localVarResponse.Data;
+             ApiResponse<List<object>> localVarResponse = await GetNamespacesNamesAsyncWithHttpInfo(namespaceIds);
+             return localVarResponse.Data.Select(i => JObject.Parse(i.ToString())).ToList(); 
 
         }
 
@@ -891,7 +535,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="namespaceIds">Array of namespaceIds</param>
         /// <returns>Task of ApiResponse (List&lt;NamespaceNameDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<NamespaceNameDTO>>> GetNamespacesNamesAsyncWithHttpInfo (NamespaceIds namespaceIds)
+        public async System.Threading.Tasks.Task<ApiResponse<List<object>>> GetNamespacesNamesAsyncWithHttpInfo (JObject namespaceIds)
         {
             // verify the required parameter 'namespaceIds' is set
             if (namespaceIds == null)
@@ -940,9 +584,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<NamespaceNameDTO>>(localVarStatusCode,
+            return new ApiResponse<List<object>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<NamespaceNameDTO>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<NamespaceNameDTO>)));
+                (List<object>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<object>)));
         }
 
     }

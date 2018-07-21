@@ -71,16 +71,17 @@ namespace IntegrationTests.Infrastructure.Transactions
                 .Subscribe(
                     e =>
                     {
-                        Assert.Fail(e.Status);
+                        Console.WriteLine(e.Status);
+
                     });
         }
 
         [TestMethod, Timeout(40000)]
         public async Task AggregateTransactionWithMissingCosignatures()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
-            var keyPair2 = KeyPair.CreateFromPrivateKey(Config.PrivateKeySecond);
+            var keyPair2 = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate2);
 
             var aggregateTransaction = AggregateTransaction.CreateBonded(
                 NetworkType.Types.MIJIN_TEST,
@@ -98,7 +99,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             WatchForFailure(aggregateTransaction);
 
             var hashLock = LockFundsTransaction.Create(NetworkType.Types.MIJIN_TEST, Deadline.CreateHours(2), 0, new Mosaic(new MosaicId("nem:xem"), 10000000), 10000, aggregateTransaction)
-                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain));
+                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1));
 
             WatchForFailure(hashLock);
 
@@ -118,11 +119,9 @@ namespace IntegrationTests.Infrastructure.Transactions
         [TestMethod, Timeout(20000)]
         public async Task SignAggregateTransactionComplete()
         {
-            var signerKey =
-                KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var acc1 = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
-            var account = new Account(Config.PrivateKeySecond,
-                NetworkType.Types.MIJIN_TEST);           
+            var acc2 = new Account(Config.PrivateKeyAggregate2, NetworkType.Types.MIJIN_TEST);           
 
             var aggregateTransaction = AggregateTransaction.CreateComplete(
                 NetworkType.Types.MIJIN_TEST,
@@ -130,30 +129,27 @@ namespace IntegrationTests.Infrastructure.Transactions
                     new List<Transaction>
                     {
                         TransferTransactionTests.CreateInnerTransferTransaction("nem:xem")
-                             .ToAggregate(PublicAccount.CreateFromPublicKey(signerKey.PublicKeyString, NetworkType.Types.MIJIN_TEST)),
+                             .ToAggregate(PublicAccount.CreateFromPublicKey(acc1.PublicKeyString, NetworkType.Types.MIJIN_TEST)),
                         TransferTransactionTests.CreateInnerTransferTransaction("nem:xem")
-                            .ToAggregate(PublicAccount.CreateFromPublicKey(account.PublicKey, NetworkType.Types.MIJIN_TEST))
+                            .ToAggregate(PublicAccount.CreateFromPublicKey(acc2.PublicKey, NetworkType.Types.MIJIN_TEST))
                     })
-                .SignWithAggregateCosigners(signerKey, new List<Account>(){
-                    Account.CreateFromPrivateKey(Config.PrivateKeySecond,
-                    NetworkType.Types.MIJIN_TEST)}
-                );
+                .SignWithAggregateCosigners(acc1, new List<Account>(){acc2});
 
             WatchForFailure(aggregateTransaction);
 
             await new TransactionHttp(host).Announce(aggregateTransaction);
 
-            var status = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(account.PublicKey, NetworkType.Types.MIJIN_TEST)).Where(e => e.TransactionInfo.Hash == aggregateTransaction.Hash).Take(1);
+            var status = await listener.ConfirmedTransactionsGiven(Address.CreateFromPublicKey(acc2.PublicKey, NetworkType.Types.MIJIN_TEST)).Where(e => e.TransactionInfo.Hash == aggregateTransaction.Hash).Take(1);
             
-            Assert.AreEqual(signerKey.PublicKeyString, status.Signer.PublicKey);
+            Assert.AreEqual(acc1.PublicKeyString, status.Signer.PublicKey);
         }
 
         [TestMethod, Timeout(40000)]
         public async Task PartialTransactionWithMissingCosigner()
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain);
+            var keyPair = KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1);
 
-            var keyPair2 = KeyPair.CreateFromPrivateKey("14A239D2ADB96753CFC160BB262F27B01BCCC8C74599F51771BC6BD39980F4E7");
+            var keyPair2 = KeyPair.CreateFromPrivateKey(Config.Cosig1);
 
             var aggregateBonded = AggregateTransaction.CreateBonded(
                 NetworkType.Types.MIJIN_TEST,
@@ -178,7 +174,7 @@ namespace IntegrationTests.Infrastructure.Transactions
                     10000,  
                     aggregateBonded
                     )
-                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyMain));
+                .SignWith(KeyPair.CreateFromPrivateKey(Config.PrivateKeyAggregate1));
 
             WatchForFailure(hashLock);
 
