@@ -70,6 +70,21 @@ namespace io.nem2.sdk.Model.Transactions
         /// <param name="transaction">The transaction.</param>
         /// <param name="netowrkType">Type of the netowrk.</param>
         /// <returns><see cref="LockFundsTransaction"/>.</returns>
+        public static LockFundsTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Mosaic mosaic, ulong duration, SignedTransaction transaction)
+        {
+            return new LockFundsTransaction(netowrkType, 3, deadline, 0, mosaic, duration, transaction);
+        }
+
+        /// <summary>
+        /// Creates the specified HashLockTransaction.
+        /// </summary>
+        /// <param name="deadline">The deadline.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="fee">The transaction fee.</param>
+        /// <param name="mosaic">The mosaic.</param>
+        /// <param name="transaction">The transaction.</param>
+        /// <param name="netowrkType">Type of the netowrk.</param>
+        /// <returns><see cref="LockFundsTransaction"/>.</returns>
         public static LockFundsTransaction Create(NetworkType.Types netowrkType, Deadline deadline, ulong fee, Mosaic mosaic, ulong duration, SignedTransaction transaction)
         {
             return new LockFundsTransaction(netowrkType, 3, deadline, fee, mosaic, duration, transaction);

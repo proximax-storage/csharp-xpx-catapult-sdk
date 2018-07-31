@@ -1,5 +1,7 @@
 ### Nem2 (Catapult) CSharp SDK
 
+:warning: this sdk is in alpha state and will change in the next versions
+
 ## Requirements
 .NetStandard 2.0
 
@@ -7,7 +9,7 @@ See [!here](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for p
 
 ## Instillation 
 
-> Install-Package nem2-sdk
+> Install-Package io.nem2.sdk
 
 ## Documentation and Getting Started
 

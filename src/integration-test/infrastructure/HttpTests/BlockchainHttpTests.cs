@@ -82,12 +82,11 @@ namespace IntegrationTests.Infrastructure.HttpTests
         }
 
         [TestMethod, Timeout(20000)]
-        public async Task GetBlockchainScore() //TODO: verify
+        public async Task GetBlockchainScore()
         {
             var a = await new BlockchainHttp(host).GetBlockchainScore();
 
             Assert.IsTrue(a > 1);
         }
-
     }
 }

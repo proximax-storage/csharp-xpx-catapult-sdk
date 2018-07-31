@@ -114,6 +114,20 @@ namespace io.nem2.sdk.Model.Transactions
             return new SecretProofTransaction(netowrkType, 3, deadline, fee, hashAlgo, secret, proof);
         }
 
+        /// <summary>
+        /// Creates the specified <see cref="SecretProofTransaction"/>.
+        /// </summary>
+        /// <param name="deadline">The deadline.</param>
+        /// <param name="hashAlgo">The hash algo.</param>
+        /// <param name="secret">The secret.</param>
+        /// <param name="proof">The proof.</param>
+        /// <param name="netowrkType">Type of the netowrk.</param>
+        /// <returns><see cref="SecretProofTransaction"/></returns>
+        public static SecretProofTransaction Create(NetworkType.Types netowrkType, Deadline deadline, HashType.Types hashAlgo, string secret, string proof)
+        {
+            return new SecretProofTransaction(netowrkType, 3, deadline, 0, hashAlgo, secret, proof);
+        }
+
         internal override byte[] GenerateBytes()
         {
             var builder = new FlatBufferBuilder(1);

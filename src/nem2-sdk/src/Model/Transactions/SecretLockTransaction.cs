@@ -93,6 +93,23 @@ namespace io.nem2.sdk.Model.Transactions
         }
 
         /// <summary>
+        /// Creates the specified deadline.
+        /// </summary>
+        /// <param name="deadline">The deadline.</param>
+        /// <param name="mosaic">The mosaic.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="fee">The fee.</param>
+        /// <param name="hashAlgo">The hash algo.</param>
+        /// <param name="secret">The secret.</param>
+        /// <param name="recipient">The recipient.</param>
+        /// <param name="netowrkType">Type of the netowrk.</param>
+        /// <returns>SecretLockTransaction.</returns>
+        public static SecretLockTransaction Create(NetworkType.Types netowrkType, Deadline deadline, Mosaic mosaic, ulong duration, HashType.Types hashAlgo, string secret, Address recipient)
+        {
+            return new SecretLockTransaction(netowrkType, 3, deadline, 0, mosaic, duration, hashAlgo, secret, recipient, null, null, null);
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SecretLockTransaction"/> class.
         /// </summary>
         /// <param name="networkType">Type of the network.</param>
