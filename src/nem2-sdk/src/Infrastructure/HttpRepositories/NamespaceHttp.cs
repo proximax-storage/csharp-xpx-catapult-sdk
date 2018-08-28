@@ -328,7 +328,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
 
             return Observable.FromAsync(async ar => await NamespaceRoutesApi.GetNamespacesNamesAsync(JObject.FromObject(new
                 {
-                    addresses = namespaceIds.Select(i => i.HexId)
+                    namespaceIds = namespaceIds.Select(i => i.HexId)
                 }))).Select(i => i.Select(e => new NamespaceId(e["name"].ToString())).ToList());
         }
 

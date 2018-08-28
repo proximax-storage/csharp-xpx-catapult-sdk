@@ -28,9 +28,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
+using io.nem2.sdk.Core.Utils;
 using io.nem2.sdk.Infrastructure.Buffers.Model;
 using io.nem2.sdk.Infrastructure.Imported.Api;
 using io.nem2.sdk.Model.Transactions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace io.nem2.sdk.Infrastructure.HttpRepositories
@@ -156,7 +158,8 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             if (string.IsNullOrEmpty(hash)) throw new ArgumentException("Value cannot be null or empty.", nameof(hash));
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");        
 
-            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionStatusAsync(hash));
+            return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionStatusAsync(hash))
+                .Select(i => new TransactionStatus(i["group"].ToString(), i["status"].ToString(), i["hash"].ToString(), ExtractBigInteger(i, "deadline"), ExtractBigInteger(i, "height")));
         }
 
         /// <summary>
@@ -174,7 +177,13 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsStatusesAsync(JObject.FromObject(new
             {
                 hashes = hashes.Select(i => i)
-            })));
+            }))).Select( i => i.Select(e => new TransactionStatus(e["group"].ToString(), e["status"].ToString(), e["hash"].ToString(), ExtractBigInteger(e, "deadline"), ExtractBigInteger(e, "height"))).ToList());
         }
+
+        internal ulong ExtractBigInteger(JToken input, string identifier)
+        {
+            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
+        }
+
     }
 }

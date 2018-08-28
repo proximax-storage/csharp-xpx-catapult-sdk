@@ -120,7 +120,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of TransactionStatusDTO</returns>
-        System.Threading.Tasks.Task<TransactionStatus> GetTransactionStatusAsync (string hash);
+        System.Threading.Tasks.Task<JObject> GetTransactionStatusAsync (string hash);
 
         /// <summary>
         /// Get transaction status
@@ -131,7 +131,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of ApiResponse (TransactionStatusDTO)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TransactionStatus>> GetTransactionStatusAsyncWithHttpInfo (string hash);
+        System.Threading.Tasks.Task<ApiResponse<JObject>> GetTransactionStatusAsyncWithHttpInfo (string hash);
         /// <summary>
         /// Get transactions information
         /// </summary>
@@ -162,7 +162,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;TransactionStatusDTO&gt;</returns>
-        System.Threading.Tasks.Task<List<TransactionStatus>> GetTransactionsStatusesAsync (JObject transactionHashes);
+        System.Threading.Tasks.Task<List<JObject>> GetTransactionsStatusesAsync (JObject transactionHashes);
 
         /// <summary>
         /// Get transactions information
@@ -173,7 +173,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;TransactionStatusDTO&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<TransactionStatus>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes);
+        System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes);
         #endregion Asynchronous Operations
     }
 
@@ -937,9 +937,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of TransactionStatusDTO</returns>
-        public async System.Threading.Tasks.Task<TransactionStatus> GetTransactionStatusAsync (string hash)
+        public async System.Threading.Tasks.Task<JObject> GetTransactionStatusAsync (string hash)
         {
-             ApiResponse<TransactionStatus> localVarResponse = await GetTransactionStatusAsyncWithHttpInfo(hash);
+             ApiResponse<JObject> localVarResponse = await GetTransactionStatusAsyncWithHttpInfo(hash);
              return localVarResponse.Data;
 
         }
@@ -950,7 +950,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="hash">Transaction hash</param>
         /// <returns>Task of ApiResponse (TransactionStatusDTO)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TransactionStatus>> GetTransactionStatusAsyncWithHttpInfo (string hash)
+        public async System.Threading.Tasks.Task<ApiResponse<JObject>> GetTransactionStatusAsyncWithHttpInfo (string hash)
         {
             // verify the required parameter 'hash' is set
             if (hash == null)
@@ -993,9 +993,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<TransactionStatus>(localVarStatusCode,
+            return new ApiResponse<JObject>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (TransactionStatus) Configuration.ApiClient.Deserialize(localVarResponse, typeof(TransactionStatus)));
+                (JObject) Configuration.ApiClient.Deserialize(localVarResponse, typeof(JObject)));
         }
 
        
@@ -1080,9 +1080,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of List&lt;TransactionStatusDTO&gt;</returns>
-        public async System.Threading.Tasks.Task<List<TransactionStatus>> GetTransactionsStatusesAsync (JObject transactionHashes)
+        public async System.Threading.Tasks.Task<List<JObject>> GetTransactionsStatusesAsync (JObject transactionHashes)
         {
-             ApiResponse<List<TransactionStatus>> localVarResponse = await GetTransactionsStatusesAsyncWithHttpInfo(transactionHashes);
+             ApiResponse<List<JObject>> localVarResponse = await GetTransactionsStatusesAsyncWithHttpInfo(transactionHashes);
              return localVarResponse.Data;
 
         }
@@ -1093,7 +1093,7 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
         /// <exception cref="ApiException">Thrown when fails to make API call</exception>
         /// <param name="transactionHashes">Array of transaction ids or hashes</param>
         /// <returns>Task of ApiResponse (List&lt;TransactionStatusDTO&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<TransactionStatus>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes)
+        public async System.Threading.Tasks.Task<ApiResponse<List<JObject>>> GetTransactionsStatusesAsyncWithHttpInfo (JObject transactionHashes)
         {
             // verify the required parameter 'transactionHashes' is set
             if (transactionHashes == null)
@@ -1143,9 +1143,9 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<TransactionStatus>>(localVarStatusCode,
+            return new ApiResponse<List<JObject>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<TransactionStatus>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<TransactionStatus>)));
+                (List<JObject>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<JObject>)));
         }
 
     }
