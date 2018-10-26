@@ -191,7 +191,7 @@ namespace io.nem2.sdk.Model.Transactions
             TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
             TransferTransactionBuffer.AddRecipient(builder, recipientVector);
             TransferTransactionBuffer.AddNumMosaics(builder, (byte)Mosaics.Count);
-            TransferTransactionBuffer.AddMessageSize(builder, (byte)Message.GetLength());
+            TransferTransactionBuffer.AddMessageSize(builder, (ushort)Message.GetLength());
             TransferTransactionBuffer.AddMessage(builder, message);
             TransferTransactionBuffer.AddMosaics(builder, mosaicsVector);
 
