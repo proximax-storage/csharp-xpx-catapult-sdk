@@ -28,65 +28,65 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetHeight()
         {
-            var a = await new BlockchainHttp(host).GetBlockchainHeight();
+            var height = await new BlockchainHttp(host).GetBlockchainHeight();
 
-            Assert.IsTrue(a > 100);    
+            Assert.IsTrue(height > 100);    
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockByHeight()
         {
-            var a = await new BlockchainHttp(host).GetBlockByHeight(3);
+            var block = await new BlockchainHttp(host).GetBlockByHeight(3);
            
-            Assert.AreEqual("D70DF7FD6FC7B3AD31C0EBCCAE0F6881CE39555BF72179472A31DEE5AB6A926B", a.Hash);
+            Assert.AreEqual("D70DF7FD6FC7B3AD31C0EBCCAE0F6881CE39555BF72179472A31DEE5AB6A926B", block.Hash);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockByHeightWithLimit()
         {
-            var a = await new BlockchainHttp(host).GetBlockByHeightWithLimit(2, 10);
+            var blocks = await new BlockchainHttp(host).GetBlockByHeightWithLimit(2, 10);
 
-            Assert.AreEqual("32305811E9173FC5ED6897462E301B0495AD95F871A66341D95485FB4A59C8F5", a[0].Hash);
+            Assert.AreEqual("32305811E9173FC5ED6897462E301B0495AD95F871A66341D95485FB4A59C8F5", blocks[0].Hash);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockTransactions()
         {
-            var a = await new BlockchainHttp(host).GetBlockTransactions(1);
+            var txs = await new BlockchainHttp(host).GetBlockTransactions(1);
 
-            Assert.AreEqual("124ACC56AF5055CEE7E134D0A6E809C45B1054C0FA96C31838669206030EDD2C", a[0].TransactionInfo.Hash);
+            Assert.AreEqual("124ACC56AF5055CEE7E134D0A6E809C45B1054C0FA96C31838669206030EDD2C", txs[0].TransactionInfo.Hash);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockchainDiagnosticBlocksWithLimit()
         {
-            var a = await new BlockchainHttp(host).GetBlockchainDiagnosticBlocksWithLimit(2, 10);
+            var txs = await new BlockchainHttp(host).GetBlockchainDiagnosticBlocksWithLimit(2, 10);
 
-            Assert.AreEqual("5277C6AF6CA15943A0F27A90C2232B989C4D62CEC212F0673B7F8B5D4F0C1834", a[0].Hash);
+            Assert.AreEqual("5277C6AF6CA15943A0F27A90C2232B989C4D62CEC212F0673B7F8B5D4F0C1834", txs[0].Hash);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockchainDiagnosticStorage()
         {
-            var a = await new BlockchainHttp(host).GetBlockchainDiagnosticStorage();
+            var diagnostics = await new BlockchainHttp(host).GetBlockchainDiagnosticStorage();
 
-            Assert.IsTrue(a.NumAccounts > 1);
+            Assert.IsTrue(diagnostics.NumAccounts > 1);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockchainDiagnosticStorageWithLimit()
         {
-            var a = await new BlockchainHttp(host).GetBlockchainDiagnosticBlocksWithLimit(1, 10);
+            var diagnostics = await new BlockchainHttp(host).GetBlockchainDiagnosticBlocksWithLimit(1, 10);
 
-            Assert.IsTrue(a[9].Height == 1);
+            Assert.IsTrue(diagnostics[9].Height == 1);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetBlockchainScore()
         {
-            var a = await new BlockchainHttp(host).GetBlockchainScore();
+            var score = await new BlockchainHttp(host).GetBlockchainScore();
 
-            Assert.IsTrue(a > 1);
+            Assert.IsTrue(score > 1);
         }
     }
 }

@@ -31,9 +31,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "mijinTest";
 
-            var a = await new NetworkHttp(host).GetNetworkType();
+            var networkType = await new NetworkHttp(host).GetNetworkType();
 
-            Assert.AreEqual(NetworkType.GetNetwork(expected), a);
+            Assert.AreEqual(NetworkType.GetNetwork(expected), networkType);
         }
     }
 }

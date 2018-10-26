@@ -30,33 +30,33 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetMosaic()
         {
-            var a = await new MosaicHttp(host).GetMosaic(Xem.Id.HexId);
+            var mosaic = await new MosaicHttp(host).GetMosaic(Xem.Id.HexId);
 
-            Assert.AreEqual(Xem.NamespaceId.HexId, a.NamespaceId.HexId);           
+            Assert.AreEqual(Xem.NamespaceId.HexId, mosaic.NamespaceId.HexId);           
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMosaics()
         {
-            var a = await new MosaicHttp(host).GetMosaics(new List<string>{ Xem.Id.HexId } );
+            var mosaics = await new MosaicHttp(host).GetMosaics(new List<string>{ Xem.Id.HexId } );
 
-            Assert.AreEqual(Xem.NamespaceId.HexId, a[0].NamespaceId.HexId);
+            Assert.AreEqual(Xem.NamespaceId.HexId, mosaics[0].NamespaceId.HexId);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMosaicsName()
         {
-            var a = await new MosaicHttp(host).GetMosaicsName(new List<string> { Xem.Id.HexId });
+            var mosaicNames = await new MosaicHttp(host).GetMosaicsName(new List<string> { Xem.Id.HexId });
 
-            Assert.AreEqual(Xem.NamespaceId.HexId, a[0].ParentId.HexId);
+            Assert.AreEqual(Xem.NamespaceId.HexId, mosaicNames[0].ParentId.HexId);
         }
 
         [TestMethod, Timeout(20000)]
         public async Task GetMosaicsFromNamespace()
         {
-            var a = await new MosaicHttp(host).GetMosaicsFromNamespace(Xem.NamespaceId);
+            var mosaics = await new MosaicHttp(host).GetMosaicsFromNamespace(Xem.NamespaceId);
 
-            Assert.AreEqual(Xem.NamespaceId.HexId, a[0].NamespaceId.HexId);
+            Assert.AreEqual(Xem.NamespaceId.HexId, mosaics[0].NamespaceId.HexId);
         }
     }
 }

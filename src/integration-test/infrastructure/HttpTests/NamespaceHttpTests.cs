@@ -36,9 +36,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespace(Xem.NamespaceId);
+            var name_space = await new NamespaceHttp(host).GetNamespace(Xem.NamespaceId);
 
-            Assert.AreEqual(expected, a.Owner.PublicKey);
+            Assert.AreEqual(expected, name_space.Owner.PublicKey);
 
         }
 
@@ -47,9 +47,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccount(new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST));
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccount(new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST));
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
 
         }
 
@@ -58,9 +58,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccount(Address.CreateFromPublicKey("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST));
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccount(Address.CreateFromPublicKey("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST));
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
 
         }
 
@@ -69,9 +69,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccount(new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST), new QueryParams(10));
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccount(new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST), new QueryParams(10));
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
 
         }
 
@@ -80,9 +80,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<PublicAccount>() { new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) });
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<PublicAccount>() { new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) });
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
@@ -90,9 +90,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<Address>() { Address.CreateFromPublicKey("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) });
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<Address>() { Address.CreateFromPublicKey("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) });
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
@@ -100,9 +100,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A";
 
-            var a = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<PublicAccount>() { new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) }, new QueryParams(10));
+            var namespaces = await new NamespaceHttp(host).GetNamespacesFromAccounts(new List<PublicAccount>() { new PublicAccount("779184937205947C1B36B0AD0FCC0D7C10A08061FFB6C0F3F4022BD3CD6A709A", NetworkType.Types.MIJIN_TEST) }, new QueryParams(10));
 
-            Assert.AreEqual(expected, a[0].Owner.PublicKey);
+            Assert.AreEqual(expected, namespaces[0].Owner.PublicKey);
         }
 
         [TestMethod, Timeout(20000)]
@@ -110,9 +110,9 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "84B3552D375FFA4B";
 
-            var a = await new NamespaceHttp(host).GetNamespacesNames(new List<NamespaceId> { Xem.NamespaceId });
+            var namespaceIds = await new NamespaceHttp(host).GetNamespacesNames(new List<NamespaceId> { Xem.NamespaceId });
 
-            Assert.AreEqual(expected, a[0].HexId);
+            Assert.AreEqual(expected, namespaceIds[0].HexId);
         }
     }
 }
