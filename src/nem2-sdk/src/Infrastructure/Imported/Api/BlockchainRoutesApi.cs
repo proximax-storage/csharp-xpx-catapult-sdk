@@ -437,11 +437,6 @@ namespace io.nem2.sdk.Infrastructure.Imported.Api
 
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
         /// <summary>
         /// Get the current height of the chain Returns the current height of the blockchain
         /// </summary>

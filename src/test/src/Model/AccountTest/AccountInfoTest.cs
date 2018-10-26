@@ -31,7 +31,7 @@ namespace test.Model.AccountTest
         {
             var mosaics = new List<Mosaic> { Xem.CreateRelative(10) };
             var accountInfo = new AccountInfo(
-                    Address.CreateFromEncoded("SDGLFWDSHILTIUHGIBH5UGX2VYF5VNJEKCCDBR26"),
+                    Address.CreateFromRawAddress("SDGLFWDSHILTIUHGIBH5UGX2VYF5VNJEKCCDBR26"),
                     966,
                     "cf893ffcc47c33e7f68ab1db56365c156b0736824a0c1e273f9e00b8df8f01eb",
                     964,
@@ -40,7 +40,7 @@ namespace test.Model.AccountTest
                     mosaics
                 );
 
-            Assert.AreEqual(Address.CreateFromEncoded("SDGLFWDSHILTIUHGIBH5UGX2VYF5VNJEKCCDBR26").Plain, accountInfo.Address.Plain);
+            Assert.AreEqual(Address.CreateFromRawAddress("SDGLFWDSHILTIUHGIBH5UGX2VYF5VNJEKCCDBR26").Plain, accountInfo.Address.Plain);
             Assert.AreEqual((ulong)966, accountInfo.AddressHeight);
             Assert.AreEqual("cf893ffcc47c33e7f68ab1db56365c156b0736824a0c1e273f9e00b8df8f01eb", accountInfo.PublicKey);
             Assert.AreEqual((ulong)964, accountInfo.PublicKeyHeight);

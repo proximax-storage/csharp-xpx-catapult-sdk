@@ -86,12 +86,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountInfoAsync(address.Plain))
                 .Select(accountInfo  => new AccountInfo(
                     Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
-                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"].ExtractBigInteger( "addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
-                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
-                    ExtractBigInteger(accountInfo["account"], "importance"),
-                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
-                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList()));
+                    accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
+                    accountInfo["account"].ExtractBigInteger("importance"),
+                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList()));
         }
 
         /// <summary>
@@ -107,12 +107,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await AccountRoutesApi.GetAccountInfoAsync(account.PublicKey))
                 .Select(accountInfo => new AccountInfo(
                     Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
-                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
-                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
-                    ExtractBigInteger(accountInfo["account"], "importance"),
-                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
-                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList()));
+                    accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
+                    accountInfo["account"].ExtractBigInteger("importance"),
+                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList()));
         }
 
         /// <summary>
@@ -133,12 +133,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             {
                 return new AccountInfo(
                     Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
-                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
-                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
-                    ExtractBigInteger(accountInfo["account"], "importance"),
-                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
-                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList());
+                    accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
+                    accountInfo["account"].ExtractBigInteger("importance"),
+                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList());
             }).ToList());
         }
 
@@ -159,12 +159,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 }))).Select(e =>
                 e.Select(accountInfo =>  new AccountInfo(
                     Address.CreateFromHex(accountInfo["account"]["address"].ToString()),
-                    ExtractBigInteger(accountInfo["account"], "addressHeight"),
+                    accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
-                    ExtractBigInteger(accountInfo["account"], "publicKeyHeight"),
-                    ExtractBigInteger(accountInfo["account"], "importance"),
-                    ExtractBigInteger(accountInfo["account"], "importanceHeight"),
-                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(ExtractBigInteger(mosaic, "id")), ExtractBigInteger(mosaic, "amount"))).ToList())
+                    accountInfo["account"].ExtractBigInteger(  "publicKeyHeight"),
+                    accountInfo["account"].ExtractBigInteger(  "importance"),
+                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
+                    accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList())
                 ).ToList());
         }
 
@@ -454,9 +454,5 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await AccountRoutesApi.TransactionsAsync(account.PublicKey, query.GetPageSize(), query.GetId()));
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
     }
 }

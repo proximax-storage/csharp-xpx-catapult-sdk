@@ -102,16 +102,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                         NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
                         int.Parse(e["namespace"]["depth"].ToString()),
                         ExtractLevels(e["namespace"]),
-                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
-                        ExtractBigInteger(e["namespace"], "startHeight"),
-                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new NamespaceId(e["namespace"].ExtractBigInteger("parentId")),
+                        e["namespace"].ExtractBigInteger( "startHeight"),
+                        e["namespace"].ExtractBigInteger("endHeight"),
                         new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
                     );
                 });
-        }
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
         }
 
         /// <summary>
@@ -165,9 +161,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                         NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
                         int.Parse(e["namespace"]["depth"].ToString()),
                         ExtractLevels(e["namespace"]),
-                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
-                        ExtractBigInteger(e["namespace"], "startHeight"),
-                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new NamespaceId(e["namespace"].ExtractBigInteger("parentId")),
+                        e["namespace"].ExtractBigInteger("startHeight"),
+                        e["namespace"].ExtractBigInteger("endHeight"),
                         new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
                     )).ToList());
         }
@@ -197,9 +193,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                         NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
                         int.Parse(e["namespace"]["depth"].ToString()),
                         ExtractLevels(e["namespace"]),
-                        new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
-                        ExtractBigInteger(e["namespace"], "startHeight"),
-                        ExtractBigInteger(e["namespace"], "endHeight"),
+                        new NamespaceId(e["namespace"].ExtractBigInteger("parentId")),
+                        e["namespace"].ExtractBigInteger( "startHeight"),
+                        e["namespace"].ExtractBigInteger( "endHeight"),
                         new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
                     )).ToList());
         }
@@ -265,9 +261,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
                     int.Parse(e["namespace"]["depth"].ToString()),
                     ExtractLevels(e["namespace"]),
-                    new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
-                    ExtractBigInteger(e["namespace"], "startHeight"),
-                    ExtractBigInteger(e["namespace"], "endHeight"),
+                    new NamespaceId(e["namespace"].ExtractBigInteger( "parentId")),
+                    e["namespace"].ExtractBigInteger( "startHeight"),
+                    e["namespace"].ExtractBigInteger( "endHeight"),
                     new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
                 )).ToList());
         }
@@ -303,9 +299,9 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     NamespaceTypes.GetRawValue(byte.Parse(e["namespace"]["type"].ToString())),
                     int.Parse(e["namespace"]["depth"].ToString()),
                     ExtractLevels(e["namespace"]),
-                    new NamespaceId(ExtractBigInteger(e["namespace"], "parentId")),
-                    ExtractBigInteger(e["namespace"], "startHeight"),
-                    ExtractBigInteger(e["namespace"], "endHeight"),
+                    new NamespaceId(e["namespace"].ExtractBigInteger( "parentId")),
+                    e["namespace"].ExtractBigInteger( "startHeight"),
+                    e["namespace"].ExtractBigInteger( "endHeight"),
                     new PublicAccount(e["namespace"]["owner"].ToString(), networkTypeResolve.Wait())
                 )).ToList());
         }
@@ -342,12 +338,12 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             List<NamespaceId> levels = new List<NamespaceId>();
             if (namespaceDTO.Contains("level0"))
             {
-                levels.Add(new NamespaceId(ExtractBigInteger(namespaceDTO, "level0")));
+                levels.Add(new NamespaceId(namespaceDTO.ExtractBigInteger( "level0")));
             }
 
             if (namespaceDTO.Contains("level1"))
             {
-                levels.Add(new NamespaceId(ExtractBigInteger(namespaceDTO, "level1")));
+                levels.Add(new NamespaceId(namespaceDTO.ExtractBigInteger( "level1")));
             }
 
             if (namespaceDTO.Contains("level2"))

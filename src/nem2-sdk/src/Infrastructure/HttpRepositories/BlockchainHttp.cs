@@ -74,27 +74,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             BlockchainRoutesApi = new BlockchainRoutesApi(Url);
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
-        internal int ExtractInteger(JsonObject input, string identifier)
-        {
-            return int.Parse(input[identifier].ToString());
-        }
-
-        internal int ExtractVersion(int version)
-        {
-            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
-        }
-
-        internal NetworkType.Types ExtractNetworkType(int version)
-        {
-            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
-
-            return NetworkType.GetRawValue(networkType);
-        }
+       
 
         /// <summary>
         /// Gets the blockchain score.
@@ -105,8 +85,8 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainScoreAsync())
                 .Select(i => new[]
                 {
-                    BitConverter.ToInt32(BitConverter.GetBytes(ExtractBigInteger(i, "scoreLow")), 0),
-                    BitConverter.ToInt32(BitConverter.GetBytes(ExtractBigInteger(i, "scoreHigh")), 0)
+                    BitConverter.ToInt32(BitConverter.GetBytes(i.ExtractBigInteger("scoreLow")), 0),
+                    BitConverter.ToInt32(BitConverter.GetBytes(i.ExtractBigInteger("scoreHigh")), 0)
                 }.FromInt8Array());
         }
 
@@ -116,7 +96,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
         /// <returns>An IObservable of ChainHeightDTO</returns>
         public IObservable<ulong> GetBlockchainHeight()
         {
-            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainHeightAsync()).Select(i => ExtractBigInteger(i, "height"));
+            return Observable.FromAsync(async ar => await BlockchainRoutesApi.GetBlockchainHeightAsync()).Select(i => i.ExtractBigInteger("height"));
         }
 
         /// <summary>
@@ -130,16 +110,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 .Select(i => new BlockInfo(
                     i["meta"]["hash"].ToString(),
                     i["meta"]["generationHash"].ToString(),
-                    ExtractBigInteger(i["meta"], "totalFee"),
+                    i["meta"].ExtractBigInteger("totalFee"),
                     int.Parse(i["meta"]["numTransactions"].ToString()),
                     i["block"]["signature"].ToString(),
-                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
-                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
-                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    new PublicAccount(i["block"]["signer"].ToString(), int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType(),
+                    int.Parse(i["block"]["version"].ToString()).ExtractVersion(),
                     int.Parse(i["block"]["type"].ToString()),
-                    ExtractBigInteger(i["block"], "height"),
-                    ExtractBigInteger(i["block"], "timestamp"),
-                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"].ExtractBigInteger( "height"),
+                    i["block"].ExtractBigInteger("timestamp"),
+                    i["block"].ExtractBigInteger("difficulty"),
                     i["block"]["previousBlockHash"].ToString(),
                     i["block"]["blockTransactionsHash"].ToString()));
         }
@@ -157,16 +137,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 e.Select(i => new BlockInfo(
                     i["meta"]["hash"].ToString(),
                     i["meta"]["generationHash"].ToString(),
-                    ExtractBigInteger(i["meta"], "totalFee"),
+                    i["meta"].ExtractBigInteger("totalFee"),
                     int.Parse(i["meta"]["numTransactions"].ToString()),
                     i["block"]["signature"].ToString(),
-                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
-                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
-                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    new PublicAccount(i["block"]["signer"].ToString(), int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType(),
+                    int.Parse(i["block"]["version"].ToString()).ExtractVersion(),
                     int.Parse(i["block"]["type"].ToString()),
-                    ExtractBigInteger(i["block"], "height"),
-                    ExtractBigInteger(i["block"], "timestamp"),
-                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"].ExtractBigInteger("height"),
+                    i["block"].ExtractBigInteger("timestamp"),
+                    i["block"].ExtractBigInteger("difficulty"),
                     i["block"]["previousBlockHash"].ToString(),
                     i["block"]["blockTransactionsHash"].ToString())).ToList()); 
 
@@ -219,16 +199,16 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                 e.Select(i => new BlockInfo(
                     i["meta"]["hash"].ToString(),
                     i["meta"]["generationHash"].ToString(),
-                    ExtractBigInteger(i["meta"], "totalFee"),
+                    i["meta"].ExtractBigInteger("totalFee"),
                     int.Parse(i["meta"]["numTransactions"].ToString()),
                     i["block"]["signature"].ToString(),
-                    new PublicAccount(i["block"]["signer"].ToString(), ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
-                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
-                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    new PublicAccount(i["block"]["signer"].ToString(), int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType(),
+                    int.Parse(i["block"]["version"].ToString()).ExtractVersion(),
                     int.Parse(i["block"]["type"].ToString()),
-                    ExtractBigInteger(i["block"], "height"),
-                    ExtractBigInteger(i["block"], "timestamp"),
-                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"].ExtractBigInteger("height"),
+                    i["block"].ExtractBigInteger("timestamp"),
+                    i["block"].ExtractBigInteger("difficulty"),
                     i["block"]["previousBlockHash"].ToString(),
                     i["block"]["blockTransactionsHash"].ToString())).ToList());
         }

@@ -64,27 +64,7 @@ namespace io.nem2.sdk.Infrastructure.Mapping
             throw new Exception("Unimplemented Transaction type");
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
 
-        internal int ExtractInteger(JsonObject input, string identifier)
-        {
-            return int.Parse(input[identifier].ToString());
-        }
-
-        internal int ExtractTransactionVersion(int version)
-        {
-            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
-        }
-
-        internal NetworkType.Types ExtractNetworkType(int version)
-        {           
-            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
-          
-            return NetworkType.GetRawValue(networkType);
-        }
 
         internal TransactionInfo CreateTransactionInfo(JObject jsonObject)
         {
@@ -92,7 +72,7 @@ namespace io.nem2.sdk.Infrastructure.Mapping
 
             if (jsonObject["hash"] != null && jsonObject["id"] != null)
             {
-                return TransactionInfo.Create(ExtractBigInteger(jsonObject,"height"),
+                return TransactionInfo.Create(jsonObject.ExtractBigInteger("height"),
                         Int32.Parse(jsonObject["index"].ToString()),
                         jsonObject["id"].ToString(),
                         jsonObject["hash"].ToString(),
@@ -101,15 +81,16 @@ namespace io.nem2.sdk.Infrastructure.Mapping
 
             if (jsonObject["aggregateHash"] != null && jsonObject["id"] != null)
             {
-                return TransactionInfo.CreateAggregate(ExtractBigInteger(
-                        jsonObject,"height"),
+                return TransactionInfo.CreateAggregate(
+                        jsonObject.ExtractBigInteger("height"),
                         Int32.Parse(jsonObject["index"].ToString()),
                         jsonObject["id"].ToString(),
                         jsonObject["aggregateHash"].ToString(),
                         jsonObject["aggregateId"].ToString());
             }
 
-            return TransactionInfo.Create(ExtractBigInteger(jsonObject, "height"),
+            return TransactionInfo.Create(
+                        jsonObject.ExtractBigInteger("height"),
                         jsonObject["hash"].ToString(),
                         jsonObject["merkleComponentHash"].ToString());
         }
@@ -136,15 +117,15 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected TransferTransaction ToTransferTransaction(JObject tx, TransactionInfo txInfo)
         { 
             return new TransferTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
                 Address.CreateFromHex(tx["transaction"]["recipient"].ToString()),
-                tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(ExtractBigInteger(m, "id")), ExtractBigInteger(m, "amount"))).ToList(),
-                RetrieveMessage(tx["message"]),
+                tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(m.ExtractBigInteger("id")), m.ExtractBigInteger("amount"))).ToList(),
+                RetrieveMessage(tx["transaction"]["message"]),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(), int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -156,20 +137,20 @@ namespace io.nem2.sdk.Infrastructure.Mapping
                     .Select(e =>
                         new MultisigCosignatoryModification(
                             MultisigCosignatoryModificationType.GetRawValue(byte.Parse(e["type"].ToString())),
-                            new PublicAccount(e["cosignatoryPublicKey"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())))
+                            new PublicAccount(e["cosignatoryPublicKey"].ToString(), int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType())
                         )
                     ).ToList() : new List<MultisigCosignatoryModification>();
             
             return new ModifyMultisigAccountTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
                 int.Parse(tx["transaction"]["minApprovalDelta"].ToString()),
                 int.Parse(tx["transaction"]["minRemovalDelta"].ToString()),
                 modifications,
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -177,27 +158,27 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected MosaicDefinitionTransaction ToMosaicDefinitionTransaction(JToken tx, TransactionInfo txInfo)
         {
             var mosaicProperties = tx["transaction"]["properties"];
-            var flags = "00" + Convert.ToString((int)ExtractBigInteger(mosaicProperties[0], "value"), 2);
+            var flags = "00" + Convert.ToString((int)mosaicProperties[0].ExtractBigInteger("value"), 2);
             var bitMapFlags = flags.Substring(flags.Length - 3, 3);
 
             var properties = new MosaicProperties(
                 bitMapFlags.ToCharArray()[2] == '1',
                 bitMapFlags.ToCharArray()[1] == '1',
                 bitMapFlags.ToCharArray()[0] == '1',
-                (int)ExtractBigInteger(mosaicProperties[1], "value"),
-                mosaicProperties.ToList().Count == 3 ? ExtractBigInteger(mosaicProperties[2], "value") : 0);
+                (int)mosaicProperties[1].ExtractBigInteger("value"),
+                mosaicProperties.ToList().Count == 3 ? mosaicProperties[2].ExtractBigInteger("value") : 0);
 
             return new MosaicDefinitionTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
                 tx["transaction"]["name"].ToString(),
-                new NamespaceId(ExtractBigInteger(tx["transaction"], "parentId")),
-                new MosaicId(ExtractBigInteger(tx["transaction"],"mosaicId")),
+                new NamespaceId(tx["transaction"].ExtractBigInteger("parentId")),
+                new MosaicId(tx["transaction"].ExtractBigInteger("mosaicId")),
                 properties,
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -205,15 +186,15 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected MosaicSupplyChangeTransaction ToMosaicSupplychangeTransaction(JToken tx, TransactionInfo txInfo)
         {
             return new MosaicSupplyChangeTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
-                new MosaicId(ExtractBigInteger(tx["transaction"],"mosaicId")),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
+                new MosaicId(tx["transaction"].ExtractBigInteger("mosaicId")),
                 MosaicSupplyType.GetRawValue(byte.Parse(tx["transaction"]["direction"].ToString())),
-                ExtractBigInteger(tx["transaction"], "delta"),
+                tx["transaction"].ExtractBigInteger("delta"),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -221,16 +202,16 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected RegisterNamespaceTransaction ToNamespaceCreationTransaction(JToken tx, TransactionInfo txInfo)
         {
             return new RegisterNamespaceTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
                 byte.Parse(tx["transaction"]["namespaceType"].ToString()),
-                NamespaceTypes.GetRawValue(byte.Parse(tx["transaction"]["namespaceType"].ToString())) == NamespaceTypes.Types.RootNamespace ? ExtractBigInteger(tx["transaction"], "duration") : 0,
-                NamespaceTypes.GetRawValue(byte.Parse(tx["transaction"]["namespaceType"].ToString())) == NamespaceTypes.Types.SubNamespace ? new NamespaceId(ExtractBigInteger(tx["transaction"], "parentId")) : null,
+                NamespaceTypes.GetRawValue(byte.Parse(tx["transaction"]["namespaceType"].ToString())) == NamespaceTypes.Types.RootNamespace ? tx["transaction"].ExtractBigInteger("duration") : 0,
+                NamespaceTypes.GetRawValue(byte.Parse(tx["transaction"]["namespaceType"].ToString())) == NamespaceTypes.Types.SubNamespace ? new NamespaceId(tx["transaction"].ExtractBigInteger("parentId")) : null,
                 new NamespaceId(tx["transaction"]["name"].ToString()),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),              
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),              
                 txInfo
             );
         }
@@ -238,15 +219,15 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected LockFundsTransaction ToLockFundsTransaction(JToken tx, TransactionInfo txInfo)
         {
             return new LockFundsTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
-                new Mosaic(new MosaicId(ExtractBigInteger(tx["transaction"], "mosaicId")), ExtractBigInteger(tx["transaction"], "amount")),
-                ExtractBigInteger(tx["transaction"], "duration"),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
+                new Mosaic(new MosaicId(tx["transaction"].ExtractBigInteger("mosaicId")), tx["transaction"].ExtractBigInteger("amount")),
+                tx["transaction"].ExtractBigInteger("duration"),
                 new SignedTransaction("", tx["transaction"]["hash"].ToString(), "", TransactionTypes.Types.AggregateBonded),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -254,17 +235,17 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected SecretLockTransaction ToSecretLockTransaction(JToken tx, TransactionInfo txInfo)
         {
             return new SecretLockTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
-                new Mosaic(new MosaicId(ExtractBigInteger(tx["transaction"],"mosaicId")), ExtractBigInteger(tx["transaction"], "amount")),
-                ExtractBigInteger(tx["transaction"], "duration"),
+                 int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                 new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
+                new Mosaic(new MosaicId(tx["transaction"].ExtractBigInteger("mosaicId")), tx["transaction"].ExtractBigInteger("amount")),
+                tx["transaction"].ExtractBigInteger("duration"),
                 HashType.GetRawValue(byte.Parse(tx["transaction"]["hashAlgorithm"].ToString())),
                 tx["transaction"]["secret"].ToString(),
                 Address.CreateFromHex(tx["transaction"]["recipient"].ToString()),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -272,15 +253,15 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         protected SecretProofTransaction ToSecretProofTransaction(JToken tx, TransactionInfo txInfo)
         {
             return new SecretProofTransaction(
-                ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
-                new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                ExtractBigInteger(tx["transaction"], "fee"),
+                 int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
+                 new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                tx["transaction"].ExtractBigInteger("fee"),
                 HashType.GetRawValue(byte.Parse(tx["transaction"]["hashAlgorithm"].ToString())),
                 tx["transaction"]["secret"].ToString(),
                 tx["transaction"]["proof"].ToString(),
                 tx["transaction"]["signature"]?.ToString(),
-                new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                 txInfo
             );
         }
@@ -321,7 +302,7 @@ namespace io.nem2.sdk.Infrastructure.Mapping
                 cosignatures = transaction["transaction"]["cosignatures"]
                     .Select(i => new AggregateTransactionCosignature(
                         i["signature"].ToString(),
-                        new PublicAccount(i["signer"].ToString(), ExtractNetworkType(int.Parse(transaction["transaction"]["version"].ToString())))
+                        new PublicAccount(i["signer"].ToString(), int.Parse(transaction["transaction"]["version"].ToString()).ExtractNetworkType())
                     )).ToList();
             }
 
@@ -333,15 +314,15 @@ namespace io.nem2.sdk.Infrastructure.Mapping
             var tx = JObject.Parse(input);
 
             return new AggregateTransaction(
-                    ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())),
-                    ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())),
+                     int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType(),
+                    int.Parse(tx["transaction"]["version"].ToString()).ExtractVersion(),
                     ushort.Parse(tx["transaction"]["type"].ToString()).GetRawValue(),
-                    new Deadline(ExtractBigInteger(tx["transaction"], "deadline")),
-                    ExtractBigInteger(tx["transaction"], "fee"),
+                     new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
+                    tx["transaction"].ExtractBigInteger("fee"),
                     MapInnerTransactions(tx),
                     MapCosignatures(tx),
                     tx["transaction"]["signature"].ToString(),
-                    new PublicAccount(tx["transaction"]["signer"].ToString(), ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString()))),
+                    new PublicAccount(tx["transaction"]["signer"].ToString(),  int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
                     CreateTransactionInfo(JObject.Parse(input))
             );
         }

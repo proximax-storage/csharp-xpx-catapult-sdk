@@ -159,7 +159,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z")) throw new ArgumentException("Invalid hash.");        
 
             return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionStatusAsync(hash))
-                .Select(i => new TransactionStatus(i["group"].ToString(), i["status"].ToString(), i["hash"].ToString(), ExtractBigInteger(i, "deadline"), ExtractBigInteger(i, "height")));
+                .Select(i => new TransactionStatus(i["group"].ToString(), i["status"].ToString(), i["hash"].ToString(), i.ExtractBigInteger("deadline"), i.ExtractBigInteger("height")));
         }
 
         /// <summary>
@@ -177,13 +177,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await TransactionRoutesApi.GetTransactionsStatusesAsync(JObject.FromObject(new
             {
                 hashes = hashes.Select(i => i)
-            }))).Select( i => i.Select(e => new TransactionStatus(e["group"].ToString(), e["status"].ToString(), e["hash"].ToString(), ExtractBigInteger(e, "deadline"), ExtractBigInteger(e, "height"))).ToList());
+            }))).Select( i => i.Select(e => new TransactionStatus(e["group"].ToString(), e["status"].ToString(), e["hash"].ToString(), e.ExtractBigInteger("deadline"), e.ExtractBigInteger( "height"))).ToList());
         }
-
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
     }
 }

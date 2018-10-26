@@ -180,41 +180,19 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                 .Select(i => new BlockInfo(
                     i["meta"]["hash"].ToString(),
                     i["meta"]["generationHash"].ToString(),
-                    i["meta"]["totalFee"] == null ? 0 : ExtractBigInteger(i["meta"], "totalFee"),
+                    i["meta"]["totalFee"] == null ? 0 : i["meta"].ExtractBigInteger("totalFee"),
                     i["meta"]["numTransactions"] == null ? 0 : int.Parse(i["meta"]["numTransactions"].ToString()),
                     i["block"]["signature"].ToString(),
                     new PublicAccount(i["block"]["signer"].ToString(),
-                        ExtractNetworkType(int.Parse(i["block"]["version"].ToString()))),
-                    ExtractNetworkType(int.Parse(i["block"]["version"].ToString())),
-                    ExtractVersion(int.Parse(i["block"]["version"].ToString())),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType(),
+                    int.Parse(i["block"]["version"].ToString()).ExtractVersion(),
                     int.Parse(i["block"]["type"].ToString()),
-                    ExtractBigInteger(i["block"], "height"),
-                    ExtractBigInteger(i["block"], "timestamp"),
-                    ExtractBigInteger(i["block"], "difficulty"),
+                    i["block"].ExtractBigInteger("height"),
+                    i["block"].ExtractBigInteger("timestamp"),
+                    i["block"].ExtractBigInteger("difficulty"),
                     i["block"]["previousBlockHash"].ToString(),
                     i["block"]["blockTransactionsHash"].ToString()));
-        }
-
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
-        internal int ExtractInteger(JsonObject input, string identifier)
-        {
-            return int.Parse(input[identifier].ToString());
-        }
-
-        internal int ExtractVersion(int version)
-        {
-            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
-        }
-
-        internal NetworkType.Types ExtractNetworkType(int version)
-        {
-            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
-
-            return NetworkType.GetRawValue(networkType);
         }
 
         /// <summary>
@@ -318,7 +296,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
                 .Select(i => new TransactionStatus(null,
                     JObject.Parse(i)["status"].ToString(),
                     JObject.Parse(i)["hash"].ToString(),
-                    ExtractBigInteger(JObject.Parse(i), "deadline"),
+                    JObject.Parse(i).ExtractBigInteger("deadline"),
                     null));
         }
 

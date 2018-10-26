@@ -76,11 +76,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             MosaicRoutesApi = new MosaicRoutesApi(host);
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
         /// <summary>
         /// Gets the mosaic.
         /// </summary>
@@ -100,10 +95,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     bool.Parse(mosaic["meta"]["active"].ToString()),
                     int.Parse(mosaic["meta"]["index"].ToString()),
                     mosaic["meta"]["id"].ToString(),
-                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
-                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
-                    ExtractBigInteger(mosaic["mosaic"], "supply"),
-                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new NamespaceId(mosaic["mosaic"].ExtractBigInteger("namespaceId")),
+                    new MosaicId(mosaic["mosaic"].ExtractBigInteger("mosaicId")),
+                    mosaic["mosaic"].ExtractBigInteger("supply"),
+                    mosaic["mosaic"].ExtractBigInteger("height"),
                     new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
                     ExtractMosaicProperties(JsonConvert
                         .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
@@ -155,10 +150,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     bool.Parse(mosaic["meta"]["active"].ToString()),
                     int.Parse(mosaic["meta"]["index"].ToString()),
                     mosaic["meta"]["id"].ToString(),
-                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
-                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
-                    ExtractBigInteger(mosaic["mosaic"], "supply"),
-                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new NamespaceId(mosaic["mosaic"].ExtractBigInteger("namespaceId")),
+                    new MosaicId(mosaic["mosaic"].ExtractBigInteger("mosaicId")),
+                    mosaic["mosaic"].ExtractBigInteger("supply"),
+                    mosaic["mosaic"].ExtractBigInteger("height"),
                     new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
                     ExtractMosaicProperties(JsonConvert
                         .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
@@ -184,10 +179,10 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     bool.Parse(mosaic["meta"]["active"].ToString()),
                     int.Parse(mosaic["meta"]["index"].ToString()),
                     mosaic["meta"]["id"].ToString(),
-                    new NamespaceId(ExtractBigInteger(mosaic["mosaic"], "namespaceId")),
-                    new MosaicId(ExtractBigInteger(mosaic["mosaic"], "mosaicId")),
-                    ExtractBigInteger(mosaic["mosaic"], "supply"),
-                    ExtractBigInteger(mosaic["mosaic"], "height"),
+                    new NamespaceId(mosaic["mosaic"].ExtractBigInteger( "namespaceId")),
+                    new MosaicId(mosaic["mosaic"].ExtractBigInteger("mosaicId")),
+                    mosaic["mosaic"].ExtractBigInteger("supply"),
+                    mosaic["mosaic"].ExtractBigInteger("height"),
                     new PublicAccount(mosaic["mosaic"]["owner"].ToString(), networkTypeResolve.Wait()),
                     ExtractMosaicProperties(JsonConvert
                         .DeserializeObject<uint[][]>(mosaic["mosaic"]["properties"].ToString())
@@ -212,8 +207,7 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
             return Observable.FromAsync(async ar => await MosaicRoutesApi.GetMosaicsNameAsync(JObject.FromObject(new
                 {
                     mosaicIds = mosaicIds.Select(i => i)
-                })))
-                .Select(e => e.Select(mosaic => new MosaicName(new MosaicId(ExtractBigInteger(mosaic, "mosaicId")), mosaic["name"].ToString(), new NamespaceId(ExtractBigInteger(mosaic, "parentId")))).ToList());
+                }))).Select(e => e.Select(mosaic => new MosaicName(new MosaicId(mosaic.ExtractBigInteger("mosaicId")), mosaic["name"].ToString(), new NamespaceId(mosaic.ExtractBigInteger("parentId")))).ToList());
         }  
     } 
 }

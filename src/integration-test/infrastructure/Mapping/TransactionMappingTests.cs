@@ -209,7 +209,7 @@ namespace test.Infrastructure
         {
             var tx = JObject.Parse(transactionDTO);
 
-            Assert.AreEqual(ExtractBigInteger(tx["meta"], "height"), transaction.TransactionInfo.Height);
+            Assert.AreEqual(tx["meta"].ExtractBigInteger( "height"), transaction.TransactionInfo.Height);
 
             if (transaction.TransactionInfo.Hash != null)
             {
@@ -231,8 +231,8 @@ namespace test.Infrastructure
             Assert.IsNotNull(transaction.Signature);
             Assert.AreEqual(tx["transaction"]["signer"], transaction.Signer.PublicKey);
             Assert.IsTrue(transaction.TransactionType.GetValue() == ushort.Parse(tx["transaction"]["type"].ToString()));          
-            Assert.IsTrue(ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())) == transaction.Version);
-            Assert.IsTrue(ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())).GetNetworkByte() == transaction.NetworkType.GetNetworkByte());
+            Assert.IsTrue(ByteCoder.ExtractVersion(int.Parse(tx["transaction"]["version"].ToString())) == transaction.Version);
+            Assert.IsTrue(ByteCoder.ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())).GetNetworkByte() == transaction.NetworkType.GetNetworkByte());
             Assert.IsNotNull(transaction.Deadline);
 
             if (transaction.TransactionType == TransactionTypes.Types.Transfer)
@@ -274,7 +274,7 @@ namespace test.Infrastructure
             
             var tx = JObject.Parse(aggregateTransactionDTO);
 
-            Assert.AreEqual(ExtractBigInteger(tx["meta"], "height"), aggregateTransaction.TransactionInfo.Height);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["meta"], "height"), aggregateTransaction.TransactionInfo.Height);
 
             if (aggregateTransaction.TransactionInfo.Hash != null)
             {
@@ -303,9 +303,9 @@ namespace test.Infrastructure
             Assert.AreEqual(tx["transaction"]["signature"].ToString(), aggregateTransaction.Signature);
             Assert.AreEqual(tx["transaction"]["signer"].ToString(), aggregateTransaction.Signer.PublicKey);
            
-            Assert.IsTrue(ExtractTransactionVersion(int.Parse(tx["transaction"]["version"].ToString())) == aggregateTransaction.Version);
-            Assert.IsTrue(ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())).GetNetworkByte() == aggregateTransaction.NetworkType.GetNetworkByte());
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "fee"), aggregateTransaction.Fee);
+            Assert.IsTrue(ByteCoder.ExtractVersion(int.Parse(tx["transaction"]["version"].ToString())) == aggregateTransaction.Version);
+            Assert.IsTrue(ByteCoder.ExtractNetworkType(int.Parse(tx["transaction"]["version"].ToString())).GetNetworkByte() == aggregateTransaction.NetworkType.GetNetworkByte());
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "fee"), aggregateTransaction.Fee);
             Assert.IsNotNull(aggregateTransaction.Deadline);
            
             if (tx["transaction"]["cosignatures"].ToList().Count > 0)
@@ -335,9 +335,9 @@ namespace test.Infrastructure
 
             var tx = JObject.Parse(transactionDTO);
 
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.Mosaic.MosaicId.Id);
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "amount"), transaction.Mosaic.Amount);
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "duration"), transaction.Duration);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.Mosaic.MosaicId.Id);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "amount"), transaction.Mosaic.Amount);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "duration"), transaction.Duration);
             Assert.IsTrue(HashType.GetRawValue(byte.Parse(tx["transaction"]["hashAlgorithm"].ToString())) == transaction.HashAlgo);
             Assert.AreEqual(tx["transaction"]["secret"].ToString(), transaction.SecretString());
             Assert.AreEqual(Address.CreateFromHex(tx["transaction"]["recipient"].ToString()).Plain, transaction.Recipient.Plain);
@@ -359,8 +359,8 @@ namespace test.Infrastructure
         {
             var tx = JObject.Parse(transactionDTO);
 
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.MosaicId.Id);
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "delta"), transaction.Delta);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.MosaicId.Id);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "delta"), transaction.Delta);
             Assert.AreEqual(MosaicSupplyType.GetRawValue(byte.Parse(tx["transaction"]["direction"].ToString())), transaction.SupplyType);
         }
 
@@ -368,9 +368,9 @@ namespace test.Infrastructure
         {
             var tx = JObject.Parse(transactionDTO);
 
-            Assert.AreEqual(transaction.Mosaic.MosaicId.Id, ExtractBigInteger(tx["transaction"], "mosaicId"));
-            Assert.AreEqual(transaction.Mosaic.Amount, ExtractBigInteger(tx["transaction"], "amount"));
-            Assert.AreEqual(transaction.Duration, ExtractBigInteger(tx["transaction"], "duration"));
+            Assert.AreEqual(transaction.Mosaic.MosaicId.Id, ByteCoder.ExtractBigInteger(tx["transaction"], "mosaicId"));
+            Assert.AreEqual(transaction.Mosaic.Amount, ByteCoder.ExtractBigInteger(tx["transaction"], "amount"));
+            Assert.AreEqual(transaction.Duration, ByteCoder.ExtractBigInteger(tx["transaction"], "duration"));
             Assert.AreEqual(transaction.Transaction.Hash, tx["transaction"]["hash"].ToString());
         }
 
@@ -378,8 +378,8 @@ namespace test.Infrastructure
         {
             var tx = JObject.Parse(transactionDTO);
 
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"],"parentId"), transaction.NamespaceId.Id);
-            Assert.AreEqual(ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.MosaicId.Id);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"],"parentId"), transaction.NamespaceId.Id);
+            Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "mosaicId"), transaction.MosaicId.Id);
             Assert.AreEqual(tx["transaction"]["name"].ToString(), transaction.MosaicName);
             Assert.IsTrue(transaction.Properties.Divisibility == 6);
             Assert.AreEqual(transaction.Properties.Duration, (ulong)1000);
@@ -388,36 +388,13 @@ namespace test.Infrastructure
             Assert.IsTrue(transaction.Properties.IsLevyMutable);
         }
 
-        internal ulong ExtractBigInteger(JToken input, string identifier)
-        {
-            return JsonConvert.DeserializeObject<uint[]>(input[identifier].ToString()).FromUInt8Array();
-        }
-
-        internal int ExtractInteger(JsonObject input, string identifier)
-        {
-            
-            return int.Parse(input[identifier].ToString());
-        }
-
-        internal int ExtractTransactionVersion(int version)
-        {
-            return (int)Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
-        }
-
-        internal NetworkType.Types ExtractNetworkType(int version)
-        {
-            var networkType = (int)Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
-
-            return NetworkType.GetRawValue(networkType);
-        }
-
         private void ValidateTransferTx(TransferTransaction transaction, string transactionDTO)
         {
             var tx = JObject.Parse(transactionDTO);
 
             Assert.AreEqual(Address.CreateFromHex(tx["transaction"]["recipient"].ToString()).Plain, transaction.Address.Plain);
 
-            var mosaics = tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(ExtractBigInteger(m, "id")), ExtractBigInteger(m, "amount"))).ToList();
+            var mosaics = tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(m.ExtractBigInteger("id")), ByteCoder.ExtractBigInteger(m, "amount"))).ToList();
 
             if (mosaics != null && mosaics.Count > 0)
             {
@@ -449,11 +426,11 @@ namespace test.Infrastructure
 
             if (transaction.NamespaceType == NamespaceTypes.Types.RootNamespace)
             {
-                Assert.AreEqual(ExtractBigInteger(tx["transaction"], "duration"), transaction.Duration);
+                Assert.AreEqual(ByteCoder.ExtractBigInteger(tx["transaction"], "duration"), transaction.Duration);
             }
             else
             {
-                Assert.AreEqual(new NamespaceId(ExtractBigInteger(tx["transaction"], "parentId")).Id, transaction.ParentId.Id);
+                Assert.AreEqual(new NamespaceId(ByteCoder.ExtractBigInteger(tx["transaction"], "parentId")).Id, transaction.ParentId.Id);
             }
         }
     }
