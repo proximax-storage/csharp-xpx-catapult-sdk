@@ -69,6 +69,8 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         /// </summary>
         private readonly Subject<string> _subject = new Subject<string>();
 
+        private CancellationTokenSource CToken = new CancellationTokenSource();
+
         /// <summary>
         /// Gets or sets the domain.
         /// </summary>
@@ -104,7 +106,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
 
                 Uid = JsonConvert.DeserializeObject<WebsocketUID>(ReadSocket().Result);
 
-                LoopReads = Task.Run(() => LoopRead());
+                LoopReads = Task.Run(() => LoopRead(), CToken.Token);
 
                 Console.WriteLine("Connected to websocket via domain: " + Domain);
 
@@ -371,8 +373,9 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         /// </summary>
         public void Close()
         {
-            ClientSocket.Abort();
+            CToken.Cancel();
             LoopReads.Dispose();
+            ClientSocket.Abort();
         }
 
         /// <summary>

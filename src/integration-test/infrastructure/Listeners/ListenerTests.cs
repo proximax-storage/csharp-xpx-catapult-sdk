@@ -43,6 +43,16 @@ namespace IntegrationTests.Infrastructure.Listeners
         }
 
         [TestMethod, Timeout(20000)]
+        public async Task CloseListener()
+        {
+            var listener = new Listener(Config.Domain);
+
+            await listener.Open();
+
+            listener.Close();
+        }
+
+        [TestMethod, Timeout(20000)]
         public async Task ListenForUnconfirmedTransactionAdded()
         {
             var listener = new Listener(Config.Domain);
