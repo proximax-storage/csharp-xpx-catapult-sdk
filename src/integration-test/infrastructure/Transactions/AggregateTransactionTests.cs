@@ -196,7 +196,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             return TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
-                Address.CreateFromEncoded("SAAA57DREOPYKUFX4OG7IQXKITMBWKD6KXTVBBQP"),
+                Address.CreateFromRawAddress("SAAA57DREOPYKUFX4OG7IQXKITMBWKD6KXTVBBQP"),
                 new List<Mosaic> {Mosaic.CreateFromIdentifier("nem:xem", 10)},
                 PlainMessage.Create("hey"));
         }

@@ -49,7 +49,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             await listener.Open();
 
-            var tx = listener.UnconfirmedTransactionsAdded(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
+            var tx = listener.UnconfirmedTransactionsAdded(Address.CreateFromRawAddress("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction();
 
@@ -104,7 +104,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             await listener.Open();
 
-            var tx = listener.UnconfirmedTransactionsRemoved(Address.CreateFromEncoded("SBHQVG-3J27J4-7X7YQJ-F6WE7K-GUP76D-BASFNO-ZGEO")).Take(1);
+            var tx = listener.UnconfirmedTransactionsRemoved(Address.CreateFromRawAddress("SBHQVG-3J27J4-7X7YQJ-F6WE7K-GUP76D-BASFNO-ZGEO")).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction();
 
@@ -120,7 +120,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             await listener.Open();
 
-            var tx = listener.ConfirmedTransactionsGiven(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
+            var tx = listener.ConfirmedTransactionsGiven(Address.CreateFromRawAddress("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction();
 
@@ -136,7 +136,7 @@ namespace IntegrationTests.Infrastructure.Listeners
 
             await listener.Open();
 
-            var tx = listener.TransactionStatus(Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
+            var tx = listener.TransactionStatus(Address.CreateFromRawAddress("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR")).Take(1);
 
             await new TransferTransactionTests().AnnounceTransaction(2000000000000000000);
 

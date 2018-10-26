@@ -45,7 +45,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         {
             var expected = "SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S";
 
-            var response = await new AccountHttp(host).GetAccountInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
+            var response = await new AccountHttp(host).GetAccountInfo(Address.CreateFromRawAddress("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
             
             Assert.AreEqual(expected, response.Address.Plain);
 
@@ -74,7 +74,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
 
             var accounts = new List<Address>()
             {
-                Address.CreateFromEncoded("SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV")
+                Address.CreateFromRawAddress("SAZJ2CI6OQFZHM4EIDTBQPP7ITOSZG33DAFSE4IV")
             };
 
             var response = await new AccountHttp(host).GetAccountsInfo(accounts);
@@ -112,7 +112,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
             var trans = (TransferTransaction) response[0];
 
             Assert.AreEqual(expected, trans.TransactionInfo.Hash);
-            Assert.AreEqual(Address.CreateFromEncoded("SA6VBFEOYF4CWLMARDQQT5FH2D3P4KNL4SJKBT3N").Plain, trans.Address.Plain);
+            Assert.AreEqual(Address.CreateFromRawAddress("SA6VBFEOYF4CWLMARDQQT5FH2D3P4KNL4SJKBT3N").Plain, trans.Address.Plain);
         }
 
         [TestMethod, Timeout(20000)]
@@ -128,7 +128,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigGraphInfoAddress()
         {
-            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
+            var response = await new AccountHttp(host).GetMultisigAccountGraphInfo(Address.CreateFromRawAddress("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
 
             Assert.AreEqual(2, response.MultisigAccounts[0][0].MinApproval);
 
@@ -151,7 +151,7 @@ namespace IntegrationTests.Infrastructure.HttpTests
         [TestMethod, Timeout(20000)]
         public async Task GetMultisigInfoAddress()
         {
-            var response = await new AccountHttp(host).GetMultisigAccountInfo(Address.CreateFromEncoded("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
+            var response = await new AccountHttp(host).GetMultisigAccountInfo(Address.CreateFromRawAddress("SCMEYH3HEOFJMWRPIFZTVQB4SGARVS5YCY7TKN3S"));
 
             Assert.AreEqual("205B8C27461DCBD9EAF8BB2A8C673E72638A079378F3BF290C406F92EC3A9EB8", response.Account.PublicKey);
             Assert.AreEqual(2, response.MinApproval);

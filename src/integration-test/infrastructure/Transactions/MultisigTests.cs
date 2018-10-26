@@ -90,7 +90,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             TransferTransaction transferTransaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
-                Address.CreateFromEncoded("SAHKKLGIPLYFMTTV2VQKOOUCWGGCXLQEMKC4OWEF"),
+                Address.CreateFromRawAddress("SAHKKLGIPLYFMTTV2VQKOOUCWGGCXLQEMKC4OWEF"),
                 new List<Mosaic>() { Xem.CreateRelative(10) },
                 PlainMessage.Create("sending 10 nem:xem")            
             );

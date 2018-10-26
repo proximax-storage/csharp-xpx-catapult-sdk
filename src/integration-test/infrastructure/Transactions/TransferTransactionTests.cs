@@ -49,14 +49,14 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transaction =  TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2), 
-                Address.CreateFromEncoded("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"),
+                Address.CreateFromRawAddress("SCEYFB35CYFF2U7UZ32RYXXZ5JTPCSKU4P6BRXZR"),
                 new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", amount) }, 
                 PlainMessage.Create("hello")  
                 ).SignWith(keyPair);
 
              await new TransactionHttp("http://" + Config.Domain + ":3000").Announce(transaction);
         }
-
+        
         [TestMethod, Timeout(40000)]
         public async Task AnnounceTransferTransactionWithMosaicWithMessage()
         {
@@ -68,8 +68,11 @@ namespace IntegrationTests.Infrastructure.Transactions
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
                 account.Address,
-                new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", 1000000) },
-                PlainMessage.Create("hello")
+                new List<Mosaic> { Xem.CreateRelative(1) },
+                PlainMessage.Create("111111111111111111111111111111111111111111111111111111111111111111111111111" +
+                                    "111111111111111111111111111111111111111111111111111111111111111111111111111" +
+                                    "111111111111111111111111111111111111111111111111111111111111111111111111111" +
+                                    "111111111111111111111111111111")
             ).SignWith(keyPair);
 
             listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType.Types.MIJIN_TEST))
@@ -93,7 +96,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
-                Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
+                Address.CreateFromRawAddress("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                 new List<Mosaic> { Mosaic.CreateFromIdentifier("nem:xem", 10) },
                 SecureMessage.Create("hello2", Config.PrivateKeyAggregate1, "5D8BEBBE80D7EA3B0088E59308D8671099781429B449A0BBCA6D950A709BA068")
                 ).SignWith(keyPair);
@@ -117,7 +120,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
-                Address.CreateFromEncoded("SAOV4Y5W627UXLIYS5O43SVU23DD6VNRCFP222P2"),
+                Address.CreateFromRawAddress("SAOV4Y5W627UXLIYS5O43SVU23DD6VNRCFP222P2"),
                 new List<Mosaic>()
                 {
                     Mosaic.CreateFromIdentifier("happy:test4", 10),
@@ -144,7 +147,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             var transaction = TransferTransaction.Create(
                 NetworkType.Types.MIJIN_TEST,
                 Deadline.CreateHours(2),
-                Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
+                Address.CreateFromRawAddress("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                 new List<Mosaic>()
                 {
                     
@@ -169,7 +172,7 @@ namespace IntegrationTests.Infrastructure.Transactions
             return TransferTransaction.Create(
                         NetworkType.Types.MIJIN_TEST,
                         Deadline.CreateHours(2),
-                        Address.CreateFromEncoded("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
+                        Address.CreateFromRawAddress("SAAA57-DREOPY-KUFX4O-G7IQXK-ITMBWK-D6KXTV-BBQP"),
                         new List<Mosaic> {Mosaic.CreateFromIdentifier(mosaic, amount)}, 
                         PlainMessage.Create("hey")
                         

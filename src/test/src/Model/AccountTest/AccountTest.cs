@@ -69,7 +69,7 @@ namespace test.Model.AccountTest
             TransferTransaction transferTransaction = TransferTransaction.Create(
                     NetworkType.Types.MIJIN_TEST,
                     Deadline.CreateHours(0), 
-                    Address.CreateFromEncoded("SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM"),
+                    Address.CreateFromRawAddress("SDUP5PLHDXKBX3UU5Q52LAY4WYEKGEWC6IB3VBFM"),
                     new List<Mosaic>() {
                         new Mosaic(new MosaicId("nem:xem"), 100)
                     },

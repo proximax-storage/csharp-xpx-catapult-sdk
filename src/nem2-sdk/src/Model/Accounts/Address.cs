@@ -103,7 +103,7 @@ namespace io.nem2.sdk.Model.Accounts
         /// or
         /// Address Network unsupported
         /// </exception>
-        public static Address CreateFromEncoded(string address)
+        public static Address CreateFromRawAddress(string address)
         {
             NetworkType.Types networkType;
 
@@ -139,7 +139,7 @@ namespace io.nem2.sdk.Model.Accounts
 
         public static Address CreateFromHex(string address)
         {
-            return CreateFromEncoded(address.FromHex().ToBase32String());
+            return CreateFromRawAddress(address.FromHex().ToBase32String());
         }
         /// <summary>
         /// Create an Address from a given public key and network type.
@@ -180,7 +180,7 @@ namespace io.nem2.sdk.Model.Accounts
             Array.Copy(stepFive, 0, stepSix, Constants.Ripemd160 + 1, Constants.Checksum);
 
             // step 7) return base 32 encode address byte array
-            return CreateFromEncoded(stepSix.ToBase32String());
+            return CreateFromRawAddress(stepSix.ToBase32String());
         }
 
         /// <summary>
