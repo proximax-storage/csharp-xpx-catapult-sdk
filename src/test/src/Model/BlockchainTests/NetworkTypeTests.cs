@@ -22,17 +22,31 @@ namespace test.Model.BlockchainTests
     public class NetworkTypeTests
     {
         [TestMethod]
-        public void MAIN_NETIs0x68()
+        public void MAIN_NETIs0xb8()
         {
-            Assert.IsTrue(0x68 == NetworkType.Types.MAIN_NET.GetNetworkByte());
-            Assert.IsTrue(104 == NetworkType.Types.MAIN_NET.GetNetworkByte());
+            Assert.IsTrue(0xb8 == NetworkType.Types.MAIN_NET.GetNetworkByte());
+            Assert.IsTrue(184 == NetworkType.Types.MAIN_NET.GetNetworkByte());
         }
 
         [TestMethod]
-        public void TEST_NETIs0x96()
+        public void TEST_NETIs0xa8()
         {
-            Assert.IsTrue(0x98 == NetworkType.Types.TEST_NET.GetNetworkByte());
-            Assert.IsTrue(152 == NetworkType.Types.TEST_NET.GetNetworkByte());
+            Assert.IsTrue(0xa8 == NetworkType.Types.TEST_NET.GetNetworkByte());
+            Assert.IsTrue(168 == NetworkType.Types.TEST_NET.GetNetworkByte());
+        }
+
+        [TestMethod]
+        public void PRIVATEIs0xc8()
+        {
+            Assert.IsTrue(0xc8 == NetworkType.Types.PRIVATE.GetNetworkByte());
+            Assert.IsTrue(200 == NetworkType.Types.PRIVATE.GetNetworkByte());
+        }
+
+        [TestMethod]
+        public void PRIVATE_TESTIs0xb0()
+        {
+            Assert.IsTrue(0xb0 == NetworkType.Types.PRIVATE_TEST.GetNetworkByte());
+            Assert.IsTrue(176 == NetworkType.Types.PRIVATE_TEST.GetNetworkByte());
         }
 
         [TestMethod]

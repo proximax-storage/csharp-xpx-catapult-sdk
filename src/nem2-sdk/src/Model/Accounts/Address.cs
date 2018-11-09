@@ -125,11 +125,17 @@ namespace io.nem2.sdk.Model.Accounts
                 case 'M':
                     networkType = NetworkType.Types.MIJIN;
                     break;
-                case 'T':
+                case 'V':
                     networkType = NetworkType.Types.TEST_NET;
                     break;
-                case 'N':
+                case 'X':
                     networkType = NetworkType.Types.MAIN_NET;
+                    break;
+                case 'W':
+                    networkType = NetworkType.Types.PRIVATE_TEST;
+                    break;
+                case 'Z':
+                    networkType = NetworkType.Types.PRIVATE;
                     break;
                 default:
                     throw new Exception("Address Network unsupported");
