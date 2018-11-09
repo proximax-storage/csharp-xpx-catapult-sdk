@@ -22,6 +22,103 @@ namespace test.Model.AccountTest
     [TestClass]
     public class AddressTest
     {
+        private const string PublicKey = "c2f93346e27ce6ad1a9f8f5e3066f8326593a406bdf357acb041e2f9ab402efe";
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForMainNet()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.MAIN_NET);
+            Assert.AreEqual("XCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRVLFKS6", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MAIN_NET, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForTestNet()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.TEST_NET);
+            Assert.AreEqual("VCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR3HTEHT", address.Plain);
+            Assert.AreEqual(NetworkType.Types.TEST_NET, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForPrivate()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.PRIVATE);
+            Assert.AreEqual("ZCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR2FNT66", address.Plain);
+            Assert.AreEqual(NetworkType.Types.PRIVATE, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForPrivateTest()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.PRIVATE_TEST);
+            Assert.AreEqual("WCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPSIBCI5Q", address.Plain);
+            Assert.AreEqual(NetworkType.Types.PRIVATE_TEST, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForMijin()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.MIJIN);
+            Assert.AreEqual("MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MIJIN, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressFromPublicKeyForMijinTest()
+        {
+            var address = Address.CreateFromPublicKey(PublicKey, NetworkType.Types.MIJIN_TEST);
+            Assert.AreEqual("SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MIJIN_TEST, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForMainNet()
+        {
+            var address = Address.CreateFromRawAddress("XCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRVLFKS6");
+            Assert.AreEqual("XCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRVLFKS6", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MAIN_NET, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForTestNet()
+        {
+            var address = Address.CreateFromRawAddress("VCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR3HTEHT");
+            Assert.AreEqual("VCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR3HTEHT", address.Plain);
+            Assert.AreEqual(NetworkType.Types.TEST_NET, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForPrivate()
+        {
+            var address = Address.CreateFromRawAddress("ZCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR2FNT66");
+            Assert.AreEqual("ZCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR2FNT66", address.Plain);
+            Assert.AreEqual(NetworkType.Types.PRIVATE, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForPrivateTest()
+        {
+            var address = Address.CreateFromRawAddress("WCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPSIBCI5Q");
+            Assert.AreEqual("WCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPSIBCI5Q", address.Plain);
+            Assert.AreEqual(NetworkType.Types.PRIVATE_TEST, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForMijin()
+        {
+            var address = Address.CreateFromRawAddress("MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX");
+            Assert.AreEqual("MCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPR72DYSX", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MIJIN, address.NetworkByte);
+        }
+
+        [TestMethod]
+        public void TestCreateAddressForMijinTest()
+        {
+            var address = Address.CreateFromRawAddress("SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2");
+            Assert.AreEqual("SCTVW23D2MN5VE4AQ4TZIDZENGNOZXPRPRLIKCF2", address.Plain);
+            Assert.AreEqual(NetworkType.Types.MIJIN_TEST, address.NetworkByte);
+        }
 
         [TestMethod]
         public void TestAddressCreation()

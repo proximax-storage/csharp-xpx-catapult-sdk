@@ -40,19 +40,27 @@ namespace io.nem2.sdk.Model.Blockchain
             /// <summary>
             /// The main net
             /// </summary>
-            MAIN_NET = 104,
+            MAIN_NET = 0xb8,
             /// <summary>
             /// The test net
             /// </summary>
-            TEST_NET = 152,
+            TEST_NET = 0xa8,
+            /// <summary>
+            /// The private
+            /// </summary>
+            PRIVATE = 0xc8,
+            /// <summary>
+            /// The private test
+            /// </summary>
+            PRIVATE_TEST = 0xb0,
             /// <summary>
             /// The mijin
             /// </summary>
-            MIJIN = 96,
+            MIJIN = 0x60,
             /// <summary>
             /// The mijin test
             /// </summary>
-            MIJIN_TEST = 144
+            MIJIN_TEST = 0x90
         }
 
 
@@ -83,6 +91,10 @@ namespace io.nem2.sdk.Model.Blockchain
                     return Types.TEST_NET;
                 case "mainnet":
                     return Types.MAIN_NET;
+                case "privateTest":
+                    return Types.PRIVATE_TEST;
+                case "private":
+                    return Types.PRIVATE;
                 default:
                     throw  new ArgumentException("invalid network name.");
             }
@@ -96,14 +108,18 @@ namespace io.nem2.sdk.Model.Blockchain
             switch (value)
             {
                     
-                case 144:
+                case 0x90:
                     return Types.MIJIN_TEST;
-                case 142:
+                case 0x60:
                     return Types.MIJIN;
-                case 96:
+                case 0xa8:
                     return Types.TEST_NET;
-                case 104:
+                case 0xb8:
                     return Types.MAIN_NET;
+                case 0xc8:
+                    return Types.PRIVATE;
+                case 0xb0:
+                    return Types.PRIVATE_TEST;
                 default:
                     throw new ArgumentException("invalid network name.");
             }
