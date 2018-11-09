@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\nem2-sdk\io.nem2.sdk.csproj" />
+    <ProjectReference Include="..\nem2-sdk\proximax.nem2.sdk.csproj" />
   </ItemGroup>
 
 </Project>
