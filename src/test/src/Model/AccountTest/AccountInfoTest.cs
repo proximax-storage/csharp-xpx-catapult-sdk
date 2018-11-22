@@ -35,8 +35,6 @@ namespace test.Model.AccountTest
                     966,
                     "cf893ffcc47c33e7f68ab1db56365c156b0736824a0c1e273f9e00b8df8f01eb",
                     964,
-                    0,
-                    0,
                     mosaics
                 );
 
@@ -44,8 +42,6 @@ namespace test.Model.AccountTest
             Assert.AreEqual((ulong)966, accountInfo.AddressHeight);
             Assert.AreEqual("cf893ffcc47c33e7f68ab1db56365c156b0736824a0c1e273f9e00b8df8f01eb", accountInfo.PublicKey);
             Assert.AreEqual((ulong)964, accountInfo.PublicKeyHeight);
-            Assert.AreEqual((ulong)0, accountInfo.Importance);
-            Assert.AreEqual((ulong)0, accountInfo.ImportanceHeight);
             Assert.AreEqual(mosaics, accountInfo.Mosaics);
         }
     }

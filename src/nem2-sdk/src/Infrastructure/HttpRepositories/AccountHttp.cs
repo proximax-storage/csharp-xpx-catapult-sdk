@@ -89,8 +89,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     accountInfo["account"].ExtractBigInteger( "addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
                     accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
-                    accountInfo["account"].ExtractBigInteger("importance"),
-                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
                     accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList()));
         }
 
@@ -110,8 +108,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
                     accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
-                    accountInfo["account"].ExtractBigInteger("importance"),
-                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
                     accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList()));
         }
 
@@ -136,8 +132,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
                     accountInfo["account"].ExtractBigInteger("publicKeyHeight"),
-                    accountInfo["account"].ExtractBigInteger("importance"),
-                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
                     accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList());
             }).ToList());
         }
@@ -162,8 +156,6 @@ namespace io.nem2.sdk.Infrastructure.HttpRepositories
                     accountInfo["account"].ExtractBigInteger("addressHeight"),
                     accountInfo["account"]["publicKey"].ToString(),
                     accountInfo["account"].ExtractBigInteger(  "publicKeyHeight"),
-                    accountInfo["account"].ExtractBigInteger(  "importance"),
-                    accountInfo["account"].ExtractBigInteger("importanceHeight"),
                     accountInfo["account"]["mosaics"].Select(mosaic => new Mosaic(new MosaicId(mosaic.ExtractBigInteger("id")), mosaic.ExtractBigInteger("amount"))).ToList())
                 ).ToList());
         }

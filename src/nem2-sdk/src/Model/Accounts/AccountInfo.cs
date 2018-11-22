@@ -63,20 +63,6 @@ namespace io.nem2.sdk.Model.Accounts
 
 
         /// <summary>
-        /// Gets or sets the importance.
-        /// </summary>
-        /// <value>The importance.</value>
-        public ulong Importance { get; }
-
-
-        /// <summary>
-        /// Gets or sets the height of the importance.
-        /// </summary>
-        /// <value>The height of the importance.</value>
-        public ulong ImportanceHeight { get; }
-
-
-        /// <summary>
         /// Gets or sets the mosaics.
         /// </summary>
         /// <value>The mosaics.</value>
@@ -98,17 +84,13 @@ namespace io.nem2.sdk.Model.Accounts
         /// <param name="addressHeight">Height of the address.</param>
         /// <param name="publicKey">The public key.</param>
         /// <param name="publicKeyHeight">Height of the public key.</param>
-        /// <param name="importance">The importance.</param>
-        /// <param name="importanceHeight">Height of the importance.</param>
         /// <param name="mosaics">The mosaics.</param>
-        public AccountInfo(Address address, ulong addressHeight,  string publicKey, ulong publicKeyHeight, ulong importance, ulong importanceHeight, List<Mosaic> mosaics)
+        public AccountInfo(Address address, ulong addressHeight,  string publicKey, ulong publicKeyHeight, List<Mosaic> mosaics)
         {
             Address = address;
             AddressHeight = addressHeight;
             PublicKey = publicKey;
             PublicKeyHeight = publicKeyHeight;
-            Importance = importance;
-            ImportanceHeight = importanceHeight;
             Mosaics = mosaics;           
         }
     }

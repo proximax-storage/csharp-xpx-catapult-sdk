@@ -260,3 +260,12 @@ paket-files/
 __pycache__/
 *.pyc
 nis2-sdk-csharp/ConsoleApp1/
+
+.idea/
+.vs/
+integration-test/bin/
+integration-test/obj/
+unit-test/bin/
+unit-test/obj/
+xpx2-csharp-sdk/bin/
+xpx2-csharp-sdk/obj/
