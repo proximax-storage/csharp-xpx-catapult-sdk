@@ -63,7 +63,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
             var longKeyHash = new byte[64];
             var shortKeyHash = new byte[32];
 
-            Array.Reverse(secretKey);
+//            Array.Reverse(secretKey);
 
             // compute  Sha3(512) hash of secret key (as in prepareForScalarMultiply)
             var digestSha3 = new Sha3Digest(512);

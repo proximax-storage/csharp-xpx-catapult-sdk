@@ -16,7 +16,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using io.nem2.sdk.Core.Crypto;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl;
+using io.nem2.sdk.Core.Crypto.Chaso.NaCl.Internal.Ed25519ref10;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
@@ -25,6 +29,7 @@ using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
 using io.nem2.sdk.Model.Transactions.Messages;
+using Org.BouncyCastle.Crypto.Digests;
 
 
 namespace IntegrationTests.Infrastructure.Transactions
@@ -38,7 +43,7 @@ namespace IntegrationTests.Infrastructure.Transactions
         {
             listener = new Listener(Config.Domain);
 
-            listener.Open().Wait();
+//            listener.Open().Wait();
         }
 
         public async Task AnnounceTransaction(ulong amount = 10)
@@ -178,5 +183,108 @@ namespace IntegrationTests.Infrastructure.Transactions
                         
                     );
         }
+        
+        [TestMethod, Timeout(20000)]
+        public async Task EncodeDecodeSecureMessage()
+        {
+            var privateKey1 = "2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90";
+            var privateKey2 = "2618090794e9c9682f2ac6504369a2f4fb9fe7ee7746f9560aca228d355b1cb9";
+            
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey1, NetworkType.Types.MIJIN_TEST).PublicKey);
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+            
+            var secureMessage = SecureMessage.Create("hello2", privateKey1,
+                Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+
+            Console.WriteLine("payload " + secureMessage.GetPayload().ToHexLower());
+            
+            var decodedPayload1 = secureMessage.GetDecodedPayload(privateKey1, 
+                Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+            Assert.AreEqual(decodedPayload1, "hello2");
+
+            var decodedPayload2 = secureMessage.GetDecodedPayload(privateKey2, 
+                Account.CreateFromPrivateKey(privateKey1, NetworkType.Types.MIJIN_TEST).PublicKey);
+            Assert.AreEqual(decodedPayload2, "hello2");
+
+        }
+
+        [TestMethod, Timeout(20000), ExpectedException(typeof(CryptographicException))]
+        public async Task EncodeDecodeSecureMessageShouldFail()
+        {
+            var privateKey1 = "2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90";
+            var privateKey2 = "2618090794e9c9682f2ac6504369a2f4fb9fe7ee7746f9560aca228d355b1cb9";
+            
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey1, NetworkType.Types.MIJIN_TEST).PublicKey);
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+            
+            var secureMessage = SecureMessage.Create("hello2", privateKey1,
+                Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+            
+            secureMessage.GetDecodedPayload(privateKey1, 
+                Account.CreateFromPrivateKey(privateKey1, NetworkType.Types.MIJIN_TEST).PublicKey);
+        }
+
+        [TestMethod, Timeout(20000)]
+        public async Task TestDerive()
+        {
+            var privateKey1 = "2a91e1d5c110a8d0105aad4683f962c2a56663a3cad46666b16d243174673d90";
+            var privateKey2 = "2618090794e9c9682f2ac6504369a2f4fb9fe7ee7746f9560aca228d355b1cb9";
+
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey1, NetworkType.Types.MIJIN_TEST).PublicKey);
+            Console.WriteLine(Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey);
+
+            var shared = new byte[32];
+            var salt = "0a5103646209c911468723ea67095ed325e5faa35a319d338edcfc7e32c5e30c".FromHex();
+            var secretKey = privateKey1.FromHex();
+            var pubkey = Account.CreateFromPrivateKey(privateKey2, NetworkType.Types.MIJIN_TEST).PublicKey.FromHex();
+            var longKeyHash = new byte[64];
+            var shortKeyHash = new byte[32];
+
+//            Array.Reverse(secretKey);
+
+            // compute  Sha3(512) hash of secret key (as in prepareForScalarMultiply)
+//            var digestSha3 = new KeccakDigest(512);
+            var digestSha3 = new Sha3Digest(512);
+            digestSha3.BlockUpdate(secretKey, 0, 32);
+            digestSha3.DoFinal(longKeyHash, 0);
+
+            longKeyHash[0] &= 248;
+            longKeyHash[31] &= 127;
+            longKeyHash[31] |= 64;
+
+            Array.Copy(longKeyHash, 0, shortKeyHash, 0, 32);
+
+            ScalarOperations.sc_clamp(shortKeyHash, 0);
+
+            var p = new[] { new long[16], new long[16], new long[16], new long[16] };
+            var q = new[] { new long[16], new long[16], new long[16], new long[16] };
+
+            TweetNaCl.Unpackneg(q, pubkey); // returning -1 invalid signature
+            TweetNaCl.Scalarmult(p, q, shortKeyHash, 0);
+            TweetNaCl.Pack(shared, p);
+
+            // for some reason the most significant bit of the last byte needs to be flipped.
+            // doesnt seem to be any corrosponding action in nano/nem.core, so this may be an issue in one of the above 3 functions. i have no idea.
+            shared[31] ^= (1 << 7);
+
+            // salt
+            for (var i = 0; i < salt.Length; i++)
+            {
+                shared[i] ^= salt[i];
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("shared key before salt " + BitConverter.ToString(shared).Replace("-",""));
+
+            // hash salted shared key
+//            var digestSha3Two = new KeccakDigest(256);
+            var digestSha3Two = new Sha3Digest(256);
+            digestSha3Two.BlockUpdate(shared, 0, 32);
+            digestSha3Two.DoFinal(shared, 0);
+
+            Console.WriteLine();
+            Console.WriteLine("salted shared key " + BitConverter.ToString(shared).Replace("-",""));
+        }        
+
     }
 }
