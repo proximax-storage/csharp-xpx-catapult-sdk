@@ -99,7 +99,17 @@ namespace io.nem2.sdk.Infrastructure.Mapping
         {
             try
             {
-                return PlainMessage.Create(Encoding.UTF8.GetString(msg["payload"].ToString().FromHex()));
+                if (msg != null && msg["type"].ToString() == "0")
+                {
+                    return PlainMessage.Create(Encoding.UTF8.GetString(msg["payload"].ToString().FromHex()));
+                } else if (msg != null && msg["type"].ToString() == "1")
+                {
+                    return SecureMessage.CreateFromEncodedPayload(msg["payload"].ToString().FromHex());
+                }
+                else
+                {
+                    return EmptyMessage.Create();
+                }
             }
             catch (Exception)
             {

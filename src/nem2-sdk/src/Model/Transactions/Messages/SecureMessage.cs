@@ -67,6 +67,10 @@ namespace io.nem2.sdk.Model.Transactions.Messages
             return new SecureMessage(CryptoUtils.Encode(msg, senderPrivateKey, receiverPublicKey).FromHex());
         }
 
+        public static SecureMessage CreateFromEncodedPayload(byte[] payload)
+        {
+            return new SecureMessage(payload);
+        }
         /// <summary>
         /// Gets the decoded payload.
         /// </summary>
