@@ -88,8 +88,10 @@ namespace io.nem2.sdk.Model.Blockchain
                 case "mijin":
                     return Types.MIJIN;
                 case "testnet":
+                case "publicTest":
                     return Types.TEST_NET;
                 case "mainnet":
+                case "public":
                     return Types.MAIN_NET;
                 case "privateTest":
                     return Types.PRIVATE_TEST;
