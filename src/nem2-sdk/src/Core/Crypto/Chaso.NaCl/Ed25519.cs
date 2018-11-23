@@ -66,7 +66,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
             Array.Reverse(secretKey);
 
             // compute  Sha3(512) hash of secret key (as in prepareForScalarMultiply)
-            var digestSha3 = new KeccakDigest(512);
+            var digestSha3 = new Sha3Digest(512);
             digestSha3.BlockUpdate(secretKey, 0, 32);
             digestSha3.DoFinal(longKeyHash, 0);
 
@@ -96,7 +96,7 @@ namespace io.nem2.sdk.Core.Crypto.Chaso.NaCl
             }
 
             // hash salted shared key
-            var digestSha3Two = new KeccakDigest(256);
+            var digestSha3Two = new Sha3Digest(256);
             digestSha3Two.BlockUpdate(shared, 0, 32);
             digestSha3Two.DoFinal(shared, 0);
         }
