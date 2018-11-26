@@ -132,7 +132,8 @@ namespace io.nem2.sdk.Infrastructure.Mapping
                 new Deadline(tx["transaction"].ExtractBigInteger("deadline")),
                 tx["transaction"].ExtractBigInteger("fee"),
                 Address.CreateFromHex(tx["transaction"]["recipient"].ToString()),
-                tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(m.ExtractBigInteger("id")), m.ExtractBigInteger("amount"))).ToList(),
+                tx["transaction"]["mosaics"] == null ? new List<Mosaic>() 
+                    : tx["transaction"]["mosaics"].Select(m => new Mosaic(new MosaicId(m.ExtractBigInteger("id")), m.ExtractBigInteger("amount"))).ToList(),
                 RetrieveMessage(tx["transaction"]["message"]),
                 tx["transaction"]["signature"]?.ToString(),
                 new PublicAccount(tx["transaction"]["signer"].ToString(), int.Parse(tx["transaction"]["version"].ToString()).ExtractNetworkType()),
