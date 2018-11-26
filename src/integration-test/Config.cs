@@ -5,7 +5,7 @@ namespace IntegrationTests
     internal static class Config
     {
 
-        internal static String Domain = "195.201.122.98";
+        internal static String Domain = "privatetest1.xpxsirius.io";
 
         internal static String PrivateKeyMain = "A699DDABBDFCD736E5265C28F800103DDC2412A325B6A5A9246A8E3D3C28FECE";
 

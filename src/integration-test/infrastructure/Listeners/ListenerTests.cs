@@ -16,14 +16,14 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using IntegrationTests.Infrastructure.Transactions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using io.nem2.sdk.Infrastructure.HttpRepositories;
 using io.nem2.sdk.Infrastructure.Listeners;
 using io.nem2.sdk.Model.Accounts;
 using io.nem2.sdk.Model.Blockchain;
 using io.nem2.sdk.Model.Mosaics;
 using io.nem2.sdk.Model.Transactions;
+using IntegrationTests.Infrastructure.Transactions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IntegrationTests.Infrastructure.Listeners
 {
@@ -50,6 +50,24 @@ namespace IntegrationTests.Infrastructure.Listeners
             await listener.Open();
 
             listener.Close();
+        }
+        
+        [TestMethod, Timeout(20000)]
+        public async Task CloseListenerTwice()
+        {
+            var listener = new Listener(Config.Domain);
+
+            await listener.Open();
+            listener.NewBlock();
+
+            listener.Close();
+            
+            var listener2 = new Listener(Config.Domain);
+
+            await listener2.Open();
+            listener.NewBlock();
+
+            listener2.Close();
         }
 
         [TestMethod, Timeout(20000)]

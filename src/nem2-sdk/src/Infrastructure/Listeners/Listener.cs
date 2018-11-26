@@ -100,9 +100,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         {
             return Observable.Start(() =>
             {
-                ClientSocket.ConnectAsync(new Uri(string.Concat("ws://", Domain, ":", Port, "/ws")), CancellationToken.None)
-                    .GetAwaiter()
-                    .GetResult();
+                ClientSocket.ConnectAsync(new Uri(string.Concat("ws://", Domain, ":", Port, "/ws")), CancellationToken.None).Wait();
 
                 Uid = JsonConvert.DeserializeObject<WebsocketUID>(ReadSocket().Result);
 
@@ -119,7 +117,7 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         /// </summary>
         internal async void LoopRead()
         {
-            while (true)
+            while (ClientSocket.State == WebSocketState.Open)
             {
                 _subject.OnNext(await ReadSocket());
             }
@@ -374,8 +372,8 @@ namespace io.nem2.sdk.Infrastructure.Listeners
         public void Close()
         {
             CToken.Cancel();
+            ClientSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None).Wait();
             LoopReads.Dispose();
-            ClientSocket.Abort();
         }
 
         /// <summary>
