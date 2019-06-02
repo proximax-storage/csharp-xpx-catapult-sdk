@@ -1,38 +1,29 @@
-### Nem2 (Catapult) CSharp SDK
+# ProximaX Sirius Blockchain C# SDK #
 
-:warning: this sdk is in alpha state and will change in the next versions
+Official ProximaX Sirius Blockchain SDK Library in C#.
+
+The ProximaX Sirius Catapult Chain C# SDK is a C# library for interacting with the Sirius Blockchain. It provides a complete library set coverage, and supports synchronous and asynchronous requests. 
+
 
 ## Requirements
 .NetStandard 2.0
 
 See [!here](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for platform compatibility
 
-## Instillation 
+## Installation 
 
-> Install-Package io.nem2.sdk
+> Install-Package io.proximax.sdk
 
-## Documentation and Getting Started
+## Wiki and Examples ##
 
-Get started and learn more about nem2-sdk-csharp, check the [official documentation][docs].
+For SDK documentation and examples see [wiki](https://github.com/proximax-storage/csharp-xpx-catapult-sdk/wiki)
 
-Check SDK reference [here][sdk-ref]
+## Contribution ##
 
-## Getting help
+We'd love to get more people involved in the project. Please feel free to [raise issue](https://github.com/proximax-storage/csharp-xpx-catapult-sdk/issues/new) or PR and we'll review your contribution.
+    
+## License ##
 
-We use GitHub issues for tracking bugs and have limited bandwidth to address them.
-Please, use the following available resources to get help:
+Project is licensed under Apache License Version 2.0. See [LICENSE](https://github.com/proximax-storage/csharp-xpx-catapult-sdk/blob/master/LICENSE) file for details.
 
-- [nem2-cli documentation][docs]
-- If you found a bug, [open a new issue][issues]
-- Find other communication channels [here][communication-channels]
-
-## License
-
-Copyright (c) 2018 NEM
-Licensed under the [Apache License 2.0](LICENSE)
-
-[self]: https://github.com/nemtech/nem2-sdk-csharp
-[docs]: http://nemtech.github.io/getting-started/setup-workstation.html
-[issues]: https://github.com/nemtech/nem2-sdk-csharp/issues
-[sdk-ref]: http://nemtech.github.io/nem2-sdk-csharp
-[communication-channels]: https://nemtech.github.io/
+<p align="right"><i><sub>Copyright (c) 2019 ProximaX Limited</sub></i></p>
