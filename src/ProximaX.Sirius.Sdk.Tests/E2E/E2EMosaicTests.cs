@@ -427,5 +427,22 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
                         _output.WriteLine($"Transaction error - {err}");
                     });
         }
+
+        internal void WatchForNewBlock()
+        {
+            _fixture.WebSocket.Listener.NewBlock()
+                .Timeout(TimeSpan.FromSeconds(3000))  
+                .Subscribe(
+                    block =>
+                    {
+                        _output.WriteLine($"New block is created {block.Height}");
+                    },
+                    err =>
+                    {
+                        _output.WriteLine($"Transaction error - {err}");
+                        _fixture.WebSocket.Listener.Close();
+
+                    });
+        }
     }
 }

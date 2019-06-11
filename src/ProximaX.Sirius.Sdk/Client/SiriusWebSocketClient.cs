@@ -19,15 +19,15 @@ namespace ProximaX.Sirius.Sdk.Client
     /// <summary>
     ///     Class SiriusWebSocket
     /// </summary>
-    public class SiriusWebSocket : IClient
+    public class SiriusWebSocketClient : IClient
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SiriusWebSocket" /> class.
+        ///     Initializes a new instance of the <see cref="SiriusWebSocketClient" /> class.
         /// </summary>
         /// <param name="host">The node host without</param>
         /// <param name="port"></param>
         /// <param name="useSsl"></param>
-        public SiriusWebSocket(string host = @"localhost", int port = 3000, bool useSsl = false)
+        public SiriusWebSocketClient(string host = @"localhost", int port = 3000, bool useSsl = false)
         {
             Host = host;
             Port = port;

@@ -17,20 +17,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 {
     public class E2ETestFixture : IDisposable
     {
-       // public AccountHttp AccountHttp { get; set; }
-
-       // public TransactionHttp TransactionHttp { get; set; }
-
-       // public Listener Listener { get; set; }
-
-      //  public NetworkHttp NetworkHttp { get; set; }
-
-       // public MosaicHttp MosaicHttp { get; set; }
-
-       // public NamespaceHttp NamespaceHttp { get; set; }
-
-      //  public MetadataHttp MetadataHttp { get; set; }
-
+  
         public Account SeedAccount { get; set; }
 
         public TimeSpan DefaultTimeout { get; set; }
@@ -39,7 +26,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
         public SiriusClient Client { get; set; }
 
-        public SiriusWebSocket WebSocket { get; set; }
+        public SiriusWebSocketClient WebSocket { get; set; }
 
         public E2ETestFixture()
         {
@@ -53,25 +40,11 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             // Initiate other services
 
-            WebSocket = new SiriusWebSocket(Environment.Host, Environment.Port);
+            WebSocket = new SiriusWebSocketClient(Environment.Host, Environment.Port);
             Client = new SiriusClient(Environment.BaseUrl);
-            //NetworkHttp = client.NetworkHttp;
-           // AccountHttp = client.AccountHttp;
-            //TransactionHttp = client.TransactionHttp;
-           // NamespaceHttp = client.NamespaceHttp;
-            //MosaicHttp = client.MosaicHttp;
-           // MetadataHttp = client.MetadataHttp;
-            /*
-            NetworkHttp = new NetworkHttp(Environment.BaseUrl);
-            AccountHttp = new AccountHttp(Environment.BaseUrl, NetworkHttp);
-            TransactionHttp = new TransactionHttp(Environment.BaseUrl, NetworkHttp);
-            NamespaceHttp = new NamespaceHttp(Environment.BaseUrl, NetworkHttp);
-            MosaicHttp = new MosaicHttp(Environment.BaseUrl, NetworkHttp);
-            MetadataHttp = new MetadataHttp(Environment.BaseUrl, NetworkHttp);
-            */
+          
             SeedAccount = await GetSeedAccount();
-            //BobAccount = await GenerateAccountAndSendSomeMoney();
-            //AliceAccount = await GenerateAccountAndSendSomeMoney();
+          
 
             //set default timeout
             DefaultTimeout = TimeSpan.FromSeconds(100);
