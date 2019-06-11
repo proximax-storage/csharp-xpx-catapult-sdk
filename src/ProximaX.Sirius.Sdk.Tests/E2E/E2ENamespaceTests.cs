@@ -66,7 +66,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         public async Task Should_Create_Aggregate_Root_And_SubNamespace()
         {
             var bobAccount = await _fixture.GenerateAccountAndSendSomeMoney(1000);
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var rootNs = "nsp" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6);
             var subNs = "subnp" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6);
@@ -100,10 +100,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             var signedTransaction = bobAccount.Sign(aggregateTransaction);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(bobAccount.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(bobAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
@@ -112,23 +112,23 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             result.TransactionType.Should().BeEquivalentTo(TransactionType.AGGREGATE_COMPLETE);
 
             /*
-            var rootNsInfo = await _fixture.NamespaceHttp.GetNamespace(rootId).Timeout(_fixture.DefaultTimeout);
+            var rootNsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(rootId).Timeout(_fixture.DefaultTimeout);
             rootNsInfo.Should().NotBeNull();
             rootNsInfo.IsRoot.Should().BeTrue();
 
-            var subNsInfo = await _fixture.NamespaceHttp.GetNamespace(childId).Timeout(_fixture.DefaultTimeout);
+            var subNsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(childId).Timeout(_fixture.DefaultTimeout);
             subNsInfo.Should().NotBeNull();
             subNsInfo.IsSubNamespace.Should().BeTrue();
             */
 
             //Verify the root namespace and sub namespace owned by the account
-            var nsInfos = await _fixture.NamespaceHttp.GetNamespacesFromAccount(bobAccount.Address, null);
+            var nsInfos = await _fixture.Client.NamespaceHttp.GetNamespacesFromAccount(bobAccount.Address, null);
             nsInfos.Should().HaveCount(2);
             nsInfos.Single(ns => ns.Id.HexId == rootId.HexId).Should().NotBeNull();
             nsInfos.Single(ns => ns.Id.HexId == childId.HexId).Should().NotBeNull();
 
             //Verify the name of the namespaces
-            var nsNames = await _fixture.NamespaceHttp.GetNamespacesNames(new List<NamespaceId>
+            var nsNames = await _fixture.Client.NamespaceHttp.GetNamespacesNames(new List<NamespaceId>
             {
                 rootId,
                 childId
@@ -158,7 +158,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             _output.WriteLine("Getting namespaces info from accounts");
 
-            var nsInfos = await _fixture.NamespaceHttp.GetNamespacesFromAccount(new List<Address>
+            var nsInfos = await _fixture.Client.NamespaceHttp.GetNamespacesFromAccount(new List<Address>
             {
                 bobAccount.Address,
                 aliceAccount.Address
@@ -173,7 +173,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         private async Task<NamespaceInfo> GenerateNamespace(Account account, string namespaceName, NamespaceId parentId)
         {
             RegisterNamespaceTransaction registerNamespaceTransaction;
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             if (parentId == null)
             {
                 registerNamespaceTransaction = RegisterNamespaceTransaction.CreateRootNamespace(
@@ -198,10 +198,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var signedTransaction = account.Sign(registerNamespaceTransaction);
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             _output.WriteLine(
                 $"Registered namespace {namespaceName} for account {account.Address.Plain} with transaction {signedTransaction.Hash}");
@@ -212,7 +212,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var expectedId = parentId != null ? NamespaceId.CreateFromParent(namespaceName, parentId) : new NamespaceId(namespaceName);
 
-            var namespaceInfo = await _fixture.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
+            var namespaceInfo = await _fixture.Client.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
 
             _output.WriteLine(
                 $"Retrieved namespace {namespaceName} successfully. The namespace HexId {namespaceInfo.Id.HexId}");

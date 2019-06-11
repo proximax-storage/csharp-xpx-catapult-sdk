@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using ProximaX.Sirius.Sdk.Infrastructure;
-using ProximaX.Sirius.Sdk.Infrastructure.Listener;
 using ProximaX.Sirius.Sdk.Model.Accounts;
 using ProximaX.Sirius.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Sdk.Model.Transactions;
@@ -26,18 +23,18 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         {
             _fixture = fixture;
             _output = output;
-            _fixture.Listener.Open().Wait();
+            _fixture.WebSocket.Listener.Open().Wait();
         }
 
         public void Dispose()
         {
-           // _fixture.Listener.Close();
+           // _fixture.WebSocket.Listener.Close();
         }
 
         [Fact]
         public async Task Should_Announce_Transfer_Transaction()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var account = Account.GenerateNewAccount(networkType);
 
@@ -58,9 +55,9 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
             
             var result = await tx;
             result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();

@@ -34,7 +34,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Create_Mosaic()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
@@ -74,15 +74,15 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             var signedTransaction = account.Sign(aggregateTransaction);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
-            var mosaicInfo = await _fixture.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
+            var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
 
             _output.WriteLine($"Mosaic created {mosaicInfo}");
 
@@ -100,7 +100,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Decrease_Mosaic_Supply()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
@@ -138,10 +138,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             var signedTransaction = account.Sign(aggregateTransaction);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
@@ -158,13 +158,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             const ulong expectedAmount = 1000000 - 500000;
 
             var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction);
-            await _fixture.TransactionHttp.Announce(signedDecreaseTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedDecreaseTransaction);
 
             var result2 = await tx;
 
             _output.WriteLine($"Request confirmed with transaction {result2.TransactionInfo.Hash}");
 
-            var mosaicInfo = await _fixture.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
+            var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
             mosaicInfo.Should().NotBeNull();
             mosaicInfo.Divisibility.Should().Be(0);
             mosaicInfo.Duration.Should().Be(1000);
@@ -178,7 +178,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Increase_Mosaic_Supply()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
@@ -216,10 +216,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             var signedTransaction = account.Sign(aggregateTransaction);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
@@ -236,13 +236,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             const ulong expectedAmount = 1000000 + 500000;
 
             var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction);
-            await _fixture.TransactionHttp.Announce(signedDecreaseTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedDecreaseTransaction);
 
             var result2 = await tx;
 
             _output.WriteLine($"Request confirmed with transaction {result2.TransactionInfo.Hash}");
 
-            var mosaicInfo = await _fixture.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
+            var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
             mosaicInfo.Should().NotBeNull();
             mosaicInfo.Divisibility.Should().Be(0);
             mosaicInfo.Duration.Should().Be(1000);
@@ -257,7 +257,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         public async Task  Should_Link_Namespace_To_Mosaic()
         {
             #region Create mosaic
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
@@ -296,15 +296,15 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
-            var mosaicInfo = await _fixture.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
+            var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
             mosaicInfo.Should().NotBeNull();
             mosaicInfo.Divisibility.Should().Be(0);
             mosaicInfo.Duration.Should().Be(1000);
@@ -325,10 +325,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var registeredNsSignedTransaction = account.Sign(registerNamespaceTransaction);
 
-            tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.TransactionHttp.Announce(registeredNsSignedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(registeredNsSignedTransaction);
 
             _output.WriteLine(
                 $"Registered namespace {namespaceName} for account {account.Address.Plain} with transaction {registeredNsSignedTransaction.Hash}");
@@ -339,7 +339,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var expectedId = new NamespaceId(namespaceName);
 
-            var nsInfo = await _fixture.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
+            var nsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
 
             _output.WriteLine(
                 $"Retrieved namespace {namespaceName} successfully. The namespace HexId {nsInfo.Id.HexId}");
@@ -355,20 +355,20 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
                 networkType
             );
 
-            tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
+            tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
 
             var aliasSignedTransaction = account.Sign(mosaicAliasTransaction);
 
             WatchForFailure(aliasSignedTransaction);
 
-            await _fixture.TransactionHttp.Announce(aliasSignedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(aliasSignedTransaction);
 
             result = await tx;
 
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            nsInfo = await _fixture.NamespaceHttp.GetNamespace(expectedId);
+            nsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(expectedId);
 
             nsInfo.Should().NotBeNull();
             nsInfo.HasAlias.Should().BeTrue();
@@ -391,20 +391,20 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
                 PlainMessage.Create("Send some mosaic to new address"),
                 networkType);
 
-            var tx2 = _fixture.Listener.ConfirmedTransactionsGiven(newAccount.Address).Take(1)
+            var tx2 = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(newAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
             var nsSignedTransferTransaction = account.Sign(transferTransaction);
 
             WatchForFailure(nsSignedTransferTransaction);
 
-            await _fixture.TransactionHttp.Announce(nsSignedTransferTransaction);
+            await _fixture.Client.TransactionHttp.Announce(nsSignedTransferTransaction);
 
             var result2 = await tx2;
 
             _output.WriteLine($"Request confirmed with transaction {result2.TransactionInfo.Hash}");
 
-            var newAccountInfo = await _fixture.AccountHttp.GetAccountInfo(newAccount.Address);
+            var newAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(newAccount.Address);
 
             _output.WriteLine($"Account {newAccountInfo.Address.Plain} with mosaic {newAccountInfo.Mosaics[0]} after transfer to the namespace alias");
 
@@ -416,7 +416,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
         internal void WatchForFailure(SignedTransaction transaction)
         {
-            _fixture.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, _fixture.NetworkHttp.GetNetworkType().Wait()))
+            _fixture.WebSocket.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, _fixture.Client.NetworkHttp.GetNetworkType().Wait()))
                 .Subscribe(
                     e =>
                     {

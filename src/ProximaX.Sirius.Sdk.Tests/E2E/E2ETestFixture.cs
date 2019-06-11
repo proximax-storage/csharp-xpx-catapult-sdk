@@ -17,19 +17,19 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 {
     public class E2ETestFixture : IDisposable
     {
-        public AccountHttp AccountHttp { get; set; }
+       // public AccountHttp AccountHttp { get; set; }
 
-        public TransactionHttp TransactionHttp { get; set; }
+       // public TransactionHttp TransactionHttp { get; set; }
 
-        public Listener Listener { get; set; }
+       // public Listener Listener { get; set; }
 
-        public NetworkHttp NetworkHttp { get; set; }
+      //  public NetworkHttp NetworkHttp { get; set; }
 
-        public MosaicHttp MosaicHttp { get; set; }
+       // public MosaicHttp MosaicHttp { get; set; }
 
-        public NamespaceHttp NamespaceHttp { get; set; }
+       // public NamespaceHttp NamespaceHttp { get; set; }
 
-        public MetadataHttp MetadataHttp { get; set; }
+      //  public MetadataHttp MetadataHttp { get; set; }
 
         public Account SeedAccount { get; set; }
 
@@ -37,6 +37,9 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
         private TestEnvironment Environment { get; set; }
 
+        public SiriusClient Client { get; set; }
+
+        public SiriusWebSocket WebSocket { get; set; }
 
         public E2ETestFixture()
         {
@@ -49,15 +52,15 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             Environment = GetEnvironment();
 
             // Initiate other services
-   
-            Listener = new Listener(Environment.Host, Environment.Port);
-            var client = new SiriusClient(Environment.BaseUrl);
-            NetworkHttp = client.NetworkHttp;
-            AccountHttp = client.AccountHttp;
-            TransactionHttp = client.TransactionHttp;
-            NamespaceHttp = client.NamespaceHttp;
-            MosaicHttp = client.MosaicHttp;
-            MetadataHttp = client.MetadataHttp;
+
+            WebSocket = new SiriusWebSocket(Environment.Host, Environment.Port);
+            Client = new SiriusClient(Environment.BaseUrl);
+            //NetworkHttp = client.NetworkHttp;
+           // AccountHttp = client.AccountHttp;
+            //TransactionHttp = client.TransactionHttp;
+           // NamespaceHttp = client.NamespaceHttp;
+            //MosaicHttp = client.MosaicHttp;
+           // MetadataHttp = client.MetadataHttp;
             /*
             NetworkHttp = new NetworkHttp(Environment.BaseUrl);
             AccountHttp = new AccountHttp(Environment.BaseUrl, NetworkHttp);
@@ -114,7 +117,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         {
             var privateKey = TestHelper.GetConfig()[$"Environments:{Environment.EnvironmentSelection.ToDescription()}:SeedAccountPrivateKey"];
 
-            var networkType = await NetworkHttp.GetNetworkType();
+            var networkType = await Client.NetworkHttp.GetNetworkType();
 
             return Account.CreateFromPrivateKey(privateKey, networkType);
 
@@ -122,7 +125,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
         public async Task<Account> GenerateAccountAndSendSomeMoney(int amount)
         {
-            var networkType = NetworkHttp.GetNetworkType().Wait();
+            var networkType = Client.NetworkHttp.GetNetworkType().Wait();
             var account = Account.GenerateNewAccount(networkType);
 
             var money = (ulong)amount;
@@ -141,11 +144,11 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var signedTransaction = SeedAccount.Sign(transferTransaction);
 
-            await Listener.Open();
+            await WebSocket.Listener.Open();
 
-            var tx = Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(100));
+            var tx = WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(100));
 
-            await TransactionHttp.Announce(signedTransaction);
+            await Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
 
@@ -157,7 +160,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
         public void WatchForFailure(SignedTransaction transaction)
         {
-            Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkHttp.GetNetworkType().Wait()))
+            WebSocket.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, Client.NetworkHttp.GetNetworkType().Wait()))
                 .Subscribe(
                     e =>
                     {

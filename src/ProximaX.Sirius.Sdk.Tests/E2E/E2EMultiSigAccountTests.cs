@@ -33,20 +33,20 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         {
             _fixture = fixture;
             _output = output;
-            multiMultisigAccount = Account.GenerateNewAccount(_fixture.NetworkHttp.GetNetworkType().Wait());
-            multisigAccount = Account.GenerateNewAccount(_fixture.NetworkHttp.GetNetworkType().Wait());
-            cosig1 = Account.GenerateNewAccount(_fixture.NetworkHttp.GetNetworkType().Wait());
-            cosig2 = Account.GenerateNewAccount(_fixture.NetworkHttp.GetNetworkType().Wait());
-            cosig3 = Account.GenerateNewAccount(_fixture.NetworkHttp.GetNetworkType().Wait());
+            multiMultisigAccount = Account.GenerateNewAccount(_fixture.Client.NetworkHttp.GetNetworkType().Wait());
+            multisigAccount = Account.GenerateNewAccount(_fixture.Client.NetworkHttp.GetNetworkType().Wait());
+            cosig1 = Account.GenerateNewAccount(_fixture.Client.NetworkHttp.GetNetworkType().Wait());
+            cosig2 = Account.GenerateNewAccount(_fixture.Client.NetworkHttp.GetNetworkType().Wait());
+            cosig3 = Account.GenerateNewAccount(_fixture.Client.NetworkHttp.GetNetworkType().Wait());
         }
 
         [Fact, Priority(0)]
         public async Task Should_Create_MultiSig_Account()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
-            await _fixture.Listener.Open();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(multisigAccount.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(multisigAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(500));
 
             _output.WriteLine($"Going to create multisig for account {multisigAccount}");
@@ -69,19 +69,19 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             _fixture.WatchForFailure(signedChangeToMultisig);
 
-            await _fixture.TransactionHttp.Announce(signedChangeToMultisig);
+            await _fixture.Client.TransactionHttp.Announce(signedChangeToMultisig);
 
             var result = await tx;
 
             _output.WriteLine($"Request announce multisig confirmed with transaction {result.TransactionInfo.Hash}");
 
-            var mai = await _fixture.AccountHttp.GetMultisigAccountInfo(multisigAccount.Address);
+            var mai = await _fixture.Client.AccountHttp.GetMultisigAccountInfo(multisigAccount.Address);
             mai.IsMultisig.Should().BeTrue();
             mai.MinRemoval.Should().Be(1);
             mai.MinApproval.Should().Be(1);
             mai.Cosignatories.Should().HaveCount(2);
 
-            var graphInfo = await _fixture.AccountHttp.GetMultisigAccountGraphInfo(multisigAccount.Address);
+            var graphInfo = await _fixture.Client.AccountHttp.GetMultisigAccountGraphInfo(multisigAccount.Address);
             graphInfo.GetLevelsNumber().Should().HaveCount(2);
         }
 
@@ -89,12 +89,12 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         public async Task Should_Create_MultiSig_Account_Aggregate()
         {
 
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var aggMulti = Account.GenerateNewAccount(networkType);
 
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(aggMulti.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(aggMulti.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(500));
 
             _output.WriteLine($"Going to create multisig for account {aggMulti}");
@@ -126,19 +126,19 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             _fixture.WatchForFailure(signedChangeToMultisig);
 
-            await _fixture.TransactionHttp.Announce(signedChangeToMultisig);
+            await _fixture.Client.TransactionHttp.Announce(signedChangeToMultisig);
 
             var result = await tx;
 
             _output.WriteLine($"Request announce multisig confirmed with transaction {result.TransactionInfo.Hash}");
 
-            var mai = await _fixture.AccountHttp.GetMultisigAccountInfo(aggMulti.Address);
+            var mai = await _fixture.Client.AccountHttp.GetMultisigAccountInfo(aggMulti.Address);
             mai.IsMultisig.Should().BeTrue();
             mai.MinRemoval.Should().Be(1);
             mai.MinApproval.Should().Be(1);
             mai.Cosignatories.Should().HaveCount(2);
 
-            var graphInfo = await _fixture.AccountHttp.GetMultisigAccountGraphInfo(aggMulti.Address);
+            var graphInfo = await _fixture.Client.AccountHttp.GetMultisigAccountGraphInfo(aggMulti.Address);
             graphInfo.GetLevelsNumber().Should().HaveCount(2);
         }
 
@@ -146,10 +146,10 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact, Priority(2)]
         public async Task Should_Transfer_From_MultiSig1_Of_2_Aggregate()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var seedAccount = _fixture.SeedAccount;
 
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
             var transfer = TransferTransaction.Create(
                 Deadline.Create(),
@@ -173,9 +173,9 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             //_fixture.WatchForFailure(signedTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
-            var status = await _fixture.Listener.TransactionStatus(cosig1.Address)
+            var status = await _fixture.WebSocket.Listener.TransactionStatus(cosig1.Address)
                 .Where(e => e.Hash == signedTransaction.Hash).Take(1).Timeout(TimeSpan.FromSeconds(200));
 
             status.Status.Should().BeEquivalentTo("Failure_Aggregate_Ineligible_Cosigners");

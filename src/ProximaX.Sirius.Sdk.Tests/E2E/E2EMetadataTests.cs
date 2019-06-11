@@ -29,12 +29,12 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Add_Metadata_To_Address()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var account = Account.GenerateNewAccount(networkType);
 
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
             _output.WriteLine($"Generated account {account}");
@@ -57,13 +57,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
           
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromAddress(account.Address);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromAddress(account.Address);
             metaInfo.Fields.Should().HaveCount(2);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.ADDRESS);
         }
@@ -72,12 +72,12 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Remove_Metadata_From_Address()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var account = Account.GenerateNewAccount(networkType);
 
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
 
             _output.WriteLine($"Generated account {account}");
 
@@ -98,14 +98,14 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
 
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromAddress(account.Address);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromAddress(account.Address);
             metaInfo.Fields.Should().HaveCount(2);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.ADDRESS);
 
@@ -124,13 +124,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
 
             _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
-            metaInfo = await _fixture.MetadataHttp.GetMetadataFromAddress(account.Address);
+            metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromAddress(account.Address);
             metaInfo.Fields.Should().HaveCount(1);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.ADDRESS);
 
@@ -139,14 +139,14 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Add_Metadata_To_Namespace()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var namespaceName = "nsp" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6);
             var namespaceId = new NamespaceId(namespaceName);
             var account = await _fixture.GetSeedAccount();
 
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(1000));
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(1000));
 
 
             _output.WriteLine($"Going to generate namespace {namespaceId}");
@@ -160,7 +160,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var signedTransaction = account.Sign(registerRootTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
 
             var result = await tx;
@@ -182,13 +182,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
             _output.WriteLine($"Request add metadata to namespace confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromNamespace(namespaceId);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromNamespace(namespaceId);
             metaInfo.Fields.Should().HaveCount(2);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.NAMESPACE);
         }
@@ -196,13 +196,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Remove_Metadata_From_Namespace()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var namespaceName = "nsp" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6);
             var namespaceId = new NamespaceId(namespaceName);
             var account = await _fixture.GetSeedAccount();
-            await _fixture.Listener.Open();
+            await _fixture.WebSocket.Listener.Open();
 
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
 
 
             _output.WriteLine($"Going to generate namespace {namespaceId}");
@@ -216,7 +216,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var signedTransaction = account.Sign(registerRootTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
 
             var result = await tx;
@@ -238,7 +238,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
             _output.WriteLine($"Request add metadata to namespace confirmed with transaction {result.TransactionInfo.Hash}");
@@ -256,11 +256,11 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
             result = await tx;
             _output.WriteLine($"Request remove metadata from namespace confirmed with transaction {result.TransactionInfo.Hash}");
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromNamespace(namespaceId);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromNamespace(namespaceId);
             metaInfo.Fields.Should().HaveCount(1);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.NAMESPACE);
         }
@@ -268,11 +268,11 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Add_Metadata_To_Mosaic()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var account = await _fixture.GetSeedAccount();
 
-            await _fixture.Listener.Open();
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
+            await _fixture.WebSocket.Listener.Open();
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
 
             var nonce = MosaicNonce.CreateRandom();
             var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
@@ -295,7 +295,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
        
             var signedTransaction = account.Sign(mosaicDefinitionTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
 
             var result = await tx;
@@ -316,13 +316,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
             _output.WriteLine($"Request add metadata to mosaic confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromMosaic(mosaicId);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromMosaic(mosaicId);
             metaInfo.Fields.Should().HaveCount(2);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.MOSAIC);
         }
@@ -330,11 +330,11 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Remove_Metadata_From_Mosaic()
         {
-            var networkType = _fixture.NetworkHttp.GetNetworkType().Wait();
+            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
             var account = await _fixture.GetSeedAccount();
 
-            await _fixture.Listener.Open();
-            var tx = _fixture.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
+            await _fixture.WebSocket.Listener.Open();
+            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(500));
 
             var nonce = MosaicNonce.CreateRandom();
             var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
@@ -357,7 +357,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             var signedTransaction = account.Sign(mosaicDefinitionTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
 
             var result = await tx;
@@ -378,7 +378,7 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
             _output.WriteLine($"Request add metadata to mosaic confirmed with transaction {result.TransactionInfo.Hash}");
@@ -397,13 +397,13 @@ namespace ProximaX.Sirius.Sdk.Tests.E2E
 
             signedTransaction = account.Sign(modifyMetadataTransaction);
 
-            await _fixture.TransactionHttp.Announce(signedTransaction);
+            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
             result = await tx;
             _output.WriteLine($"Request remove metadata from mosaic confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var metaInfo = await _fixture.MetadataHttp.GetMetadataFromMosaic(mosaicId);
+            var metaInfo = await _fixture.Client.MetadataHttp.GetMetadataFromMosaic(mosaicId);
             metaInfo.Fields.Should().HaveCount(1);
             metaInfo.Type.Should().BeEquivalentTo(MetadataType.MOSAIC);
         }
