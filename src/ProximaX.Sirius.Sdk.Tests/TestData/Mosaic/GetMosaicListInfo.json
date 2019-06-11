@@ -1,0 +1,74 @@
+﻿[
+  {
+    "meta": {
+      "id": "5CF911A386B0AF55B6DE06E6"
+    },
+    "mosaic": {
+      "mosaicId": [
+        3558494415,
+        1407811860
+      ],
+      "supply": [
+        0,
+        0
+      ],
+      "height": [
+        185,
+        0
+      ],
+      "owner": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "revision": 1,
+      "properties": [
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ]
+      ],
+      "levy": {}
+    }
+  },
+  {
+    "meta": {
+      "id": "5CF9118B86B0AF55B6DE06AE"
+    },
+    "mosaic": {
+      "mosaicId": [
+        2249826272,
+        719693471
+      ],
+      "supply": [
+        0,
+        0
+      ],
+      "height": [
+        182,
+        0
+      ],
+      "owner": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "revision": 1,
+      "properties": [
+        [
+          3,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ]
+      ],
+      "levy": {}
+    }
+  }
+]

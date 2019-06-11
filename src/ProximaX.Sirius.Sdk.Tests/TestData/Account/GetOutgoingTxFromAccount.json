@@ -1,0 +1,260 @@
+﻿[
+  {
+    "meta": {
+      "height": [ 16403, 0 ],
+      "hash": "06B1D5BD54FA453F8953E4E6C2E9509F2F1138C7E034C93C01E08FAB682F5E0D",
+      "merkleComponentHash": "06B1D5BD54FA453F8953E4E6C2E9509F2F1138C7E034C93C01E08FAB682F5E0D",
+      "index": 0,
+      "id": "5CF647134E38FD0001347182"
+    },
+    "transaction": {
+      "signature": "9514AA3915F44C0F5A908C01BF01EFDEF78D9F3782C028EF418DEF0548BD1FEB9E4F8973EB9B3855E6029197F89AB713C1F2C7E1DCF7DCEDA473E3A2A7D44C08",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36867,
+      "type": 16724,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1394290978, 23 ],
+      "recipient": "90B150DF575727495E8C93260B02D07C4BC328E7B5D104EEC8",
+      "message": {
+        "type": 0,
+        "payload": "7472616E7366657254657374"
+      },
+      "mosaics": [
+        {
+          "id": [ 481110499, 231112638 ],
+          "amount": [ 10000000, 0 ]
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15571, 0 ],
+      "hash": "BAB672839B4425DCA63DAD51BC1B3163A2017801EEE7049E499043F9569BA2F2",
+      "merkleComponentHash": "BAB672839B4425DCA63DAD51BC1B3163A2017801EEE7049E499043F9569BA2F2",
+      "index": 0,
+      "id": "5CF500254E38FD0001346B00"
+    },
+    "transaction": {
+      "signature": "614807DC7F8115F1657C0C85D1D379C9E02B60D4496894F572AF6469098A1661622B7E7AADFE687B10E4CEA8F0577F6C7126C9CE1176F4296F663F3E4C0B5F0C",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 16957,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1310767018, 23 ],
+      "metadataType": 2,
+      "metadataId": [ 2943114235, 289835884 ],
+      "modifications": [
+        {
+          "modificationType": 1,
+          "key": "department",
+          "value": ""
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15570, 0 ],
+      "hash": "80E354193FCE0C4487E2BA4F974876DC5B52FABDE6F1804CF050132AFABAB497",
+      "merkleComponentHash": "80E354193FCE0C4487E2BA4F974876DC5B52FABDE6F1804CF050132AFABAB497",
+      "index": 0,
+      "id": "5CF500164E38FD0001346AFC"
+    },
+    "transaction": {
+      "signature": "ED364BA674903BE2CDB8F0D4AA718A32D76963BD773618C3809D8C29EEC7D164F91E6CA14551BAC4FD85C1CE37088D7869BCF227F91B4AC1FC03733D146C6302",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 16957,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1310751034, 23 ],
+      "metadataType": 2,
+      "metadataId": [ 2943114235, 289835884 ],
+      "modifications": [
+        {
+          "modificationType": 0,
+          "key": "company",
+          "value": "ProximaX"
+        },
+        {
+          "modificationType": 0,
+          "key": "department",
+          "value": "IT"
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15569, 0 ],
+      "hash": "E5DFCEDFFE02D13FDA0AA3A1BBE89778FF8673F308D26A4A88E2C63C51E2EF9E",
+      "merkleComponentHash": "E5DFCEDFFE02D13FDA0AA3A1BBE89778FF8673F308D26A4A88E2C63C51E2EF9E",
+      "index": 0,
+      "id": "5CF500064E38FD0001346AF7"
+    },
+    "transaction": {
+      "signature": "8DBAC7009D8C8DFBA17A5B69A5FA7A39FDFDB84D79B20DA479CEF11E5218F62199EFA8DD0A54EFCB18D2CEA85E5AFFB98ED2F652043410F1801977875592DA06",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36867,
+      "type": 16717,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1310732351, 23 ],
+      "mosaicNonce": 269944183,
+      "mosaicId": [ 2943114235, 289835884 ],
+      "properties": [
+        {
+          "id": 0,
+          "value": [ 3, 0 ]
+        },
+        {
+          "id": 1,
+          "value": [ 0, 0 ]
+        },
+        {
+          "id": 2,
+          "value": [ 1000, 0 ]
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15459, 0 ],
+      "hash": "424A6F1ADD6B82182950B32BB80E996394546CB48396387C7DCF7EB3F003EA4F",
+      "merkleComponentHash": "424A6F1ADD6B82182950B32BB80E996394546CB48396387C7DCF7EB3F003EA4F",
+      "index": 0,
+      "id": "5CF4F9AA4E38FD0001346A19"
+    },
+    "transaction": {
+      "signature": "A212EBE7F9B44964F8B7A34F93C1D81C22356674E392B5710976776D77BC875891FDFF97B1E1F76E05054C38C7FC72329BD698B09BEA259E204871F559B3FA0C",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 16957,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1309099249, 23 ],
+      "metadataType": 2,
+      "metadataId": [ 1608081834, 720651953 ],
+      "modifications": [
+        {
+          "modificationType": 0,
+          "key": "company",
+          "value": "ProximaX"
+        },
+        {
+          "modificationType": 0,
+          "key": "department",
+          "value": "IT"
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15344, 0 ],
+      "hash": "6219E33425E9056725BC585FC0F0E293F8BBD20EFED1A588A46E365A13078142",
+      "merkleComponentHash": "6219E33425E9056725BC585FC0F0E293F8BBD20EFED1A588A46E365A13078142",
+      "index": 0,
+      "id": "5CF4F3334E38FD000134692C"
+    },
+    "transaction": {
+      "signature": "A7B1C119BDCA2270B942A832D25A5B2D17F2F2E6E8690E8C05656FDD24CB129F10C184E6B545F3D048A5F48E7B611EA8BB178500CBF7C413D765EBF934687C04",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 17213,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1307446070, 23 ],
+      "metadataType": 3,
+      "metadataId": [ 3924786794, 2308853141 ],
+      "modifications": [
+        {
+          "modificationType": 1,
+          "key": "department",
+          "value": ""
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15343, 0 ],
+      "hash": "E95808C5398BD78EFA5E442174077CFADC29711233D990B6206428F6468424B0",
+      "merkleComponentHash": "E95808C5398BD78EFA5E442174077CFADC29711233D990B6206428F6468424B0",
+      "index": 0,
+      "id": "5CF4F3204E38FD0001346928"
+    },
+    "transaction": {
+      "signature": "656A93DD35AE39FF9F81CB182B0A4C3CCEEB3CA0D4779AAD9EC4C7C3EF294E0358407B3BD138DFF1D5A0B99977C070423FACB25EEFF6CF757A91F93235E52201",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 17213,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1307421067, 23 ],
+      "metadataType": 3,
+      "metadataId": [ 3924786794, 2308853141 ],
+      "modifications": [
+        {
+          "modificationType": 0,
+          "key": "company",
+          "value": "ProximaX"
+        },
+        {
+          "modificationType": 0,
+          "key": "department",
+          "value": "IT"
+        }
+      ]
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15342, 0 ],
+      "hash": "15E6760AD02C3F20A3F17894F4BBC082F4DDF24FBFC4E7FA8641945FE8D7641A",
+      "merkleComponentHash": "15E6760AD02C3F20A3F17894F4BBC082F4DDF24FBFC4E7FA8641945FE8D7641A",
+      "index": 0,
+      "id": "5CF4F3074E38FD0001346922"
+    },
+    "transaction": {
+      "signature": "BACA6BED0BFEED773F95A8E6749995106200F940FE64BAAC21B2DD882DF8616130DB859272D20B5EC5B95DDA7809508BC4F436FA8587B4062235129B8755DD05",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36866,
+      "type": 16718,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1307417985, 23 ],
+      "namespaceType": 0,
+      "duration": [ 100, 0 ],
+      "namespaceId": [ 3924786794, 2308853141 ],
+      "name": "nspec2397"
+    }
+  },
+  {
+    "meta": {
+      "height": [ 15262, 0 ],
+      "hash": "05F1386B06C44E34953F314CEC05E7120CFE4D0EE75931E80414B419225C5B4C",
+      "merkleComponentHash": "05F1386B06C44E34953F314CEC05E7120CFE4D0EE75931E80414B419225C5B4C",
+      "index": 0,
+      "id": "5CF4EE5D4E38FD0001346880"
+    },
+    "transaction": {
+      "signature": "7D88AF4198F0CD57BD8B454C9EB47EAED9D1033F50D464F904A5D77A9D2CFB3C83DDAB41847354C388466465D1043E6AA0559915D8C2C60539E01E073FFA620B",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36865,
+      "type": 17213,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1306200780, 23 ],
+      "metadataType": 3,
+      "metadataId": [ 1775421644, 2214609365 ],
+      "modifications": [
+        {
+          "modificationType": 0,
+          "key": "company",
+          "value": "ProximaX"
+        },
+        {
+          "modificationType": 0,
+          "key": "department",
+          "value": "IT"
+        }
+      ]
+    }
+  }
+]

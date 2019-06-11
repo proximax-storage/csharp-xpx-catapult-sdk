@@ -1,0 +1,18 @@
+﻿{
+  "meta": {
+    "active": true,
+    "index": 0,
+    "id": "5CFE4585F4539E00010C923D"
+  },
+  "namespace": {
+    "type": 0,
+    "depth": 1,
+    "level0": [ 644399730, 3169365387 ],
+    "alias": { "type": 0 },
+    "parentId": [ 0, 0 ],
+    "owner": "ABDC49A331B45412F28108759D7784CFB9B240350FAFDCE4B5760E9FFF225685",
+    "ownerAddress": "9010CC6E15BE2F5DC79E32D5EBCA97537596EB4E1605ED6841",
+    "startHeight": [ 4943, 0 ],
+    "endHeight": [ 5043, 0 ]
+  }
+}

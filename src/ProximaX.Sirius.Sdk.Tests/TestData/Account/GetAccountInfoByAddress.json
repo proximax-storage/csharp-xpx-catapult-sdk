@@ -1,0 +1,13 @@
+﻿{
+  "meta": {},
+  "account": {
+    "address": "90C8012D0464B3480AB9315C078999F5B101080C61DCEC1564",
+    "addressHeight": [ 14907, 0 ],
+    "publicKey": "20D57BED1C5DA5C224D83B22BEFF1CCC7D5D94054C9B75E83E08EF3ED5F992CD",
+    "publicKeyHeight": [ 14907, 0 ],
+    "accountType": 0,
+    "linkedAccountKey": "0000000000000000000000000000000000000000000000000000000000000000",
+    "mosaics": [],
+    "snapshots": []
+  }
+}

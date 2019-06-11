@@ -1,0 +1,12 @@
+language: csharp
+solution: Proximax.Sirius.SDK.sln
+dist: xenial
+
+matrix:
+  include:
+    - dotnet: 2.2.104
+      mono: none
+      script:
+       - dotnet build src/ProximaX.Sirius.Sdk
+       - dotnet build src/ProximaX.Sirius.Sdk.Tests
+       - dotnet test src/ProximaX.Sirius.Sdk.Tests
