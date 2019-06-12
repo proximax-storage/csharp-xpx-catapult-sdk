@@ -17,6 +17,9 @@ using ProximaX.Sirius.Sdk.Crypto.Core.Chaso.NaCl;
 
 namespace ProximaX.Sirius.Sdk.Model.Transactions.Messages
 {
+    /// <summary>
+    /// The SecureMessage
+    /// </summary>
     public class SecureMessage : IMessage
     {
         /// <summary>
@@ -79,6 +82,16 @@ namespace ProximaX.Sirius.Sdk.Model.Transactions.Messages
         public static SecureMessage Create(string payload, string senderPrivateKey, string receiverPublicKey)
         {
             return new SecureMessage(CryptoUtils.Encode(payload, senderPrivateKey, receiverPublicKey).FromHex());
+        }
+
+        /// <summary>
+        ///     Creates secure message from payload
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static SecureMessage CreateFromEncodedPayload(byte[] payload)
+        {
+            return new SecureMessage(payload);
         }
 
         /// <summary>

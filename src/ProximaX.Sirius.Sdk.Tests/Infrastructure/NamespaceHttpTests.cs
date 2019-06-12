@@ -43,24 +43,24 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
           
         }
 
-        /*
+       
         [Fact]
         public async Task Get_SubNamespace_Should_Return_NamespaceInfo()
         {
 
-            //using (var httpTest = new HttpTest())
-           // {
-            //    var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\GetSubNamespaceInfo.json");
-           //     httpTest.RespondWithJson(fakeJson);
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Namespace\\GetSubNamespaceInfo.json");
+                httpTest.RespondWithJson(fakeJson);
 
                 const string expectedNamespaceIdHex = "AF6D6FD56D6E51CB";
                 var namespaceId = new NamespaceId("nsp4daa64.subns0992ae");
                 var namespaceInfo = await _namespaceHttp.GetNamespace(namespaceId);
                 namespaceInfo.Id.HexId.Should().BeEquivalentTo(expectedNamespaceIdHex);
-          //  }
-
+           }
         }
 
+        /*
         [Fact]
         public async Task Get_Namespaces_By_Account_Address_Should_Return_NamespaceInfo_List()
         {

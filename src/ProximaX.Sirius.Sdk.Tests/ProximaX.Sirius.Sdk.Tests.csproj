@@ -68,25 +68,28 @@
     <None Update="TestData\Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\CreateMosaicAggregateTransaction.json">
+    <None Update="TestData\Transactions\TransferTransactionWithSecureMessage.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\DecreaseMosaicSupplyTransaction.json">
+    <None Update="TestData\Transactions\CreateMosaicAggregateTransaction.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\GetRootNamespaceInfo.json">
+    <None Update="TestData\Transactions\DecreaseMosaicSupplyTransaction.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\GetSubNamespaceInfo.json">
+    <None Update="TestData\Namespace\GetRootNamespaceInfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\IncreaseMosaicSupplyTransaction.json">
+    <None Update="TestData\Namespace\GetSubNamespaceInfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\LinkNamespaceToAddress.json">
+    <None Update="TestData\Transactions\IncreaseMosaicSupplyTransaction.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\LinkNamespaceToMosaic.json">
+    <None Update="TestData\Transactions\LinkNamespaceToAddress.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Transactions\LinkNamespaceToMosaic.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Metadata\GetMetadataByAddress.json">
@@ -117,6 +120,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Namespace\GetNamespaceInfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Transactions\account.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

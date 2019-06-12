@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Flurl.Http.Testing;
 using ProximaX.Sirius.Sdk.Infrastructure;
+using ProximaX.Sirius.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Sdk.Model.Transactions;
+using ProximaX.Sirius.Sdk.Model.Transactions.Messages;
 using ProximaX.Sirius.Sdk.Tests.Utils;
 using Xunit;
 
@@ -15,7 +17,7 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
 
         public TransactionHttpTests()
         {
-            _transactionHttp = new TransactionHttp(BaseUrl);
+            _transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
         }
 
         [Fact]
@@ -23,7 +25,7 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
         {
             using (var httpTest = new HttpTest())
             {
-                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\CreateMosaicAggregateTransaction.json");
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\CreateMosaicAggregateTransaction.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
@@ -41,7 +43,7 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
         {
             using (var httpTest = new HttpTest())
             {
-                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\DecreaseMosaicSupplyTransaction.json");
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\DecreaseMosaicSupplyTransaction.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
@@ -58,7 +60,7 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
         {
             using (var httpTest = new HttpTest())
             {
-                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\LinkNamespaceToMosaic.json");
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\LinkNamespaceToMosaic.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
@@ -78,7 +80,7 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
         {
             using (var httpTest = new HttpTest())
             {
-                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\LinkNamespaceToAddress.json");
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\LinkNamespaceToAddress.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
@@ -89,6 +91,34 @@ namespace ProximaX.Sirius.Sdk.Tests.Infrastructure
                 transaction.Should().BeOfType<AliasTransaction>();
                 transaction.TransactionType.Should().BeEquivalentTo(TransactionType.ADDRESS_ALIAS);
                 ((AliasTransaction) transaction).Address.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public async Task Get_Transfer_Transaction_With_Secure_Message()
+        {
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.PUBLIC_TEST };
+
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\TransferTransactionWithSecureMessage.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                const string transactionHash = "68B465D832DD2FE6976414FE3D7F645DFA438051760C5C20DF42B75D3560D2AC";
+                const string receiverPrivateKey = "DBD900D56FF058729079B97A0E447FA4DED723D74C8081632C08F6CE49CAC9C0";
+                const string senderPublicKey = "95de2ffdcc397bb9688da28a18a70fdd23f4ce2ef4240a4a7b6baf5dfa07e5dc";
+                var transaction = await transactionHttp.GetTransaction(transactionHash);
+
+                transaction.Should().BeOfType<TransferTransaction>();
+                var transferTransaction = ((TransferTransaction)transaction);
+                var messageType = MessageTypeExtension.GetRawValue(transferTransaction.Message.GetMessageType());
+                messageType.Should().BeEquivalentTo(MessageType.ENCRYPTED_MESSAGE);
+
+                var securedMessage = (SecureMessage)transferTransaction.Message;
+                var payload = securedMessage.DecryptPayload(receiverPrivateKey, senderPublicKey);
+                payload.Should().BeEquivalentTo("Hi Thomas");
+                
             }
         }
     }

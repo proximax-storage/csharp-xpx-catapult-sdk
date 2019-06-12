@@ -70,7 +70,7 @@ namespace ProximaX.Sirius.Sdk.Infrastructure.Mapping
                 case MessageType.PLAIN_MESSAGE:
                     return PlainMessage.Create(Encoding.UTF8.GetString(payload));
                 case MessageType.ENCRYPTED_MESSAGE:
-                    return EmptyMessage.Create();
+                    return SecureMessage.CreateFromEncodedPayload(payload);
                 default:
                     return EmptyMessage.Create();
             }
