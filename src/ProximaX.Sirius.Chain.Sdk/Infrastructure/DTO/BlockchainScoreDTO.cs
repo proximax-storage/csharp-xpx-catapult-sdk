@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -20,20 +19,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
     /// <summary>
     /// </summary>
-    [DataContract]
     public class BlockchainScoreDTO
     {
         /// <summary>
         ///     Gets or Sets ScoreHigh
         /// </summary>
-        [DataMember(Name = "scoreHigh", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "scoreHigh")]
         public UInt64DTO ScoreHigh { get; set; }
 
         /// <summary>
         ///     Gets or Sets ScoreLow
         /// </summary>
-        [DataMember(Name = "scoreLow", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "scoreLow")]
         public UInt64DTO ScoreLow { get; set; }
 

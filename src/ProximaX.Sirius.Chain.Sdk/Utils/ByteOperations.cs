@@ -64,6 +64,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
             return BitConverter.ToUInt64(BitConverter.GetBytes(s1).Concat(BitConverter.GetBytes(s2)).ToArray(), 0);
         }
 
+        public static ulong FromUInt64Array(this ulong[] src)
+        {
+            /*var s1 = Convert.ToUInt32(src[0]);
+            var s2 = Convert.ToUInt32(src[1]);*/
+            return BitConverter.ToUInt64(BitConverter.GetBytes(src[0]).Concat(BitConverter.GetBytes(src[1])).ToArray(), 0);
+        }
+
+
         public static ulong FromInt8Array(this int[] src)
         {
             return BitConverter.ToUInt64(BitConverter.GetBytes(src[0]).Concat(BitConverter.GetBytes(src[1])).ToArray(),

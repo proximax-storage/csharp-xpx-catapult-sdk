@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Proximax.Sirius.Sdk\ProximaX.Sirius.Chain.Sdk.csproj" />
+    <ProjectReference Include="..\Proximax.Sirius.Chain.Sdk\ProximaX.Sirius.Chain.Sdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +63,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Account\GetUnconfirmedTxFromAccount.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Block\BlockScore.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\Config.json">
