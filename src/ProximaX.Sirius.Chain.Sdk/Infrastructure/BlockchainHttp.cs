@@ -1,5 +1,6 @@
 ﻿using Flurl.Http;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
+using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<HeightDTO>())
                 .Select(i => i.Height.ToUInt64());
+        }
+
+        public IObservable<BlockchainStorageInfo> GetBlockStorage()
+        {
+            var route = $"{BasePath}/diagnostic/storage";
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<BlockchainStorageInfoDTO>())
+                .Select(i => new BlockchainStorageInfo(i.NumAccounts.Value,i.NumBlocks.Value, i.NumTransactions.Value));
         }
     }
 }
