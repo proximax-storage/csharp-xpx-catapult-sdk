@@ -1,5 +1,5 @@
 language: csharp
-solution: Proximax.Sirius.SDK.sln
+solution: Proximax.Sirius.Chain.SDK.sln
 dist: xenial
 
 matrix:
@@ -7,6 +7,6 @@ matrix:
     - dotnet: 2.2.104
       mono: none
       script:
-       - dotnet build src/ProximaX.Sirius.Sdk
-       - dotnet build src/ProximaX.Sirius.Sdk.Tests
-       - dotnet test src/ProximaX.Sirius.Sdk.Tests
+       - dotnet build src/ProximaX.Sirius.Chain.Sdk
+       - dotnet build src/ProximaX.Sirius.Chain.Sdk.Tests
+       - dotnet test src/ProximaX.Sirius.Chain.Sdk.Tests
