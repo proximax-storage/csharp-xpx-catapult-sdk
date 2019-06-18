@@ -1,7 +1,8 @@
 language: csharp
 solution: Proximax.Sirius.Chain.SDK.sln
 dist: xenial
-
+install:
+  - nuget restore Proximax.Sirius.Chain.SDK.sln
 matrix:
   include:
     - dotnet: 2.2.104
