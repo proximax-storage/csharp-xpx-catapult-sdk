@@ -15,7 +15,7 @@ See [!here](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for p
 In .Net Core
 
 ```cli
-dotnet add package ProximaX.Sirius.SDK
+dotnet add package csharp-xpx-chain-sdk
 
 dotnet restore
 ```
@@ -23,7 +23,7 @@ dotnet restore
 If you are using legacy .Net Framework 4.6.1 and above
 
 ```nuget
-Install-Package ProximaX.Sirius.SDK
+Install-Package csharp-xpx-chain-sdk
 ```
 
 
