@@ -4,17 +4,18 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using ProximaX.Sirius.Sdk.Client;
-using ProximaX.Sirius.Sdk.Crypto.Utils;
-using ProximaX.Sirius.Sdk.Infrastructure;
-using ProximaX.Sirius.Sdk.Model.Accounts;
-using ProximaX.Sirius.Sdk.Model.Blockchain;
-using ProximaX.Sirius.Sdk.Model.Mosaics;
-using ProximaX.Sirius.Sdk.Model.Namespaces;
-using ProximaX.Sirius.Sdk.Model.Transactions;
-using ProximaX.Sirius.Sdk.Model.Transactions.Messages;
+using ProximaX.Sirius.Chain.Sdk.Client;
 
-namespace Proximax.Sirius.Sdk.NetCore.Examples.Accounts
+using ProximaX.Sirius.Chain.Sdk.Infrastructure;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
+using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
+using ProximaX.Sirius.Chain.Sdk.Utils;
+
+namespace ProximaX.Sirius.Chain.Sdk.NetCore.Examples.Accounts
 {
     public  class AccountExamples
     {

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ProximaX.Sirius.Sdk.Client;
-using ProximaX.Sirius.Sdk.Model.Accounts;
-using ProximaX.Sirius.Sdk.Model.Blockchain;
-using ProximaX.Sirius.Sdk.Model.Namespaces;
-using ProximaX.Sirius.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Client;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
-namespace Proximax.Sirius.Sdk.NetCore.Examples.Accounts
+namespace ProximaX.Sirius.Chain.SdkNetCore.Examples.Accounts
 {
     public class NamespaceExample
     {
