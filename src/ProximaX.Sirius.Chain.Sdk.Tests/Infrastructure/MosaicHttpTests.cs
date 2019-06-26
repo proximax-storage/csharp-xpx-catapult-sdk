@@ -74,6 +74,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var mosaicInfoList = await _mosaicHttp.GetMosaicListAsync(list);
                 mosaicInfoList.Should().HaveCountGreaterThan(0);
             }
+        }
+
+        [Fact]
+        public async Task Get_Mosaic_Names()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToArray(@"Testdata\\Mosaic\\GetMosaicNames.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                var list = new List<string>
+                {
+                    "0DC67FBE1CAD29E3"
+               
+                };
+                var mosaicNames = await _mosaicHttp.GetMosaicNames(list);
+                mosaicNames.Should().HaveCountGreaterThan(0);
+                mosaicNames[0].Names[0].Should().BeEquivalentTo("prx.xpx");
+            }
 
 
         }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
@@ -21,47 +22,39 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
     /// <summary>
     /// </summary>
     [DataContract]
-    public class MosaicNameDTO
+    public class MosaicNamesDTO
     {
         /// <summary>
-        ///     Gets or Sets ParentId
-        /// </summary>
-        [DataMember(Name = "parentId", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "parentId")]
-        public UInt64DTO ParentId { get; set; }
-
-        /// <summary>
-        ///     Gets or Sets MosaicId
+        /// Gets or Sets MosaicId
         /// </summary>
         [DataMember(Name = "mosaicId", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "mosaicId")]
         public UInt64DTO MosaicId { get; set; }
 
         /// <summary>
-        ///     Gets or Sets Name
+        /// Gets or Sets Names
         /// </summary>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        [DataMember(Name = "names", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "names")]
+        public List<string> Names { get; set; }
 
 
         /// <summary>
-        ///     Get the string presentation of the object
+        /// Get the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class MosaicNameDTO {\n");
-            sb.Append("  ParentId: ").Append(ParentId).Append("\n");
+            sb.Append("class MosaicNamesDTO {\n");
             sb.Append("  MosaicId: ").Append(MosaicId).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Names: ").Append(Names).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        ///     Get the JSON string presentation of the object
+        /// Get the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public string ToJson()

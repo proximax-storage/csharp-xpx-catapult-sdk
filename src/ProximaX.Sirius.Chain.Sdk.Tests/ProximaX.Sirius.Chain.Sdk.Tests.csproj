@@ -71,6 +71,9 @@
     <None Update="TestData\Config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Mosaic\GetMosaicNames.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Transactions\TransferTransactionWithSecureMessage.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

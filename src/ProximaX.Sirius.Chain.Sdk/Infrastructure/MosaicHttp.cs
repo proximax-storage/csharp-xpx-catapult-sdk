@@ -106,19 +106,40 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         }
 
         /// <summary>
+        ///     Gets the mosaic names.
+        /// </summary>
+        /// <returns>IObservable&lt;List&lt;MosaicNames&gt;&gt;</returns>
+        /// <exception cref="ArgumentNullException">mosaicId</exception>
+        public IObservable<List<MosaicNames>> GetMosaicNames(List<string> mosaicIDs)
+        {
+            var route = $"{BasePath}/mosaic/names";
+
+            var mosaicList = new MosaicIds
+            {
+                _MosaicIds = mosaicIDs
+            };
+
+            var networkType = GetNetworkTypeObservable().Take(1);
+
+            return Observable.FromAsync(async ar =>
+                    await route.PostJsonAsync(mosaicList).ReceiveJson<List<MosaicNamesDTO>>())
+                .Select(l => l.Select(m => new MosaicNames(new MosaicId(m.MosaicId.FromUInt8Array()), m.Names)).ToList());
+        }
+
+        /// <summary>
         ///     Extracts the mosaic properties.
         /// </summary>
         /// <param name="properties">The properties.</param>
         /// <returns>MosaicProperties.</returns>
         private static MosaicProperties ExtractMosaicProperties(IReadOnlyList<ulong> properties)
         {
-            var flags = "00" + Convert.ToString((long) properties[0], 2);
+            var flags = "00" + Convert.ToString((long)properties[0], 2);
             var bitMapFlags = flags.Substring(flags.Length - 3, 3);
 
             return MosaicProperties.Create(bitMapFlags.ToCharArray()[2] == '1',
                 bitMapFlags.ToCharArray()[1] == '1',
                 bitMapFlags.ToCharArray()[0] == '1',
-                (int) properties[1],
+                (int)properties[1],
                 properties.Count == 3 ? properties[2] : 0);
         }
     }
