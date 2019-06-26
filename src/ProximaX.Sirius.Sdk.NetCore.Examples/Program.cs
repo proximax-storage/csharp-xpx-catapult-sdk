@@ -35,7 +35,7 @@ namespace ProximaX.Sirius.Chain.Sdk.NetCore.Examples
             Console.WriteLine($"{nameof(Account)} : {account.Address.Plain}");
 
             // Creates an instance of SiriusClient
-            var client = new SiriusClient("http://bctestnet1.xpxsirius.io:3000");
+            var client = new SiriusClient("https://bctestnet1.xpxsirius.io");
 
             // Gets the account information
             var accountInfo = await client.AccountHttp.GetAccountInfo(account.Address);
