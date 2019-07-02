@@ -65,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         public IObservable<AccountInfo> GetAccountInfo(Address address)
         {
             Guard.NotNull(address,nameof(address),"Address should not be null");
-           
+            
             var route = $"{BasePath}/account/{address.Plain}";
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<AccountInfoDTO>())

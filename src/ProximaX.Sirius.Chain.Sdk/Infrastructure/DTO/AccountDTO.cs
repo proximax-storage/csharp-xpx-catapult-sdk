@@ -19,47 +19,58 @@ using Newtonsoft.Json;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
     /// <summary>
+    /// AccountDTO
     /// </summary>
     public class AccountDTO
     {
         /// <summary>
-        ///     Gets or Sets Address
+        /// The account unique address in hexadecimal. 
         /// </summary>
-
+        /// <value>The account unique address in hexadecimal. </value>
         [JsonProperty(PropertyName = "address")]
         public string Address { get; set; }
 
         /// <summary>
-        ///     Gets or Sets AddressHeight
+        /// Gets or Sets AddressHeight
         /// </summary>
-
         [JsonProperty(PropertyName = "addressHeight")]
         public UInt64DTO AddressHeight { get; set; }
 
         /// <summary>
-        ///     Gets or Sets PublicKey
+        /// The public key of an account can be used to verify signatures of the account. Only accounts that have already published a transaction have a public key assigned to the account. Otherwise, the field is null. 
         /// </summary>
-
+        /// <value>The public key of an account can be used to verify signatures of the account. Only accounts that have already published a transaction have a public key assigned to the account. Otherwise, the field is null. </value>
         [JsonProperty(PropertyName = "publicKey")]
         public string PublicKey { get; set; }
 
         /// <summary>
-        ///     Gets or Sets PublicKeyHeight
+        /// Gets or Sets PublicKeyHeight
         /// </summary>
-
         [JsonProperty(PropertyName = "publicKeyHeight")]
         public UInt64DTO PublicKeyHeight { get; set; }
 
         /// <summary>
-        ///     Gets or Sets Mosaics
+        /// The list of mosaics the account owns. The amount is represented in absolute amount. Thus a balance of 123456789 for a mosaic with divisibility 6 (absolute) means the account owns 123.456789 instead. 
         /// </summary>
-
+        /// <value>The list of mosaics the account owns. The amount is represented in absolute amount. Thus a balance of 123456789 for a mosaic with divisibility 6 (absolute) means the account owns 123.456789 instead. </value>
         [JsonProperty(PropertyName = "mosaics")]
         public List<MosaicDTO> Mosaics { get; set; }
 
+        /// <summary>
+        /// Gets or Sets AccountType
+        /// </summary>
+        [JsonProperty(PropertyName = "accountType")]
+        public int? AccountType { get; set; }
 
         /// <summary>
-        ///     Get the string presentation of the object
+        /// Gets or Sets LinkedAccountKey
+        /// </summary>
+        [JsonProperty(PropertyName = "linkedAccountKey")]
+        public string LinkedAccountKey { get; set; }
+
+
+        /// <summary>
+        /// Get the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
         public override string ToString()
@@ -71,12 +82,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
             sb.Append("  PublicKey: ").Append(PublicKey).Append("\n");
             sb.Append("  PublicKeyHeight: ").Append(PublicKeyHeight).Append("\n");
             sb.Append("  Mosaics: ").Append(Mosaics).Append("\n");
+            sb.Append("  AccountType: ").Append(AccountType).Append("\n");
+            sb.Append("  LinkedAccountKey: ").Append(LinkedAccountKey).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
 
         /// <summary>
-        ///     Get the JSON string presentation of the object
+        /// Get the JSON string presentation of the object
         /// </summary>
         /// <returns>JSON string presentation of the object</returns>
         public string ToJson()
