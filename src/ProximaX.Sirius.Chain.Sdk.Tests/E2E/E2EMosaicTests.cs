@@ -71,7 +71,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedTransaction = account.Sign(aggregateTransaction);
+            var signedTransaction = account.Sign(aggregateTransaction,_fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
@@ -135,7 +135,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedTransaction = account.Sign(aggregateTransaction);
+            var signedTransaction = account.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
@@ -157,7 +157,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             const ulong expectedAmount = 1000000 - 500000;
 
-            var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction);
+            var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction, _fixture.Environment.GenerationHash);
             await _fixture.Client.TransactionHttp.Announce(signedDecreaseTransaction);
 
             var result2 = await tx;
@@ -213,7 +213,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedTransaction = account.Sign(aggregateTransaction);
+            var signedTransaction = account.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
@@ -235,7 +235,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             const ulong expectedAmount = 1000000 + 500000;
 
-            var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction);
+            var signedDecreaseTransaction = account.Sign(mosaicDecreaseSupplyChangeTransaction, _fixture.Environment.GenerationHash);
             await _fixture.Client.TransactionHttp.Announce(signedDecreaseTransaction);
 
             var result2 = await tx;
@@ -292,7 +292,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedTransaction = account.Sign(aggregateTransaction);
+            var signedTransaction = account.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -323,7 +323,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType
             );
 
-            var registeredNsSignedTransaction = account.Sign(registerNamespaceTransaction);
+            var registeredNsSignedTransaction = account.Sign(registerNamespaceTransaction, _fixture.Environment.GenerationHash);
 
             tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
@@ -357,7 +357,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
 
-            var aliasSignedTransaction = account.Sign(mosaicAliasTransaction);
+            var aliasSignedTransaction = account.Sign(mosaicAliasTransaction, _fixture.Environment.GenerationHash);
 
             WatchForFailure(aliasSignedTransaction);
 
@@ -394,7 +394,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx2 = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(newAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            var nsSignedTransferTransaction = account.Sign(transferTransaction);
+            var nsSignedTransferTransaction = account.Sign(transferTransaction,_fixture.Environment.GenerationHash);
 
             WatchForFailure(nsSignedTransferTransaction);
 

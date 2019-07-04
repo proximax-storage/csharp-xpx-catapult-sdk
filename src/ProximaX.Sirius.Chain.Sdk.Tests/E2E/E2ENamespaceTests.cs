@@ -97,7 +97,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     registerChildTransaction.ToAggregate(bobAccount.PublicAccount)
                 }, networkType);
 
-            var signedTransaction = bobAccount.Sign(aggregateTransaction);
+            var signedTransaction = bobAccount.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(bobAccount.Address).Take(1)
@@ -196,7 +196,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             }
 
 
-            var signedTransaction = account.Sign(registerNamespaceTransaction);
+            var signedTransaction = account.Sign(registerNamespaceTransaction, _fixture.Environment.GenerationHash);
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));

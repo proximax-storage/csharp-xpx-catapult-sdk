@@ -52,7 +52,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 PlainMessage.Create("transferTest"),
                 networkType);
 
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction);
+            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);

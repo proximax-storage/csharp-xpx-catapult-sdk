@@ -117,9 +117,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         /// <returns>SignedTransaction.</returns>
-        public SignedTransaction Sign(Transaction transaction)
+        public SignedTransaction Sign(Transaction transaction,string generationHash)
         {
-            return transaction.SignWith(this);
+            return transaction.SignWith(this, generationHash);
         }
 
         /// <summary>

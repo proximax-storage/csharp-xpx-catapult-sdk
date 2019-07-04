@@ -51,7 +51,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            var signedTransaction = account.Sign(modifyMetadataTransaction);
+            var signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            var signedTransaction = account.Sign(modifyMetadataTransaction);
+            var signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -120,7 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
 
@@ -158,7 +158,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType
             );
 
-            var signedTransaction = account.Sign(registerRootTransaction);
+            var signedTransaction = account.Sign(registerRootTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -180,7 +180,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -214,7 +214,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType
             );
 
-            var signedTransaction = account.Sign(registerRootTransaction);
+            var signedTransaction = account.Sign(registerRootTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -236,7 +236,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -254,7 +254,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                modifications,
                networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
             result = await tx;
@@ -293,7 +293,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType);
 
        
-            var signedTransaction = account.Sign(mosaicDefinitionTransaction);
+            var signedTransaction = account.Sign(mosaicDefinitionTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -314,7 +314,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -355,7 +355,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType);
 
 
-            var signedTransaction = account.Sign(mosaicDefinitionTransaction);
+            var signedTransaction = account.Sign(mosaicDefinitionTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -376,7 +376,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction, _fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 
@@ -395,7 +395,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 modifications,
                 networkType);
 
-            signedTransaction = account.Sign(modifyMetadataTransaction);
+            signedTransaction = account.Sign(modifyMetadataTransaction,_fixture.Environment.GenerationHash);
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
 

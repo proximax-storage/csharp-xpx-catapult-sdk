@@ -13,16 +13,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests
 
         public int Port { get; set; }
 
+        public string GenerationHash { get; set; }
+
         public string BaseUrl => $"{Protocol}://{Host}:{Port}";
 
         public EnvironmentSelection EnvironmentSelection { get; set; }
 
-        public TestEnvironment(string host = null, string protocol = null, int port = default,
+        public TestEnvironment(string host = null, string protocol = null, int port = default,string generationHash = null,
             EnvironmentSelection selection = EnvironmentSelection.DEV)
         {
             Host = host;
             Protocol = protocol;
             Port = port;
+            GenerationHash = generationHash;
             EnvironmentSelection = selection;
         }
     }

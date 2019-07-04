@@ -30,7 +30,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
                 0
             );
             var account = Account.CreateFromPrivateKey("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.MIJIN_TEST);
-            var signedTransaction = transferTransaction.SignWith(account);
+            var generationHash = "B750FC8ADD9FAB8C71F0BB90B6409C66946844F07C5CADB51F27A9FAF219BFC7";
+            var signedTransaction = transferTransaction.SignWith(account, generationHash);
             // var payload = signedTransaction.Payload;
             signedTransaction.Payload.Should().NotBeNullOrEmpty();
             signedTransaction.Hash.Should().NotBeNullOrEmpty();

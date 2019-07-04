@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Utils;
@@ -96,13 +97,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public SignedTransaction SignWith(Account account)
+        public SignedTransaction SignWith(Account account,string generationHash)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
 
             Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType);
 
-            Bytes = GenerateBytes();
+            var generationHashBytes = Encoding.UTF8.GetBytes(generationHash);
+
+            Bytes = generationHashBytes.Concat(GenerateBytes()).ToArray();
 
             var sig = TransactionExtensions.SignTransaction(account.KeyPair, Bytes);
 

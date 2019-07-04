@@ -22,12 +22,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public TimeSpan DefaultTimeout { get; set; }
 
-        private TestEnvironment Environment { get; set; }
+        public TestEnvironment Environment { get; set; }
 
         public SiriusClient Client { get; set; }
 
         public SiriusWebSocketClient WebSocket { get; set; }
 
+        
         public E2ETestFixture()
         {
             Task.Run(InitializeFixture);
@@ -81,8 +82,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var protocol = TestHelper.GetConfig()[$"Environments:{env}:Protocol"];
             var host = TestHelper.GetConfig()[$"Environments:{env}:Host"];
             var port = TestHelper.GetConfig()[$"Environments:{env}:Port"];
-
-            return new TestEnvironment(host, protocol, Convert.ToInt32(port));
+            var generationHash = TestHelper.GetConfig()[$"Environments:{env}:Hash"];
+            return new TestEnvironment(host, protocol, Convert.ToInt32(port), generationHash);
 
         }
 
@@ -115,7 +116,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 PlainMessage.Create("transferTest"),
                 networkType);
 
-            var signedTransaction = SeedAccount.Sign(transferTransaction);
+            var signedTransaction = SeedAccount.Sign(transferTransaction, Environment.GenerationHash);
 
             await WebSocket.Listener.Open();
 

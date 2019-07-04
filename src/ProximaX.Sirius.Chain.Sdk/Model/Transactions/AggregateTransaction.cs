@@ -137,12 +137,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     or
         ///     cosignatories
         /// </exception>
-        public SignedTransaction SignTransactionWithCosigners(Account initiatorAccount, List<Account> cosignatories)
+        public SignedTransaction SignTransactionWithCosigners(Account initiatorAccount, List<Account> cosignatories,string generationHash)
         {
             if (initiatorAccount == null) throw new ArgumentNullException(nameof(initiatorAccount));
             if (cosignatories == null) throw new ArgumentNullException(nameof(cosignatories));
 
-            var signedTransaction = SignWith(initiatorAccount);
+            var signedTransaction = SignWith(initiatorAccount, generationHash);
             var payload = signedTransaction.Payload.FromHex();
 
             foreach (var cosignatory in cosignatories)

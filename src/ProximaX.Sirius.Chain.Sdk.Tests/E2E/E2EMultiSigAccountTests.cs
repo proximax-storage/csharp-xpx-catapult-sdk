@@ -63,7 +63,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                         cosig2.PublicAccount),
                 },
                 networkType);
-            var signedChangeToMultisig = multisigAccount.Sign(changeToMultisig);
+            var signedChangeToMultisig = multisigAccount.Sign(changeToMultisig, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce multisig transaction {signedChangeToMultisig.Hash}");
 
@@ -120,7 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedChangeToMultisig = aggMulti.Sign(aggregateTransaction);
+            var signedChangeToMultisig = aggMulti.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce multisig transaction {signedChangeToMultisig.Hash}");
 
@@ -169,7 +169,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 networkType);
 
-            var signedTransaction = cosig1.Sign(aggregateTransaction);
+            var signedTransaction = cosig1.Sign(aggregateTransaction, _fixture.Environment.GenerationHash);
 
             //_fixture.WatchForFailure(signedTransaction);
 

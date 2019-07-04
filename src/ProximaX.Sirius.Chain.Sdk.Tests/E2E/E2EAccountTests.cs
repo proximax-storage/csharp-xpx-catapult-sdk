@@ -56,9 +56,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 PlainMessage.Create("transferTest"),
                 networkType);
 
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction);
+            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to send {amount} XPP to {aliceAccount.Address.Pretty} with transaction {signedTransaction.Hash}");
-
+            WatchForFailure(signedTransaction);
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
             var result = await tx;
 
@@ -94,7 +94,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var signedTransaction = addressFilter.SignWith(company);
+            var generationHash = "";
+            var signedTransaction = addressFilter.SignWith(company, generationHash);
 
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
@@ -141,7 +142,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var signedTransaction = accountFilter.SignWith(company);
+            var generationHash = "";
+            var signedTransaction = accountFilter.SignWith(company, generationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -191,7 +193,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var signedTransaction = accountFilter.SignWith(company);
+            var generationHash = "";
+            var signedTransaction = accountFilter.SignWith(company, generationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -238,7 +241,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 PlainMessage.Create("transferTest"),
                 networkType);
 
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction);
+            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction,_fixture.Environment.GenerationHash);
             _output.WriteLine($"Going to send {amount} XPP to {company.Address.Pretty} with transaction {signedTransaction.Hash}");
 
             await _fixture.Client.TransactionHttp.Announce(signedTransaction);
@@ -262,7 +265,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 networkType
             );
 
-            var registeredNsSignedTransaction = company.Sign(registerNamespaceTransaction);
+            var registeredNsSignedTransaction = company.Sign(registerNamespaceTransaction, _fixture.Environment.GenerationHash);
 
             tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
@@ -301,7 +304,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1);
 
-            var aliasSignedTransaction = company.Sign(addressAliasTransaction);
+            var aliasSignedTransaction = company.Sign(addressAliasTransaction, _fixture.Environment.GenerationHash);
 
             WatchForFailure(aliasSignedTransaction);
 
@@ -334,7 +337,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(_fixture.SeedAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            var nsSignedTransferTransaction = _fixture.SeedAccount.Sign(transferTransaction);
+            var nsSignedTransferTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
 
             WatchForFailure(nsSignedTransferTransaction);
 
