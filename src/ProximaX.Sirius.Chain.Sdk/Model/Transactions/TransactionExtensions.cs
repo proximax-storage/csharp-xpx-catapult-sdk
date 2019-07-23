@@ -43,6 +43,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             return hash;
         }
 
+        public static byte[] Hasher(byte[] payload, byte[] generationHash)
+        {
+            /*
+            var sigAndKey = payload.Take(4, 32)
+                .Concat(
+                    payload.Take(4 + 64, payload.Length - (4 + 64))
+                )
+                .Concat(generationHash).
+                ToArray();*/
+
+            var signingBytes = payload.Take(4, 36)
+                .Concat(payload.Take(4 + 64, payload.Length - (4 + 64)))
+                .Concat(generationHash)
+                .ToArray();
+
+            var hash = new byte[32];
+            var sha3Hasher = new Sha3Digest(256);
+            sha3Hasher.BlockUpdate(signingBytes, 0, signingBytes.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
+        }
+
         /// <summary>
         ///     Signs the hash.
         /// </summary>

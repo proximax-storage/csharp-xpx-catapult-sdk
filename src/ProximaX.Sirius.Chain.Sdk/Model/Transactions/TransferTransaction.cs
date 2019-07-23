@@ -140,7 +140,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 mosaics[index] = MosaicBuffer.EndMosaicBuffer(builder);
             }
 
-            var fixedSize = 148 + (16 * Mosaics.Count) + Message.GetLength();
+            var fixedSize = 120 + 25 + 2 + 1 + 1 + (16 * Mosaics.Count) + bytePayload.Length;
 
             var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaics);
             // add vectors
@@ -154,7 +154,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
             TransferTransactionBuffer.AddRecipient(builder, recipientVector);
             TransferTransactionBuffer.AddNumMosaics(builder, (byte) Mosaics.Count);
-            TransferTransactionBuffer.AddMessageSize(builder, (ushort) Message.GetLength());
+            TransferTransactionBuffer.AddMessageSize(builder, (ushort)(bytePayload.Length + 1));
             TransferTransactionBuffer.AddMessage(builder, message);
             TransferTransactionBuffer.AddMosaics(builder, mosaicsVector);
 

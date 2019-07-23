@@ -14,7 +14,7 @@
 
 using System;
 using System.Linq;
-using System.Text;
+using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Utils;
@@ -97,28 +97,85 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public SignedTransaction SignWith(Account account,string generationHash)
+        public SignedTransaction SignWith(Account account, string generationHash)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
+            
+            var generationHashBytes = Org.BouncyCastle.Utilities.Encoders.Hex.Decode(generationHash); //generationHash.DecodeHexString();
+
+            Bytes = GenerateBytes();
+
+            var signingBytes = new byte[Bytes.Length - 100 + 32];
+
+            Buffer.BlockCopy(generationHashBytes, 0, signingBytes, 0, 32);
+
+            Buffer.BlockCopy(Bytes, 100, signingBytes, 32, Bytes.Length - 100);
 
             Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType);
 
-            var generationHashBytes = Encoding.UTF8.GetBytes(generationHash);
+            var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes);
 
-            Bytes = generationHashBytes.Concat(GenerateBytes()).ToArray();
+            var payload = new byte[Bytes.Length];
+            Buffer.BlockCopy(Bytes, 0, payload, 0, 4);
 
-            var sig = TransactionExtensions.SignTransaction(account.KeyPair, Bytes);
+            Buffer.BlockCopy(signature, 0, payload, 4, signature.Length);
 
-            var signedBuffer = Bytes.Take(4)
-                .Concat(sig)
-                .Concat(account.KeyPair.PublicKey)
-                .Concat(
-                    Bytes.Take(4 + 64 + 32, Bytes.Length - (4 + 64 + 32))
+            var rawSignerPublicKey = account.KeyPair.PublicKey;
+            Buffer.BlockCopy(rawSignerPublicKey, 0, payload, 64 + 4, rawSignerPublicKey.Length);
+
+            Buffer.BlockCopy(Bytes, 100, payload, 100, Bytes.Length - 100);
+
+            var hash = CreateTransactionHash(payload, generationHashBytes);
+
+            return SignedTransaction.Create(payload, hash,
+                account.KeyPair.PublicKey, TransactionType, NetworkType);
+            /*
+            var generationHashBytes = generationHash.DecodeHexString();
+
+            Bytes = GenerateBytes();
+
+            var signingBytes = generationHashBytes.Concat(
+                     Bytes.Take(4 + 64 + 32)
                 ).ToArray();
 
-            return SignedTransaction.Create(signedBuffer, TransactionExtensions.Hasher(signedBuffer),
-                account.KeyPair.PublicKey, TransactionType, NetworkType);
+            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType);
+
+
+            var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes);
+
+            var signedBuffer = Bytes.Take(4)
+                .Concat(signature)
+                .Concat(account.KeyPair.PublicKey)
+                .Concat(
+                    Bytes.Take(4+ 64 + 32, Bytes.Length - (4+ 64+32))
+                ).ToArray();
+            
+            return SignedTransaction.Create(signedBuffer, TransactionExtensions.Hasher(signedBuffer,generationHashBytes),
+                account.KeyPair.PublicKey, TransactionType, NetworkType);*/
+            
         }
+
+        public static byte[] CreateTransactionHash(byte[] payloadBytes, byte[] generationHashBytes)
+        {
+            // expected size is payload - 4 bytes
+            byte[] signingBytes = new byte[payloadBytes.Length - 4];
+            // 32 bytes = skip 4 bytes and take half of the signature
+            Buffer.BlockCopy(payloadBytes, 4, signingBytes, 0, 32);
+            // 32 bytes = skip second half of signature and take signer
+            Buffer.BlockCopy(payloadBytes, 68, signingBytes, 32, 32);
+            // 32 bytes = generation hash
+            Buffer.BlockCopy(generationHashBytes, 0, signingBytes, 64, 32);
+            // remainder
+            Buffer.BlockCopy(payloadBytes, 100, signingBytes, 96, payloadBytes.Length - 100);
+
+            var hash = new byte[32];
+            var sha3Hasher = new Sha3Digest(256);
+            sha3Hasher.BlockUpdate(signingBytes, 0, signingBytes.Length);
+            sha3Hasher.DoFinal(hash, 0);
+
+            return hash;
+        }
+
 
         /// <summary>
         ///     Convert an aggregate transaction to an inner transaction including transaction signer.
