@@ -7,6 +7,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
@@ -31,6 +32,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         }
 
+     
         [Fact]
         public async Task Should_Send_Some_Money_To_New_Account()
         {
