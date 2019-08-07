@@ -67,7 +67,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Meta.Active,
                     info.Meta.Index,
                     info.Meta.Id,
-                    NamespaceTypeExtension.GetRawValue(info.Namespace.Type),
+                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
                     info.Namespace.Depth,
                     ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
                     info.Namespace.ParentId.ToUInt64() == 0
@@ -76,7 +76,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
                     info.Namespace.StartHeight.ToUInt64(),
                     info.Namespace.EndHeight.ToUInt64(),
-                    new Alias(AliasTypeExtension.GetRawValue(info.Namespace.Alias.Type),
+                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
                         info.Namespace.Alias.Address != null
                             ? Address.CreateFromHex(info.Namespace.Alias.Address)
                             : null,
@@ -113,14 +113,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Meta.Active,
                     info.Meta.Index,
                     info.Meta.Id,
-                    NamespaceTypeExtension.GetRawValue(info.Namespace.Type),
+                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
                     info.Namespace.Depth,
                     ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
                     new NamespaceId(info.Namespace.ParentId.ToUInt64()),
                     PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
                     info.Namespace.StartHeight.ToUInt64(),
                     info.Namespace.EndHeight.ToUInt64(),
-                    new Alias(AliasTypeExtension.GetRawValue(info.Namespace.Alias.Type),
+                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
                         info.Namespace.Alias.Address != null
                             ? Address.CreateFromRawAddress(info.Namespace.Alias.Address)
                             : null,
@@ -163,14 +163,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Meta.Active,
                     info.Meta.Index,
                     info.Meta.Id,
-                    NamespaceTypeExtension.GetRawValue(info.Namespace.Type),
+                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
                     info.Namespace.Depth,
                     ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
                     new NamespaceId(info.Namespace.ParentId.ToUInt64()),
                     PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
                     info.Namespace.StartHeight.ToUInt64(),
                     info.Namespace.EndHeight.ToUInt64(),
-                    new Alias(AliasTypeExtension.GetRawValue(info.Namespace.Alias.Type),
+                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
                         info.Namespace.Alias.Address != null
                             ? Address.CreateFromRawAddress(info.Namespace.Alias.Address)
                             : null,
@@ -207,14 +207,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Meta.Active,
                     info.Meta.Index,
                     info.Meta.Id,
-                    NamespaceTypeExtension.GetRawValue(info.Namespace.Type),
+                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
                     info.Namespace.Depth,
                     ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
                     new NamespaceId(info.Namespace.ParentId.ToUInt64()),
                     PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
                     info.Namespace.StartHeight.ToUInt64(),
                     info.Namespace.EndHeight.ToUInt64(),
-                    new Alias(AliasTypeExtension.GetRawValue(info.Namespace.Alias.Type),
+                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
                         info.Namespace.Alias.Address != null
                             ? Address.CreateFromRawAddress(info.Namespace.Alias.Address)
                             : null,
@@ -246,7 +246,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(i => i.Select(n => new NamespaceName(
                     new NamespaceId(n.NamespaceId.ToUInt64()),
                     n.Name,
-                    n.ParentId != null ? new NamespaceId(n.ParentId.ToUInt64()) : null
+                   null
                 )).ToList());
         }
 

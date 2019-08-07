@@ -64,8 +64,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <returns>IObservable&lt;AccountInfo&gt;</returns>
         public IObservable<AccountInfo> GetAccountInfo(Address address)
         {
-            Guard.NotNull(address,nameof(address),"Address should not be null");
-            
+            Guard.NotNull(address, nameof(address), "Address should not be null");
+
             var route = $"{BasePath}/account/{address.Plain}";
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<AccountInfoDTO>())
@@ -126,12 +126,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             var route = $"{BasePath}/account/{account.PublicKey}/properties";
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<AccountPropertiesInfoDTO>())
-                .Select(info => new AccountPropertiesInfo(info.Meta == null ? "" : info.Meta.Id,
+                .Select(info => new AccountPropertiesInfo(null,
                     new AccountProperties(
                         Address.CreateFromHex(info.AccountProperties.Address),
                         info.AccountProperties.Properties
                             .Select(ap =>
-                                new AccountProperty(PropertyTypeExtension.GetRawValue(ap.PropertyType), ap.Values))
+                                new AccountProperty(PropertyTypeExtension.GetRawValue((int)ap.PropertyType), ap.Values))
                             .OrderBy(pt => pt.PropertyType).ToList()
                     )
                 ));
@@ -149,12 +149,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             var route = $"{BasePath}/account/{address.Plain}/properties";
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<AccountPropertiesInfoDTO>())
-                .Select(info => new AccountPropertiesInfo(info.Meta == null ? "" : info.Meta.Id,
+                .Select(info => new AccountPropertiesInfo(null,
                     new AccountProperties(
                         Address.CreateFromHex(info.AccountProperties.Address),
                         info.AccountProperties.Properties
                             .Select(ap =>
-                                new AccountProperty(PropertyTypeExtension.GetRawValue(ap.PropertyType), ap.Values))
+                                new AccountProperty(PropertyTypeExtension.GetRawValue((int)ap.PropertyType), ap.Values))
                             .OrderBy(pt => pt.PropertyType).ToList()
                     )
                 ));
@@ -178,6 +178,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             return Observable.FromAsync(async ar =>
                     await route.PostJsonAsync(addressList).ReceiveJson<List<AccountPropertiesInfoDTO>>())
+                .Select(apl => apl.Select(info => new AccountPropertiesInfo(null,
+                    new AccountProperties(
+                        Address.CreateFromHex(info.AccountProperties.Address),
+                        info.AccountProperties.Properties
+                            .Select(ap =>
+                                new AccountProperty(PropertyTypeExtension.GetRawValue((int)ap.PropertyType), ap.Values))
+                            .OrderBy(pt => pt.PropertyType).ToList()
+                    )
+                )).OrderBy(l => l.AccountProperties.Address.Plain).ToList());
+
+            /*
+            return Observable.FromAsync(async ar =>
+                    await route.PostJsonAsync(addressList).ReceiveJson<List<AccountPropertiesInfoDTO>>())
                 .Select(apl => apl.Select(info => new AccountPropertiesInfo(info.Meta == null ? "" : info.Meta.Id,
                     new AccountProperties(
                         Address.CreateFromHex(info.AccountProperties.Address),
@@ -186,7 +199,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                                 new AccountProperty(PropertyTypeExtension.GetRawValue(ap.PropertyType), ap.Values))
                             .OrderBy(pt => pt.PropertyType).ToList()
                     )
-                )).OrderBy(l => l.AccountProperties.Address.Plain).ToList());
+                )).OrderBy(l => l.AccountProperties.Address.Plain).ToList());*/
         }
 
         #endregion
@@ -358,8 +371,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             return Observable.FromAsync(async ar => await route.GetJsonAsync<MultisigAccountInfoDTO>())
                 .Select(info => new MultisigAccountInfo(
                     new PublicAccount(info.Multisig.Account, networkType.Wait()),
-                    info.Multisig.MinApproval,
-                    info.Multisig.MinRemoval,
+                    info.Multisig.MinApproval.Value,
+                    info.Multisig.MinRemoval.Value,
                     info.Multisig.Cosignatories.Select(cos => new PublicAccount(
                         cos, networkType.Wait())).ToList(),
                     info.Multisig.MultisigAccounts.Select(mul => new PublicAccount(
@@ -386,12 +399,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                         var graphInfoMap = new Dictionary<int, List<MultisigAccountInfo>>();
                         entry.ForEach(item =>
                             graphInfoMap.Add(
-                                item.Level,
+                                item.Level.Value,
                                 item.MultisigEntries.Select(info =>
                                     new MultisigAccountInfo(
                                         new PublicAccount(info.Multisig.Account, networkType.Wait()),
-                                        info.Multisig.MinApproval,
-                                        info.Multisig.MinRemoval,
+                                        info.Multisig.MinApproval.Value,
+                                        info.Multisig.MinRemoval.Value,
                                         info.Multisig.Cosignatories.Select(cos =>
                                             new PublicAccount(
                                                 cos, networkType.Wait())).ToList(),

@@ -70,8 +70,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Mosaic.Height.ToUInt64(),
                     PublicAccount.CreateFromPublicKey(info.Mosaic.Owner, networkType.Wait()),
                     info.Mosaic.Revision,
-                    ExtractMosaicProperties(info.Mosaic.Properties.ToUInt64Array()),
-                    info.Mosaic.Levy)
+                    ExtractMosaicProperties(info.Mosaic.Properties),
+                    null)
                 );
         }
 
@@ -100,8 +100,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Mosaic.Height.ToUInt64(),
                     PublicAccount.CreateFromPublicKey(info.Mosaic.Owner, networkType.Wait()),
                     info.Mosaic.Revision,
-                    ExtractMosaicProperties(info.Mosaic.Properties.ToUInt64Array()),
-                    info.Mosaic.Levy
+                    ExtractMosaicProperties(info.Mosaic.Properties),
+                    null
                 )).ToList());
         }
 
@@ -131,16 +131,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// </summary>
         /// <param name="properties">The properties.</param>
         /// <returns>MosaicProperties.</returns>
-        private static MosaicProperties ExtractMosaicProperties(IReadOnlyList<ulong> properties)
+        /* private static MosaicProperties ExtractMosaicProperties(IReadOnlyList<ulong> properties)
+         {
+             var flags = "00" + Convert.ToString((long)properties[0], 2);
+             var bitMapFlags = flags.Substring(flags.Length - 3, 3);
+
+             return MosaicProperties.Create(bitMapFlags.ToCharArray()[2] == '1',
+                 bitMapFlags.ToCharArray()[1] == '1',
+                 bitMapFlags.ToCharArray()[0] == '1',
+                 (int)properties[1],
+                 properties.Count == 3 ? properties[2] : 0);
+         }*/
+
+        private static MosaicProperties ExtractMosaicProperties(List<MosaicPropertyDTO> properties)
         {
-            var flags = "00" + Convert.ToString((long)properties[0], 2);
+            var flags = "00" + Convert.ToString((long)properties[0].Value.FromUInt8Array(), 2);
             var bitMapFlags = flags.Substring(flags.Length - 3, 3);
 
             return MosaicProperties.Create(bitMapFlags.ToCharArray()[2] == '1',
                 bitMapFlags.ToCharArray()[1] == '1',
                 bitMapFlags.ToCharArray()[0] == '1',
-                (int)properties[1],
-                properties.Count == 3 ? properties[2] : 0);
+                (int)properties[1].Value.FromUInt8Array(),
+                properties.Count == 3 ? properties[2].Value.FromUInt8Array() : 0);
         }
     }
 }

@@ -34,6 +34,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
             return input.ToArray().FromUInt8Array();
         }
 
+        public static ulong FromUInt8Array(this UInt64DTO input)
+        {
+            return input.ToArray().FromUInt8Array();
+        }
+
         public static ulong[] ToUInt64Array(this List<UInt64DTO> input)
         {
             var arrayInput = JsonConvert.SerializeObject(input, Formatting.Indented);

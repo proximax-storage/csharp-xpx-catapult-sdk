@@ -90,6 +90,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns>PropertyType</returns>
         public static PropertyType GetRawValue(int? value)
         {
+            /*return EnumExtensions.GetEnumValue<PropertyType>(value);*/
             return value.HasValue
                 ? EnumExtensions.GetEnumValue<PropertyType>(value.Value)
                 : throw new TypeNotSupportException(nameof(value));
