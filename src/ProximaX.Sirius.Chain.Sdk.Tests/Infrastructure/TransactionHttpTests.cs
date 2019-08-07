@@ -97,7 +97,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_Transfer_Transaction_With_Secure_Message()
         {
-            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.PUBLIC_TEST };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
 
             using (var httpTest = new HttpTest())
             {

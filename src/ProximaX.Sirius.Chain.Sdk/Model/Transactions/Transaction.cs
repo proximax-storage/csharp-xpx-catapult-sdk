@@ -101,8 +101,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
             
-            var generationHashBytes = Org.BouncyCastle.Utilities.Encoders.Hex.Decode(generationHash); //generationHash.DecodeHexString();
-            var testHash = generationHash.DecodeHexString();
+            var generationHashBytes = generationHash.DecodeHexString();
+            //Org.BouncyCastle.Utilities.Encoders.Hex.Decode(generationHash);
+            ///var testHash = generationHash.DecodeHexString();
 
             Bytes = GenerateBytes();
 

@@ -12,13 +12,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Enum_PUBLIC_NET_Value_Is_184()
         {
-            NetworkTypeValueIsX(NetworkType.PUBLIC, 184);
+            NetworkTypeValueIsX(NetworkType.MAIN_NET, 184);
         }
 
         [Fact]
         public void Enum_PUBLIC_TEST_Value_Is_168()
         {
-            NetworkTypeValueIsX(NetworkType.PUBLIC_TEST, 168);
+            NetworkTypeValueIsX(NetworkType.TEST_NET, 168);
         }
 
         [Fact]
@@ -54,13 +54,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Enum_PUBLIC_Value_In_Byte_Is_0xb8()
         {
-            NetworkTypeValueInByteIsX(NetworkType.PUBLIC, 0xb8);
+            NetworkTypeValueInByteIsX(NetworkType.MAIN_NET, 0xb8);
         }
 
         [Fact]
         public void Enum_PUBLIC_NET_Value_In_Byte_Is_0xa8()
         {
-            NetworkTypeValueInByteIsX(NetworkType.PUBLIC_TEST, 0xa8);
+            NetworkTypeValueInByteIsX(NetworkType.TEST_NET, 0xa8);
         }
 
         [Fact]
@@ -97,13 +97,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Value_184_Is_PUBLIC()
         {
-            ValueXIsNetWorkType(184, NetworkType.PUBLIC);
+            ValueXIsNetWorkType(184, NetworkType.MAIN_NET);
         }
 
         [Fact]
         public void Value_168_Is_PUBLIC_TEST()
         {
-            ValueXIsNetWorkType(168, NetworkType.PUBLIC_TEST);
+            ValueXIsNetWorkType(168, NetworkType.TEST_NET);
         }
 
         [Fact]
@@ -134,9 +134,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         public void NetworkType_Name_Returns_Enum_NetworkType()
         {
             GetEnumTypeByName("MIJINTEST", NetworkType.MIJIN_TEST);
-            GetEnumTypeByName("PUBLIC", NetworkType.PUBLIC);
+            GetEnumTypeByName("PUBLIC", NetworkType.MAIN_NET);
             GetEnumTypeByName("MIJIN", NetworkType.MIJIN);
-            GetEnumTypeByName("PUBLICTEST", NetworkType.PUBLIC_TEST);
+            GetEnumTypeByName("PUBLICTEST", NetworkType.TEST_NET);
             GetEnumTypeByName("PRIVATE", NetworkType.PRIVATE);
             GetEnumTypeByName("PRIVATETEST", NetworkType.PRIVATE_TEST);
             Action act = () => { NetworkTypeExtension.GetRawValue("PRIVATE_NET"); };

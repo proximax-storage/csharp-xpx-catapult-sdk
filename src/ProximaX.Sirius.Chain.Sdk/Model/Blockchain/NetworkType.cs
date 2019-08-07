@@ -27,12 +27,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         /// <summary>
         ///     The main net
         /// </summary>
-        [Description("Public")] PUBLIC = 184,
+        [Description("Public")] MAIN_NET = 184,
 
         /// <summary>
         ///     The test net
         /// </summary>
-        [Description("PublicTest")] PUBLIC_TEST = 168,
+        [Description("PublicTest")] TEST_NET = 168,
 
         /// <summary>
         ///     The mijin
@@ -45,12 +45,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         [Description("MijinTest")] MIJIN_TEST = 144,
 
         /// <summary>
-        ///     The mijin
+        ///     The private net
         /// </summary>
         [Description("Private")] PRIVATE = 200,
 
         /// <summary>
-        ///     The mijin test
+        ///     The private test net
         /// </summary>
         [Description("PrivateTest")] PRIVATE_TEST = 176,
 
@@ -120,9 +120,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
             switch (value.ToUpper())
             {
                 case "PUBLIC":
-                    return NetworkType.PUBLIC;
+                    return NetworkType.MAIN_NET;
                 case "PUBLICTEST":
-                    return NetworkType.PUBLIC_TEST;
+                
+                    return NetworkType.TEST_NET;
                 case "PRIVATE":
                     return NetworkType.PRIVATE;
                 case "PRIVATETEST":

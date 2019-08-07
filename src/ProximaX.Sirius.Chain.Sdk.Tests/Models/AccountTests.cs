@@ -64,7 +64,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         {
 
             var address = Address.CreateFromRawAddress(Constants.PUBLIC_PLAIN_ADDRESS);
-            address.NetworkType.Should().BeEquivalentTo(NetworkType.PUBLIC);
+            address.NetworkType.Should().BeEquivalentTo(NetworkType.MAIN_NET);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
             var address = Address.CreateFromRawAddress(Constants.PUBLIC_TEST_PLAIN_ADDRESS);
 
-            address.NetworkType.Should().BeEquivalentTo(NetworkType.PUBLIC_TEST);
+            address.NetworkType.Should().BeEquivalentTo(NetworkType.TEST_NET);
 
         }
 

@@ -87,10 +87,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
                     networkType = NetworkType.MIJIN;
                     break;
                 case 'X':
-                    networkType = NetworkType.PUBLIC;
+                    networkType = NetworkType.MAIN_NET;
                     break;
                 case 'V':
-                    networkType = NetworkType.PUBLIC_TEST;
+                    networkType = NetworkType.TEST_NET;
                     break;
                 case 'Z':
                     networkType = NetworkType.PRIVATE;

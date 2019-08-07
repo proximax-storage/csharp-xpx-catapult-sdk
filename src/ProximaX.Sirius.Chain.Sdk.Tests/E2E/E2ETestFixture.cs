@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using ProximaX.Sirius.Chain.Sdk.Client;
-using ProximaX.Sirius.Chain.Sdk.Infrastructure;
-using ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
