@@ -33,9 +33,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var namespaceId = new NamespaceId("nsp274d22");
+                var namespaceId = new NamespaceId("nsp714402");
 
-                const string expectedNamespaceIdHex = "BCE8AD8B2668C272";
+                const string expectedNamespaceIdHex = "FD57051688018889";
                 namespaceId.HexId.Should().BeEquivalentTo(expectedNamespaceIdHex);
                 var namespaceInfo = await _namespaceHttp.GetNamespace(namespaceId);
                 namespaceInfo.Id.HexId.Should().BeEquivalentTo(expectedNamespaceIdHex);
@@ -45,18 +45,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
        
         [Fact]
-        public async Task Get_SubNamespace_Should_Return_NamespaceInfo()
+        public async Task Get_SubNamespace_Should_Return_SubNamespaceInfo()
         {
 
             using (var httpTest = new HttpTest())
             {
                 var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Namespace\\GetSubNamespaceInfo.json");
                 httpTest.RespondWithJson(fakeJson);
+                
+                const string expectedNamespaceIdHex = "9C86E3F37F6EC854";
+                const string expectedParentNamespaceIdHex = "9777BFC68948B892";
+                var namespaceId = new NamespaceId("nspcef49a.subns1a99d1");
 
-                const string expectedNamespaceIdHex = "AF6D6FD56D6E51CB";
-                var namespaceId = new NamespaceId("nsp4daa64.subns0992ae");
                 var namespaceInfo = await _namespaceHttp.GetNamespace(namespaceId);
                 namespaceInfo.Id.HexId.Should().BeEquivalentTo(expectedNamespaceIdHex);
+                namespaceInfo.ParentId.HexId.Should().BeEquivalentTo(expectedParentNamespaceIdHex);
+                    
            }
         }
 

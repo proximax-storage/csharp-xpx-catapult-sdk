@@ -1,74 +1,90 @@
 ﻿[
   {
     "meta": {
-      "id": "5CF911A386B0AF55B6DE06E6"
+      "id": "5D4BF0BA9EEB54FCB5CD4E7F"
     },
     "mosaic": {
       "mosaicId": [
-        3558494415,
-        1407811860
+        1691433928,
+        562876090
       ],
       "supply": [
-        0,
+        1000000,
         0
       ],
       "height": [
-        185,
+        883,
         0
       ],
-      "owner": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "owner": "BB21D7E3742F7D64063FD8784E30FE9E88D023CFDC4CBC2A6705C643D3B45D9C",
       "revision": 1,
       "properties": [
-        [
-          3,
-          0
-        ],
-        [
-          0,
-          0
-        ],
-        [
-          1000,
-          0
-        ]
-      ],
-      "levy": {}
+        {
+          "id": 0,
+          "value": [
+            3,
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "value": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": 2,
+          "value": [
+            1000,
+            0
+          ]
+        }
+      ]
     }
   },
   {
     "meta": {
-      "id": "5CF9118B86B0AF55B6DE06AE"
+      "id": "5D4978CF9EEB54FCB5CD2457"
     },
     "mosaic": {
       "mosaicId": [
-        2249826272,
-        719693471
+        481110499,
+        231112638
       ],
       "supply": [
-        0,
-        0
+        3403414400,
+        2095475
       ],
       "height": [
-        182,
+        1,
         0
       ],
-      "owner": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "owner": "B4F12E7C9F6946091E2CB8B6D3A12B50D17CCBBF646386EA27CE2946A7423DCF",
       "revision": 1,
       "properties": [
-        [
-          3,
-          0
-        ],
-        [
-          0,
-          0
-        ],
-        [
-          1000,
-          0
-        ]
-      ],
-      "levy": {}
+        {
+          "id": 0,
+          "value": [
+            2,
+            0
+          ]
+        },
+        {
+          "id": 1,
+          "value": [
+            6,
+            0
+          ]
+        },
+        {
+          "id": 2,
+          "value": [
+            0,
+            0
+          ]
+        }
+      ]
     }
   }
 ]

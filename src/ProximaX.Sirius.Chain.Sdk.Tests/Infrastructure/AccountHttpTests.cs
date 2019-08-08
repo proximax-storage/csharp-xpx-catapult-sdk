@@ -37,7 +37,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string rawAddress = "SDEACLIEMSZUQCVZGFOAPCMZ6WYQCCAMMHOOYFLE";
+                const string rawAddress = "SDR2YLGNPGFLSDRG2CGFBEXCJUHVC2ZWBODHRLJN";
                 var address = Address.CreateFromRawAddress(rawAddress);
                 var accountInfo = await _accountHttp.GetAccountInfo(address);
                 accountInfo.Should().NotBeNull();

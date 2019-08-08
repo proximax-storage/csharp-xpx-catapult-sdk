@@ -96,8 +96,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var generationHash = "";
-            var signedTransaction = addressFilter.SignWith(company, generationHash);
+     
+            var signedTransaction = addressFilter.SignWith(company, _fixture.Environment.GenerationHash);
 
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
@@ -144,8 +144,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var generationHash = "";
-            var signedTransaction = accountFilter.SignWith(company, generationHash);
+       
+            var signedTransaction = accountFilter.SignWith(company, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
@@ -195,8 +195,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
-            var generationHash = "";
-            var signedTransaction = accountFilter.SignWith(company, generationHash);
+          
+            var signedTransaction = accountFilter.SignWith(company, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 

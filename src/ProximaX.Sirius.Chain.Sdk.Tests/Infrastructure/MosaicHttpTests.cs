@@ -43,7 +43,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string mosaicHex = "7D26BCA6BD15E3BF";
+                const string mosaicHex = "5D4BF0BA9EEB54FCB5CD4E7F";
                 var mosaicId = new MosaicId(mosaicHex);
                 var mosaicInfo = await _mosaicHttp.GetMosaic(mosaicId);
                 mosaicInfo.Should().NotBeNull();
@@ -68,8 +68,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 var list = new List<string>
                 {
-                    "53E98114D41A50CF",
-                    "2AE5A69F86199FE0"
+                     "0DC67FBE1CAD29E3",
+                     "218CCEBA64D13BC8"
                 };
                 var mosaicInfoList = await _mosaicHttp.GetMosaicListAsync(list);
                 mosaicInfoList.Should().HaveCountGreaterThan(0);
@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 };
                 var mosaicNames = await _mosaicHttp.GetMosaicNames(list);
                 mosaicNames.Should().HaveCountGreaterThan(0);
-                mosaicNames[0].Names[0].Should().BeEquivalentTo("prx.xpx");
+                mosaicNames[0].Names[0].Should().BeEquivalentTo("cat.currency");
             }
 
 

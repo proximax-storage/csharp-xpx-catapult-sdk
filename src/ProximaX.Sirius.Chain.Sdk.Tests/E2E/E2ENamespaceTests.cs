@@ -134,7 +134,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 childId
             });
 
-            nsNames.Should().HaveCount(3);
+            nsNames.Should().HaveCount(2);
             nsNames.Select(ns => ns.Name == rootId.Name).Should().NotBeNull();
             nsNames.Select(ns => ns.Name == childId.Name).Should().NotBeNull();
         }

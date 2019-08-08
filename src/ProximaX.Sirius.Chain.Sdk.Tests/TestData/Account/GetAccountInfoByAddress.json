@@ -1,13 +1,18 @@
 ﻿{
   "meta": {},
   "account": {
-    "address": "90C8012D0464B3480AB9315C078999F5B101080C61DCEC1564",
-    "addressHeight": [ 14907, 0 ],
-    "publicKey": "20D57BED1C5DA5C224D83B22BEFF1CCC7D5D94054C9B75E83E08EF3ED5F992CD",
-    "publicKeyHeight": [ 14907, 0 ],
+    "address": "90E3AC2CCD798AB90E26D08C5092E24D0F516B360B8678AD2D",
+    "addressHeight": [ 1297, 0 ],
+    "publicKey": "0000000000000000000000000000000000000000000000000000000000000000",
+    "publicKeyHeight": [ 0, 0 ],
     "accountType": 0,
     "linkedAccountKey": "0000000000000000000000000000000000000000000000000000000000000000",
-    "mosaics": [],
+    "mosaics": [
+      {
+        "id": [ 651575171, 1828834062 ],
+        "amount": [ 10, 0 ]
+      }
+    ],
     "snapshots": []
   }
 }

@@ -1,36 +1,24 @@
 ﻿{
-  "meta": {
-    "id": "5CFE3A939E12C48C5EC69A10"
-  },
+  "meta": { "id": "5D4BF0BA9EEB54FCB5CD4E7F" },
   "mosaic": {
-    "mosaicId": [
-      3172328383,
-      2099690662
-    ],
-    "supply": [
-      1000000,
-      0
-    ],
-    "height": [
-      4755,
-      0
-    ],
-    "owner": "9E9EC175E04494988A56F137C940F7AA69AA7679BABA252BD7C712F8C96FD87C",
+    "mosaicId": [ 1691433928, 562876090 ],
+    "supply": [ 1000000, 0 ],
+    "height": [ 883, 0 ],
+    "owner": "BB21D7E3742F7D64063FD8784E30FE9E88D023CFDC4CBC2A6705C643D3B45D9C",
     "revision": 1,
     "properties": [
-      [
-        3,
-        0
-      ],
-      [
-        0,
-        0
-      ],
-      [
-        1000,
-        0
-      ]
-    ],
-    "levy": {}
+      {
+        "id": 0,
+        "value": [ 3, 0 ]
+      },
+      {
+        "id": 1,
+        "value": [ 0, 0 ]
+      },
+      {
+        "id": 2,
+        "value": [ 1000, 0 ]
+      }
+    ]
   }
 }

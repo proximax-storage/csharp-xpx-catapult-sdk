@@ -105,20 +105,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
             var nonce = MosaicNonce.CreateRandom();
-
+            var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
             var mosaicDefinitionTransaction = MosaicDefinitionTransaction.Create(
                 nonce,
-                MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey),
+                mosaicId,
                 Deadline.Create(),
                 MosaicProperties.Create(
                     supplyMutable: true,
                     transferable: true,
                     levyMutable: false,
-                    divisibility: 0,
+                    divisibility: 6,
                     duration: 1000
                 ),
                 networkType);
-             
+            _output.WriteLine($"Going to create mosaic {mosaicId}");
+
             var mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.Create(
                 Deadline.Create(),
                 mosaicDefinitionTransaction.MosaicId,
@@ -166,7 +167,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
             mosaicInfo.Should().NotBeNull();
-            mosaicInfo.Divisibility.Should().Be(0);
+            mosaicInfo.Divisibility.Should().Be(6);
             mosaicInfo.Duration.Should().Be(1000);
             mosaicInfo.IsLevyMutable.Should().BeFalse();
             mosaicInfo.IsSupplyMutable.Should().BeTrue();
@@ -183,19 +184,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
 
             var nonce = MosaicNonce.CreateRandom();
+            var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
 
             var mosaicDefinitionTransaction = MosaicDefinitionTransaction.Create(
                 nonce,
-                MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey),
+                mosaicId,
                 Deadline.Create(),
                 MosaicProperties.Create(
                     supplyMutable: true,
                     transferable: true,
                     levyMutable: false,
-                    divisibility: 0,
+                    divisibility: 3,
                     duration: 1000
                 ),
                 networkType);
+            _output.WriteLine($"Going to create mosaic {mosaicId}");
 
             var mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.Create(
                 Deadline.Create(),
@@ -244,7 +247,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var mosaicInfo = await _fixture.Client.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
             mosaicInfo.Should().NotBeNull();
-            mosaicInfo.Divisibility.Should().Be(0);
+            mosaicInfo.Divisibility.Should().Be(3);
             mosaicInfo.Duration.Should().Be(1000);
             mosaicInfo.IsLevyMutable.Should().BeFalse();
             mosaicInfo.IsSupplyMutable.Should().BeTrue();

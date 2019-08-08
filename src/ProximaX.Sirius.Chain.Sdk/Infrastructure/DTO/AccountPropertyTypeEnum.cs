@@ -13,8 +13,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     [DataContract]
     public enum AccountPropertyTypeEnum : int
     {
-        NUMBER_1 =1,
-        NUMBER_2 =2
+      
     }
 }
 

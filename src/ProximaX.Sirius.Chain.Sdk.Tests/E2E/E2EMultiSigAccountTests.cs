@@ -63,7 +63,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                         cosig2.PublicAccount),
                 },
                 networkType);
-            var signedChangeToMultisig = multisigAccount.Sign(changeToMultisig, _fixture.Environment.GenerationHash);
+
+            var changeToMultisigAggregate = AggregateTransaction.CreateBonded(
+               Deadline.Create(),
+               new List<Transaction>
+               {
+                    changeToMultisig.ToAggregate(multisigAccount.PublicAccount)
+               },
+               networkType);
+
+            //var signedChangeToMultisig = multisigAccount.Sign(changeToMultisig, _fixture.Environment.GenerationHash);
+            var cosignatories = new List<Account>
+            {
+                cosig1, cosig2
+            };
+
+            var signedChangeToMultisig = changeToMultisigAggregate.SignTransactionWithCosigners(multisigAccount, cosignatories, _fixture.Environment.GenerationHash);
 
             _output.WriteLine($"Going to announce multisig transaction {signedChangeToMultisig.Hash}");
 
