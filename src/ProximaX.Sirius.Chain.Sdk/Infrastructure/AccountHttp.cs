@@ -314,6 +314,36 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(h => h.Select(t => new TransactionMapping().Apply(t)).ToList());
         }
 
+        public IObservable<List<Transaction>> AggregateBondedTransactions(PublicAccount account, QueryParams query = null)
+        {
+            if (account == null) throw new ArgumentNullException(nameof(account));
+
+            var route = $"{BasePath}/account/{account.PublicKey}/transactions/partial";
+
+            if (query != null)
+            {
+                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+
+                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+
+                switch (query.Order)
+                {
+                    case Order.ASC:
+                        route.SetQueryParam("ordering", "id");
+                        break;
+                    case Order.DESC:
+                        route.SetQueryParam("ordering", "-id");
+                        break;
+                    default:
+                        route.SetQueryParam("ordering", "-id");
+                        break;
+                }
+            }
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<List<JObject>>())
+                .Select(h => h.Select(t => new TransactionMapping().Apply(t)).ToList());
+        }
+
 
         /// <summary>
         ///     Get unconfirmed transactions for which an account is the sender or receiver.

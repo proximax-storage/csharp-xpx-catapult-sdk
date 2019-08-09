@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
@@ -116,10 +117,34 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         ///     Signs the specified transaction.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
+        /// <param name="generationHash">The generation hash</param>
         /// <returns>SignedTransaction.</returns>
         public SignedTransaction Sign(Transaction transaction,string generationHash)
         {
             return transaction.SignWith(this, generationHash);
+        }
+
+        /// <summary>
+        /// Sign transaction with cosignatories creating a new SignedTransaction.
+        /// </summary>
+        /// <param name="transaction">The transaction</param>
+        /// <param name="generationHash">The generation hash</param>
+        /// <param name="cosignatories">The list of cosginatories</param>
+        /// <returns></returns>
+        public SignedTransaction SignTransactionWithCosignatories(AggregateTransaction transaction, string generationHash,
+           List<Account> cosignatories)
+        {
+            return transaction.SignTransactionWithCosigners(this, cosignatories, generationHash);
+        }
+
+        /// <summary>
+        /// Sign aggregate signature transaction
+        /// </summary>
+        /// <param name="cosignatureTransaction">the aggregate signature transaction</param>
+        /// <returns></returns>
+        public CosignatureSignedTransaction SignCosignatureTransaction(CosignatureTransaction cosignatureTransaction)
+        {
+            return cosignatureTransaction.SignWith(this);
         }
 
         /// <summary>

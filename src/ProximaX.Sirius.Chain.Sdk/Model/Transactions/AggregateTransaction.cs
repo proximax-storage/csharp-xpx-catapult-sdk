@@ -171,7 +171,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="publicAccount">The public account.</param>
         /// <returns><c>true</c> if signed by the account, <c>false</c> otherwise.</returns>
         /// <exception cref="ArgumentNullException">publicAccount</exception>
-        public bool SignedByAccount(PublicAccount publicAccount)
+        public bool IsSignedByAccount(PublicAccount publicAccount)
         {
             if (publicAccount == null) throw new ArgumentNullException(nameof(publicAccount));
 

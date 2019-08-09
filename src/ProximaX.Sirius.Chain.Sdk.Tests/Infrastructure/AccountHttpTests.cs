@@ -46,6 +46,45 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             }
         }
 
+        /*
+        [Fact]
+        public async Task Get_MultiSignAccountInfo_By_Address()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Account\\GetMultiSigAccountByAddress.json");
+
+                httpTest.RespondWithJson(fakeJson);
+                const string rawAddress = "SCE5YTZZCMV44MGCXGTKV7PRBOZVNAXY66QSOGNK";
+                var address = Address.CreateFromRawAddress(rawAddress);
+                var accountInfo = await _accountHttp.GetMultisigAccountInfo(address);
+                accountInfo.Should().NotBeNull();
+                accountInfo.MinApproval.Should().Be(1);
+                accountInfo.MinRemoval.Should().Be(1);
+                accountInfo.Cosignatories.Should().HaveCount(2);
+
+            }
+        }
+
+        [Fact]
+        public async Task Get_MultiSignAccountGraph_By_Address()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetMultiSigAccountGraphByAddress.json");
+
+                httpTest.RespondWithJson(fakeJson);
+                const string rawAddress = "SCE5YTZZCMV44MGCXGTKV7PRBOZVNAXY66QSOGNK";
+                var address = Address.CreateFromRawAddress(rawAddress);
+                var graphInfo = await _accountHttp.GetMultisigAccountGraphInfo(address);
+                graphInfo.GetLevelsNumber().Should().NotBeNull();
+                graphInfo.MultisigAccounts.Should().HaveCountGreaterThan(0);
+
+            }
+        }*/
+
         [Fact]
         public async Task Get_AccountInfo_By_PublicKey()
         {
@@ -245,67 +284,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             }
 
         }
-        /*
-
-       [Fact]
-       public async Task Get_Account_Transactions_By_PublicKey_With_Query_Should_Return_Account_Transaction_List()
-       {
-           var accountHttp = new AccountHttp(BaseUrl);
-           var networkType = await new NetworkHttp(BaseUrl).GetNetworkType();
-           var publicAccount = PublicAccount.CreateFromPublicKey(PUBLIC_TEST_PUBLIC_KEY, networkType);
-           var query = new QueryParams(10, null, Order.DESC);
-           var transactions = await accountHttp.Transactions(publicAccount, query);
-           transactions.Should().HaveCountGreaterThan(0);
-
-       }
-
-       [Fact]
-       public async Task Get_Account_Property_Info_By_PublicAccount__Should_Return_Account_Property_Info()
-       {
-           var publicKey = "5798B5DA682079A5C2AF3EDD48D1A2AC7940CCF9A0370597A5D27F6A210BFCC6";
-           var expectedAddress = "VA5H5UEJA57AYSYGOHCE2B5XWNOM7MYPTQGPTMUF";
-           var expectedPropertyType = PropertyTypeExtension.GetRawValue(129);
-           var accountHttp = new AccountHttp(BaseUrl);
-           var networkType = await new NetworkHttp(BaseUrl).GetNetworkType();
-           var publicAccount = PublicAccount.CreateFromPublicKey(publicKey,networkType);
-           var accountProperty = await accountHttp.GetAccountProperty(publicAccount);
-           accountProperty.AccountProperties.Address.Plain.Should().BeEquivalentTo(expectedAddress);
-           accountProperty.AccountProperties.Properties.Should().HaveCountGreaterThan(0);
-           accountProperty.AccountProperties.Properties[0].PropertyType.Should().BeEquivalentTo(expectedPropertyType);
-
-       }
-
-
-       [Fact]
-       public async Task Get_Account_Property_Info_By_Address__Should_Return_Account_Property_Info()
-       {
-          // var publicKey = "5798B5DA682079A5C2AF3EDD48D1A2AC7940CCF9A0370597A5D27F6A210BFCC6";
-           var expectedAddress = "VA5H5UEJA57AYSYGOHCE2B5XWNOM7MYPTQGPTMUF";
-           var expectedPropertyType = PropertyTypeExtension.GetRawValue(129);
-           var accountHttp = new AccountHttp(BaseUrl);
-           //var networkType = await new NetworkHttp(BaseUrl).GetNetworkType();
-           var address = Address.CreateFromRawAddress(expectedAddress);
-
-           var accountProperty = await accountHttp.GetAccountProperty(address);
-
-       }
-
-       [Fact]
-       public async Task Get_AccountProperties_By_Addresses_Should_Return_Account_Property_List()
-       {
-           var accountHttp = new AccountHttp(BaseUrl);
-           var expectedAddress1 = "VA5H5UEJA57AYSYGOHCE2B5XWNOM7MYPTQGPTMUF";
-           var expectedAddress2 = "VDQLBSMQ65GAGUTIO6EOZWVDYLAHQNTB5YV7QXDL";
-           var address1 = Address.CreateFromRawAddress(expectedAddress1);
-           var address2 = Address.CreateFromRawAddress(expectedAddress2);
-           var list = new List<Address> { address1,address2 };
-
-           var accountPropertyList = await accountHttp.GetAccountProperties(list);
-
-           Assert.IsTrue(accountPropertyList.Count > 1);
-           Assert.AreEqual(expectedAddress1, accountPropertyList[0].AccountProperties.Address.Plain);
-           Assert.AreEqual(expectedAddress2, accountPropertyList[1].AccountProperties.Address.Plain);
-       }
-   */
+       
     }
 }
