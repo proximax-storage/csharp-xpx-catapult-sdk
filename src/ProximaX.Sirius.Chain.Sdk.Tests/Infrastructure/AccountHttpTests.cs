@@ -46,6 +46,25 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             }
         }
 
+        [Fact]
+        public async Task Get_AccountInfo_WithLinkedAccount_By_Address()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Account\\GetAccountInfoWithLinkedAccountKey.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                const string rawAddress = "SBIGZPKNMZHB7ZUJOMD5IYNVUIIM5KUQG53BYTRZ";
+                var address = Address.CreateFromRawAddress(rawAddress);
+                var accountInfo = await _accountHttp.GetAccountInfo(address);
+                accountInfo.Should().NotBeNull();
+                accountInfo.Address.Plain.Should().BeEquivalentTo(rawAddress);
+                accountInfo.LinkedAccountKey.Should().BeEquivalentTo("29646721A55041C411BDF5A8428B94CEB47C7B6295F9559C3F3ACD70963321AA");
+            }
+        }
+
         /*
         [Fact]
         public async Task Get_MultiSignAccountInfo_By_Address()

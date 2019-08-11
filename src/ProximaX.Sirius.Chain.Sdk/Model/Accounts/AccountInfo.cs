@@ -32,7 +32,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="mosaics"></param>
         /// <param name="meta"></param>
         public AccountInfo(Address address, ulong addressHeight, string publicKey,
-            ulong publicKeyHeight, IList<Mosaic> mosaics, object meta = null)
+            ulong publicKeyHeight, IList<Mosaic> mosaics, string linkedAccountKey, object meta = null )
         {
             Address = address;
             AddressHeight = addressHeight;
@@ -40,6 +40,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             PublicKeyHeight = publicKeyHeight;
             Mosaics = mosaics;
             Meta = meta;
+            LinkedAccountKey = linkedAccountKey;
         }
 
         /// <summary>
@@ -76,6 +77,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         ///     Meta
         /// </summary>
         public object Meta { get; }
+
+        /// <summary>
+        /// LinkedAccountKey
+        /// </summary>
+        public string LinkedAccountKey { get; }
 
         /// <summary>
         ///     ToString

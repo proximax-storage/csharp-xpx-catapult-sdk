@@ -39,8 +39,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             Action = action;
         }
 
-        public static AccountLinkTransaction Create(Deadline deadline, ulong? maxFee,
-             PublicAccount remoteAccount, AccountLinkAction action, NetworkType networkType)
+        public static AccountLinkTransaction Create(PublicAccount remoteAccount, AccountLinkAction action, Deadline deadline, ulong? maxFee, NetworkType networkType)
         {
             return new AccountLinkTransaction(networkType, TransactionVersion.LINK_ACCOUNT.GetValue(), deadline,
                maxFee, TransactionType.LINK_ACCOUNT, remoteAccount, action);
