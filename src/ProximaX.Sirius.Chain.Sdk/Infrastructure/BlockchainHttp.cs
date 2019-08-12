@@ -31,26 +31,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
         #endregion
 
-        public IObservable<ulong> GetBlockScore()
-        {
-            var route = $"{BasePath}/chain/score";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<BlockchainScoreDTO>())
-                .Select(i => new ulong[]
-                {
-                   i.ScoreHigh.ToUInt64(),
-                   i.ScoreLow.ToUInt64()
-                }.FromUInt64Array());
-        }
-
-        public IObservable<ulong> GetBlockHeight()
-        {
-            var route = $"{BasePath}/chain/height";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<HeightDTO>())
-                .Select(i => i.Height.ToUInt64());
-        }
-
+      
         public IObservable<BlockchainStorageInfo> GetBlockStorage()
         {
             var route = $"{BasePath}/diagnostic/storage";
@@ -58,5 +39,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             return Observable.FromAsync(async ar => await route.GetJsonAsync<BlockchainStorageInfoDTO>())
                 .Select(i => new BlockchainStorageInfo(i.NumAccounts.Value,i.NumBlocks.Value, i.NumTransactions.Value));
         }
+
+
     }
 }

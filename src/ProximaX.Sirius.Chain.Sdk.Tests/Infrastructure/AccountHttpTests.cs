@@ -23,7 +23,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
         public AccountHttpTests()
         {
-            _accountHttp = new AccountHttp(BaseUrl);
+            _accountHttp = new AccountHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
         }
 
 

@@ -20,21 +20,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             _blockchainHttp = new BlockHttp(BaseUrl);
         }
 
-        [Fact]
-        public async Task Get_Blockchain_Score()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var fakeJson =
-                    TestHelper.LoadJsonFileToObject(@"Testdata\\Block\\BlockScore.json");
-
-                httpTest.RespondWithJson(fakeJson);
-
-                var score = await _blockchainHttp.GetBlockScore();
-
-                score.Should().BeGreaterThan(0);
-
-            }
-        }
+     
     }
 }
