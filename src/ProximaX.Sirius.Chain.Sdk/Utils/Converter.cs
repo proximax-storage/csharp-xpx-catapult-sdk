@@ -52,6 +52,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
             return hexLength % 2 == 0 ? input.ToString("X") : input.ToString("X" + (hexLength + 1));
         }
 
+        public static string ToHex(this int input)
+        {
+            var hexLength = input.ToString("X").Length;
+
+            return hexLength % 2 == 0 ? input.ToString("X") : input.ToString("X" + (hexLength + 1));
+        }
+
+
         public static byte[] AliasToRecipient(this NamespaceId id)
         {
             // 0x91 | namespaceId on 8 bytes | 16 bytes 0-pad = 25 bytes

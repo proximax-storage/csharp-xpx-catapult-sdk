@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using ProximaX.Sirius.Chain.Sdk.Utils;
+using System;
+using System.Globalization;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
 {
@@ -41,7 +45,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         public BlockInfo(string hash, string generationHash, ulong? totalFee,
             int? numTransactions, string signature, PublicAccount signer, NetworkType networkType,
             int version, int type, ulong height, ulong timestamp, ulong difficulty,
-            string previousBlockHash, string blockTransactionsHash)
+            string previousBlockHash, string blockTransactionsHash, string blockReceiptsHash)
         {
             Hash = hash;
             GenerationHash = generationHash;
@@ -57,6 +61,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
             Difficulty = difficulty;
             PreviousBlockHash = previousBlockHash;
             BlockTransactionsHash = blockTransactionsHash;
+            BlockReceiptsHash = blockReceiptsHash;
         }
 
         /// <summary>
@@ -129,6 +134,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         /// </summary>
         public string BlockTransactionsHash { get; }
 
+        /// <summary>
+        /// The block receipts hash
+        /// </summary>
+        public string BlockReceiptsHash { get; }
+
         public override string ToString()
         {
             return "BlockInfo{" +
@@ -146,7 +156,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
                    ", difficulty=" + Difficulty +
                    ", previousBlockHash='" + PreviousBlockHash + '\'' +
                    ", blockTransactionsHash='" + BlockTransactionsHash + '\'' +
+                   ", blockReceiptsHash='" + BlockReceiptsHash + '\'' +
                    '}';
+        }
+
+        public static BlockInfo FromDto(BlockInfoDTO dto, NetworkType networkType)
+        {
+            return new BlockInfo(dto.Meta.Hash,
+                  dto.Meta.GenerationHash,
+                  dto.Meta.TotalFee.ToUInt64(),
+                   dto.Meta.NumTransactions.Value,
+                   dto.Block.Signature,
+                   PublicAccount.CreateFromPublicKey(dto.Block.Signer, networkType),
+                   networkType,
+                   Convert.ToInt32(EnumExtensions.GetEnumValue<int>(dto.Block.Version.ToString()).ToHex().Substring(2, 4), 16),
+                   EnumExtensions.GetEnumValue<int>(dto.Block.Type.ToString()),
+                   dto.Block.Height.ToUInt64(),
+                   dto.Block.Timestamp.ToUInt64(),
+                   dto.Block.Difficulty.ToUInt64(),
+                   dto.Block.PreviousBlockHash,
+                      dto.Block.BlockTransactionsHash,
+                      dto.Block.BlockReceiptsHash);
+
         }
     }
 }
