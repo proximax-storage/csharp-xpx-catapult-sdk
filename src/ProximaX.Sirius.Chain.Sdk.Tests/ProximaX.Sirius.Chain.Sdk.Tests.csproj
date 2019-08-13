@@ -68,6 +68,18 @@
     <None Update="TestData\Account\GetUnconfirmedTxFromAccount.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Block\GetReceiptFromBlock.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Block\GetBlockTransaction.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Block\BlockByHeightWithLimit.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Block\BlockByHeight.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Block\BlockScore.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

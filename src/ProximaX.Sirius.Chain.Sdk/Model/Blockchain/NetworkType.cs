@@ -92,7 +92,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         /// <returns>NetworkType</returns>
         public static NetworkType ExtractNetworkType(this int version)
         {
-            var networkType = (int) Convert.ToInt64(version.ToString("X").Substring(0, 2), 16);
+            var networkType = (int) Convert.ToInt64(version.ToString("X").MySubstring(0, 2), 16);
 
             return GetRawValue(networkType);
         }
@@ -136,5 +136,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
                     throw new TypeNotSupportException(nameof(value));
             }
         }
+
     }
 }

@@ -17,7 +17,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
     /// <summary>
     /// The BlocksLimit enumeration
     /// </summary>
-    public enum BlocksLimit
+    public enum BlocksLimit:int
     {
         LIMIT_25 = 25,
         LIMIT_50 = 50,

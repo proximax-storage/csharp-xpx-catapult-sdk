@@ -18,6 +18,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+
 namespace ProximaX.Sirius.Chain.Sdk.Utils
 {
     public static class ByteCoder
@@ -34,7 +35,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
         public static int ExtractVersion(this int version)
         {
-            return (int) Convert.ToInt64(version.ToString("X").Substring(2, 2), 16);
+           
+            return (int)Convert.ToInt64(version.ToString("X").MySubstring(2, 4), 16);
+         
         }
 
 

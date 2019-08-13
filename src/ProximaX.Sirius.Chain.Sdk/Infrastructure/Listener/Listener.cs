@@ -185,7 +185,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
                     i["meta"]["numTransactions"] == null ? 0 : int.Parse(i["meta"]["numTransactions"].ToString()),
                     i["block"]["signature"].ToString(),
                     new PublicAccount(i["block"]["signer"].ToString(),
-                        int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
+                    int.Parse(i["block"]["version"].ToString()).ExtractNetworkType()),
                     int.Parse(i["block"]["version"].ToString()).ExtractNetworkType(),
                     int.Parse(i["block"]["version"].ToString()).ExtractVersion(),
                     int.Parse(i["block"]["type"].ToString()),
@@ -193,7 +193,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
                     i["block"].ExtractBigInteger("timestamp"),
                     i["block"].ExtractBigInteger("difficulty"),
                     i["block"]["previousBlockHash"].ToString(),
-                    i["block"]["blockTransactionsHash"].ToString()));
+                    i["block"]["blockTransactionsHash"].ToString(),
+                    i["block"]["blockReceiptsHash"].ToString()
+                    ));
         }
 
         /// <summary>

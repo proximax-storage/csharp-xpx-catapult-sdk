@@ -160,8 +160,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
                    '}';
         }
 
-        public static BlockInfo FromDto(BlockInfoDTO dto, NetworkType networkType)
+        public static BlockInfo FromDto(BlockInfoDTO dto)
         {
+            var networkType = int.Parse(dto.Block.Version.ToString()).ExtractNetworkType();
+
             return new BlockInfo(dto.Meta.Hash,
                   dto.Meta.GenerationHash,
                   dto.Meta.TotalFee.ToUInt64(),
@@ -169,8 +171,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
                    dto.Block.Signature,
                    PublicAccount.CreateFromPublicKey(dto.Block.Signer, networkType),
                    networkType,
-                   Convert.ToInt32(EnumExtensions.GetEnumValue<int>(dto.Block.Version.ToString()).ToHex().Substring(2, 4), 16),
-                   EnumExtensions.GetEnumValue<int>(dto.Block.Type.ToString()),
+                   int.Parse(dto.Block.Version.ToString()).ExtractVersion(),
+                   int.Parse(dto.Block.Type.ToString()),
                    dto.Block.Height.ToUInt64(),
                    dto.Block.Timestamp.ToUInt64(),
                    dto.Block.Difficulty.ToUInt64(),
