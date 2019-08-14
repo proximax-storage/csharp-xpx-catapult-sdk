@@ -6,7 +6,6 @@ using ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Receipts;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
-using ProximaX.Sirius.Chain.Sdk.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,6 +95,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             return Observable.FromAsync(async ar => await route.GetJsonAsync<List<JObject>>())
                 .Select(h => h.Select(t => new TransactionMapping().Apply(t)).ToList());
         }
+
+
 
     }
 }
