@@ -126,6 +126,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(l => l.Select(m => new MosaicNames(new MosaicId(m.MosaicId.FromUInt8Array()), m.Names)).ToList());
         }
 
+       
+
         /// <summary>
         ///     Extracts the mosaic properties.
         /// </summary>

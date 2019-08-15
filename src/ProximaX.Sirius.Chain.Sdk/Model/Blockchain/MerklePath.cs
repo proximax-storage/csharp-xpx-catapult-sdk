@@ -30,13 +30,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
             Items = items;
         }
 
-        public static MerklePath FromDTO(MerkleProofInfo dto)
+        public static MerklePath FromDto(MerkleProofInfoDTO dto)
         {
             return new MerklePath(
-                dto.MerklePath.Select(i =>
+                dto.Payload.MerklePath.Select(i =>
                   new MerklePathItem(i.Position.Value, i.Hash))
                 .ToList());
-
         }
     }
 }

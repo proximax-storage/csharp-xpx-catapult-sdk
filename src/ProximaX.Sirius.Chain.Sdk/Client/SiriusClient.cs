@@ -34,6 +34,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Client
             MosaicHttp = new MosaicHttp(host, NetworkHttp);
             NamespaceHttp = new NamespaceHttp(host, NetworkHttp);
             TransactionHttp = new TransactionHttp(host, NetworkHttp);
+            BlockHttp = new BlockHttp(host, NetworkHttp);
+            ChainHttp = new ChainHttp(host, NetworkHttp);
         }
 
         /// <summary>
@@ -70,5 +72,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Client
         ///     The transaction http
         /// </summary>
         public TransactionHttp TransactionHttp { get; }
+        public BlockHttp BlockHttp { get; }
+        public ChainHttp ChainHttp { get; }
     }
 }

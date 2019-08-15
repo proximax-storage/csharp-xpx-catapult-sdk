@@ -36,6 +36,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
         #endregion
 
+        /// <summary>
+        /// Get the block storage
+        /// </summary>
+        /// <returns></returns>
         public IObservable<BlockchainStorageInfo> GetBlockStorage()
         {
             var route = $"{BasePath}/diagnostic/storage";
@@ -44,6 +48,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(i => new BlockchainStorageInfo(i.NumAccounts.Value, i.NumBlocks.Value, i.NumTransactions.Value));
         }
 
+        /// <summary>
+        /// Gets a block from the chain that has the given height
+        /// </summary>
+        /// <param name="height">The height of the block.</param>
+        /// <returns>IObservable&lt;BlockInfo&gt;</returns>
         public IObservable<BlockInfo> GetBlockByHeight(ulong height)
         {
             var route = $"{BasePath}/block/{height}";
@@ -52,6 +61,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(i =>  BlockInfo.FromDto(i));
         }
 
+        /// <summary>
+        /// Returns the network nemesis block generation hash
+        /// </summary>
+        /// <returns>IObservable&lt;string&gt;</returns>
+        public IObservable<string> GetGenerationHash()
+        {
+            var route = $"{BasePath}/block/1";
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<BlockInfoDTO>())
+                .Select(i => BlockInfo.FromDto(i).GenerationHash);
+        }
+
+        /// <summary>
+        /// Gets up to limit number of blocks after given block height.
+        /// </summary>
+        /// <param name="height">The height of the block. If height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.</param>
+        /// <param name="limit">he number of blocks to be returned. Available values : 25, 50, 75, 100</param>
+        /// <returns>IObservable&lt;List&lt;BlockInfo&gt;&gt;</returns>
         public IObservable<List<BlockInfo>> GetBlockByHeighWithLimit(ulong height, BlocksLimit limit)
         {
             var route = $"{BasePath}/blocks/{height}/limit/{limit}";
@@ -66,6 +93,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<StatementsDTO>())
                 .Select(i =>  Receipts.FromDto(i));
+        }
+
+        public IObservable<MerklePath> GetReceiptMerklePath(ulong height, string receiptHash)
+        {
+            var route = $"{BasePath}/block/{height}/receipt/{receiptHash}/merkle";
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<MerkleProofInfoDTO>())
+                .Select(i => MerklePath.FromDto(i));
+
+        }
+
+        public IObservable<MerklePath> GetTransactionMerklePath(ulong height, string transactionHash)
+        {
+            var route = $"{BasePath}/block/{height}/transaction/{transactionHash}/merkle";
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<MerkleProofInfoDTO>())
+                .Select(i => MerklePath.FromDto(i));
+
         }
 
         public IObservable<List<Transaction>> GetBlockTransactions(ulong height, QueryParams query = null)

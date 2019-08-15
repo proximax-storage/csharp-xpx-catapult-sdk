@@ -68,6 +68,9 @@
     <None Update="TestData\Account\GetUnconfirmedTxFromAccount.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Block\BlockByHeightGenerationHash.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Block\GetReceiptFromBlock.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

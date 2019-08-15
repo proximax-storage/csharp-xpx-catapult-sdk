@@ -63,5 +63,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 transactions[0].NetworkType.Should().Be(NetworkType.MIJIN_TEST);
             }
         }
+
+        [Fact]
+        public async Task Should_Return_The_Generation_Hash()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Block\\BlockByHeightGenerationHash.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                var generationHash = await _blockchainHttp.GetGenerationHash();
+                generationHash.Should().BeEquivalentTo("7C175E628183275364959BEA811897111C5AFCA014DD991FC0D87AD7C16BB41F");
+            }
+        }
     }
 }

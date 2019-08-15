@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>0.4.0-beta</Version>
+    <Version>0.4.0-beta2</Version>
     <Authors>Proximax IO</Authors>
     <Description>ProximaX Sirius Blockchain .Net SDK</Description>
     <Copyright>Copyright (c) 2019 ProximaX Limited</Copyright>
