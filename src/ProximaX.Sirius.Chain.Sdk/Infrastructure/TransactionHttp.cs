@@ -171,21 +171,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// </summary>
         /// <param name="signedTransaction">The signed transaction</param>
         /// <returns>IObservable&lt;TransactionAnnounceResponse&gt;</returns>
-        public IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignature(
-            CosignatureSignedTransaction signedTransaction)
+        public IObservable<TransactionAnnounceResponse> AnnounceAggregateBondedCosignatureAsync(
+            CosignatureSignedTransaction cosignatureSignedTransaction)
         {
-            if (signedTransaction == null) throw new ArgumentException(nameof(signedTransaction));
+            if (cosignatureSignedTransaction == null) throw new ArgumentException(nameof(cosignatureSignedTransaction));
 
             var route = $"{BasePath}/transaction/cosignature";
 
-            var payload = new TransactionPayload
+            var payload = new
             {
-                Payload = JsonConvert.SerializeObject(signedTransaction)
+                parentHash = cosignatureSignedTransaction.ParentHash,
+                signature = cosignatureSignedTransaction.Signature,
+                signer = cosignatureSignedTransaction.Signer
             };
-
+      
             return Observable.FromAsync(async ar =>
-                    await route.PutJsonAsync(payload).ReceiveJson<AnnounceTransactionInfoDTO>())
-                .Select(m => new TransactionAnnounceResponse(m.Message));
+                         await route.PutJsonAsync(payload).ReceiveJson<AnnounceTransactionInfoDTO>())
+                     .Select(m => new TransactionAnnounceResponse(m.Message));
         }
     }
 }

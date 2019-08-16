@@ -4,10 +4,7 @@ using ProximaX.Sirius.Chain.Sdk.Infrastructure;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Tests.Utils;
-using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

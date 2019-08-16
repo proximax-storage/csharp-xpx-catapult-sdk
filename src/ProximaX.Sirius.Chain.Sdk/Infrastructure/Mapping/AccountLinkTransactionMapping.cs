@@ -22,13 +22,27 @@ using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 {
+    /// <summary>
+    /// AccountLinkTransactionMapping Class
+    /// </summary>
     public class AccountLinkTransactionMapping : TransactionMapping
     {
+        /// <summary>
+        /// Applies the AccountLinkTransactionMapping
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public new AccountLinkTransaction Apply(JObject input)
         {
             return ToAccountLinkTransaction(input, TransactionMappingHelper.CreateTransactionInfo(input));
         }
 
+        /// <summary>
+        /// Converts to AccountLinkTransactionMapping
+        /// </summary>
+        /// <param name="tx"></param>
+        /// <param name="txInfo"></param>
+        /// <returns></returns>
         private static AccountLinkTransaction ToAccountLinkTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();

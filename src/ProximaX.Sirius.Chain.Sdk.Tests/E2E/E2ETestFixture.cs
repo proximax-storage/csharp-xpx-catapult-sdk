@@ -15,7 +15,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
     public class E2ETestFixture : IDisposable
     {
-  
+
         public Account SeedAccount { get; set; }
 
         public TimeSpan DefaultTimeout { get; set; }
@@ -26,7 +26,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public SiriusWebSocketClient WebSocket { get; set; }
 
-        
+
         public E2ETestFixture()
         {
             Task.Run(InitializeFixture);
@@ -41,9 +41,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             WebSocket = new SiriusWebSocketClient(Environment.Host, Environment.Port);
             Client = new SiriusClient(Environment.BaseUrl);
-          
+
             SeedAccount = await GetSeedAccount();
-          
+
 
             //set default timeout
             DefaultTimeout = TimeSpan.FromSeconds(100);
@@ -116,18 +116,33 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var signedTransaction = SeedAccount.Sign(transferTransaction, Environment.GenerationHash);
 
-            await WebSocket.Listener.Open();
+            try
+            {
+                await WebSocket.Listener.Open();
 
-            var tx = WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(100));
+                var tx = WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(100));
 
-            await Client.TransactionHttp.Announce(signedTransaction);
+                await Client.TransactionHttp.Announce(signedTransaction);
 
-            var result = await tx;
+                var result = await tx;
 
-            if (result.IsConfirmed())
-                return account;
-            else
-                throw new Exception($"Unable to send money to account {account.Address.Plain}");
+                if (result.IsConfirmed())
+                    return account;
+                else
+                    throw new Exception($"Unable to send money to account {account.Address.Plain}");
+            }
+            finally
+            {
+                try
+                {
+                   // WebSocket.Listener.Close();
+                }
+                catch (Exception)
+                {
+                    //do nothing
+                }
+
+            }
         }
 
         public void WatchForFailure(SignedTransaction transaction)
@@ -138,6 +153,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     {
                         Console.WriteLine(e.Status);
 
+                    });
+        }
+
+        public void WatchForFailure(CosignatureSignedTransaction transaction)
+        {
+            WebSocket.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, Client.NetworkHttp.GetNetworkType().Wait()))
+                .Subscribe(
+                    e =>
+                    {
+                        Console.WriteLine(e.Status);
                     });
         }
     }

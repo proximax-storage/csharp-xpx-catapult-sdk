@@ -30,12 +30,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Client
             Host = host;
             NetworkHttp = new NetworkHttp(host);
             AccountHttp = new AccountHttp(host, NetworkHttp);
+            BlockHttp = new BlockHttp(host, NetworkHttp);
+            ChainHttp = new ChainHttp(host, NetworkHttp);
             MetadataHttp = new MetadataHttp(host, NetworkHttp);
             MosaicHttp = new MosaicHttp(host, NetworkHttp);
             NamespaceHttp = new NamespaceHttp(host, NetworkHttp);
             TransactionHttp = new TransactionHttp(host, NetworkHttp);
-            BlockHttp = new BlockHttp(host, NetworkHttp);
-            ChainHttp = new ChainHttp(host, NetworkHttp);
+            NodeHttp = new NodeHttp(host, NetworkHttp);
+
         }
 
         /// <summary>
@@ -72,7 +74,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Client
         ///     The transaction http
         /// </summary>
         public TransactionHttp TransactionHttp { get; }
+
+        /// <summary>
+        /// The Node Http
+        /// </summary>
+        public NodeHttp NodeHttp { get; }
+
+        /// <summary>
+        /// The Block http
+        /// </summary>
         public BlockHttp BlockHttp { get; }
+
+        /// <summary>
+        /// The Chain http
+        /// </summary>
         public ChainHttp ChainHttp { get; }
     }
 }

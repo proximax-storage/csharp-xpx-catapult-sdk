@@ -13,6 +13,9 @@ using System.Reactive.Linq;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 {
+    /// <summary>
+    /// BlockHttp class
+    /// </summary>
     public class BlockHttp : BaseHttp
     {
         #region Constructors
@@ -87,6 +90,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(i => i.Select(b => BlockInfo.FromDto(b)).ToList());
         }
 
+        /// <summary>
+        /// GetBlockReceipts
+        /// </summary>
+        /// <param name="height">The height of the block. If height -1 is not a multiple of the limit provided, the inferior closest multiple + 1 is used instead.</param>
+        /// <returns></returns>
         public IObservable<Receipts> GetBlockReceipts(ulong height)
         {
             var route = $"{BasePath}/blocks/{height}/receipts";
@@ -95,6 +103,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 .Select(i =>  Receipts.FromDto(i));
         }
 
+        /// <summary>
+        /// GetReceiptMerklePath
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="receiptHash"></param>
+        /// <returns></returns>
         public IObservable<MerklePath> GetReceiptMerklePath(ulong height, string receiptHash)
         {
             var route = $"{BasePath}/block/{height}/receipt/{receiptHash}/merkle";
@@ -104,6 +118,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
         }
 
+        /// <summary>
+        /// GetTransactionMerklePath
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="transactionHash"></param>
+        /// <returns></returns>
         public IObservable<MerklePath> GetTransactionMerklePath(ulong height, string transactionHash)
         {
             var route = $"{BasePath}/block/{height}/transaction/{transactionHash}/merkle";
@@ -113,6 +133,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
         }
 
+        /// <summary>
+        /// GetBlockTransactions
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public IObservable<List<Transaction>> GetBlockTransactions(ulong height, QueryParams query = null)
         {
             var route = $"{BasePath}/block/{height}/transactions";
@@ -140,8 +166,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             return Observable.FromAsync(async ar => await route.GetJsonAsync<List<JObject>>())
                 .Select(h => h.Select(t => new TransactionMapping().Apply(t)).ToList());
         }
-
-
 
     }
 }
