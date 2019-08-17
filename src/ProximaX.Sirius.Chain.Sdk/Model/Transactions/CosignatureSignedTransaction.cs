@@ -13,6 +13,8 @@
 // limitations under the License.
 
 
+using Newtonsoft.Json;
+
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     /// <summary>
@@ -36,18 +38,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Gets or sets the parent hash.
         /// </summary>
         /// <value>The parent hash.</value>
+        [JsonProperty("parentHash")]
         public string ParentHash { get; set; }
 
         /// <summary>
         ///     Gets or sets the signature.
         /// </summary>
         /// <value>The signature.</value>
+        [JsonProperty("signature")]
         public string Signature { get; set; }
 
         /// <summary>
         ///     Gets or sets the signer.
         /// </summary>
         /// <value>The signer.</value>
+        [JsonProperty("signer")]
         public string Signer { get; set; }
     }
 }

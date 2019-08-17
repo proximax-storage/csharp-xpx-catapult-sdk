@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
@@ -248,17 +249,25 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Convert_Account_To_MultiSig()
         {
-            // Create an account to be converted to multisig with some money
-            var account = await _fixture.GenerateAccountAndSendSomeMoney(100);
-            var cosignatory1 = await _fixture.GenerateAccountAndSendSomeMoney(100);
-            var cosignatory2 = await _fixture.GenerateAccountAndSendSomeMoney(100);
-
             // Get current network type 
             var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
 
+
+            // Create an account to be converted to multisig with some money
+            var account = await _fixture.GenerateAccountAndSendSomeMoney(100);
+            _output.WriteLine($"MultiSig account {account}");
+            // var cosignatory1 = await _fixture.GenerateAccountAndSendSomeMoney(100);
+            // var cosignatory2 = await _fixture.GenerateAccountAndSendSomeMoney(100);
+            //var account = GetAccountFromKey("F40DAD4B22DAFBBAA6BD33531E14C51810AFEF5BDDBFFE5E2ACB1C1D77EF0D93", networkType);
+            // var cosignatory2 = GetAccountFromKey("574D23DEF92D1C89DD50750DF303EA2A4C26ADBC9B966546B6BACAB827761088", networkType);
+            // var cosignatory1 = GetAccountFromKey("5F558CE1B471980D76BE8C716334E098DEDDCACA71736620BA7B48436C5972D2", networkType);
+
             // Create two other accounts 
-            // var cosignatory1 = Account.GenerateNewAccount(networkType);
-            // var cosignatory2 = Account.GenerateNewAccount(networkType);
+            var cosignatory1 = Account.GenerateNewAccount(networkType);
+            _output.WriteLine($"MultiSig cosignatory1 {cosignatory1}");
+
+            var cosignatory2 = Account.GenerateNewAccount(networkType);
+            _output.WriteLine($"MultiSig cosignatory2 {cosignatory2}");
 
             // Create a modify multisig account transaction to convert the shared account into a multisig account
             var convertIntoMultisigTransaction = ModifyMultisigAccountTransaction.Create(
@@ -296,7 +305,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var hashLockTransaction = HashLockTransaction.Create(
                 Deadline.Create(),
                 NetworkCurrencyMosaic.CreateRelative(10),
-                (ulong)480,
+                (ulong)700,
                 signedTransaction,
                 networkType);
 
@@ -305,7 +314,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             // register transaction with web socket
             try
             {
-               // await _fixture.WebSocket.Listener.Open();
+                // await _fixture.WebSocket.Listener.Open();
 
                 var hashLocktx = _fixture.WebSocket.Listener
                     .ConfirmedTransactionsGiven(account.Address).Take(1)
@@ -329,7 +338,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                        .AggregateBondedAdded(account.Address).Take(1)
                        .Timeout(TimeSpan.FromSeconds(500));
 
-                    
+                    var aggBondedConfirmed = _fixture.WebSocket.Listener
+                      .ConfirmedTransactionsGiven(account.Address).Take(1)
+                      .Timeout(TimeSpan.FromSeconds(500));
+
                     _fixture.WatchForFailure(signedTransaction);
 
                     _output.WriteLine($"Going to announce aggregate bonded transaction {signedTransaction.Hash}");
@@ -339,28 +351,64 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
                     var aggBondedTx = await aggBonded;
 
-                    var cosignatory1AggBonded = _fixture.WebSocket.Listener
-                        .ConfirmedTransactionsGiven(cosignatory1.Address).Take(1)
-                        .Timeout(TimeSpan.FromSeconds(500));
+                    //if(aggBondedTx.IsConfirmed())
+                   // {
+                        // Cosign the aggregate transaction with cosignatory1
+                        var cosignatory1Cosigned = _fixture.WebSocket.Listener
+                            .CosignatureAdded(cosignatory1.Address).Take(1)
+                            .Timeout(TimeSpan.FromSeconds(500));
 
-                    var cosignatory1AggTxs = await _fixture.Client.AccountHttp.AggregateBondedTransactions(cosignatory1.PublicAccount);
-                    foreach(AggregateTransaction tx in cosignatory1AggTxs)
-                    {
-                        if(!tx.IsSignedByAccount(cosignatory1.PublicAccount))
+                        var cosignatory1AggTxs = await _fixture.Client.AccountHttp.AggregateBondedTransactions(cosignatory1.PublicAccount);
+                        foreach (AggregateTransaction tx in cosignatory1AggTxs)
                         {
-                            var cosignatureSignedTransaction = CosignAggregateBondedTransaction(tx, cosignatory1);
+                            if (!tx.IsSignedByAccount(cosignatory1.PublicAccount))
+                            {
+                                var cosignatureSignedTransaction = CosignAggregateBondedTransaction(tx, cosignatory1);
 
-                            _fixture.WatchForFailure(cosignatureSignedTransaction);
+                                _fixture.WatchForFailure(cosignatureSignedTransaction);
 
-                            await _fixture.Client.TransactionHttp.AnnounceAggregateBondedCosignatureAsync(cosignatureSignedTransaction);
+                                await _fixture.Client.TransactionHttp.AnnounceAggregateBondedCosignatureAsync(cosignatureSignedTransaction);
 
-                            var resultTx = await cosignatory1AggBonded;
+                                var resultTx = await cosignatory1Cosigned;
 
+                                _output.WriteLine($"Completed Cosign 1 {resultTx}");
 
-                            _output.WriteLine($"Completed {resultTx}");
-
+                            }
                         }
-                    }
+
+                        // Cosign the aggregate transaction with cosignatory2
+                        var cosignatory2Cosigned = _fixture.WebSocket.Listener
+                              .CosignatureAdded(cosignatory2.Address).Take(1)
+                              .Timeout(TimeSpan.FromSeconds(500));
+
+                        var cosignatory2AggTxs = await _fixture.Client.AccountHttp.AggregateBondedTransactions(cosignatory2.PublicAccount);
+                        foreach (AggregateTransaction tx in cosignatory2AggTxs)
+                        {
+                            if (!tx.IsSignedByAccount(cosignatory2.PublicAccount))
+                            {
+                                var cosignatureSignedTransaction = CosignAggregateBondedTransaction(tx, cosignatory2);
+
+                                _fixture.WatchForFailure(cosignatureSignedTransaction);
+
+                                await _fixture.Client.TransactionHttp.AnnounceAggregateBondedCosignatureAsync(cosignatureSignedTransaction);
+
+                                var resultTx = await cosignatory2Cosigned;
+
+                                _output.WriteLine($"Completed Cosign 2 {resultTx}");
+
+                            }
+                        }
+
+                   // }
+
+                    // verify the account is multisig
+                    var multiSigAcc = await _fixture.Client.AccountHttp.GetMultisigAccountInfo(account.Address);
+                    _output.WriteLine($"Multisig account {multiSigAcc}");
+
+                    multiSigAcc.IsMultisig.Should().BeTrue();
+                    multiSigAcc.MinApproval.Should().Be(1);
+                    multiSigAcc.MinRemoval.Should().Be(1);
+                    multiSigAcc.Cosignatories.Should().HaveCount(2);
 
                     _output.WriteLine($"Completed");
 
@@ -392,6 +440,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             return account.SignCosignatureTransaction(cosignatureTransaction);
         }
 
+      
     }
 
 

@@ -177,13 +177,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             if (cosignatureSignedTransaction == null) throw new ArgumentException(nameof(cosignatureSignedTransaction));
 
             var route = $"{BasePath}/transaction/cosignature";
-
+            
             var payload = new
             {
                 parentHash = cosignatureSignedTransaction.ParentHash,
                 signature = cosignatureSignedTransaction.Signature,
                 signer = cosignatureSignedTransaction.Signer
             };
+            //var rb = JsonConvert.SerializeObject(payload);
       
             return Observable.FromAsync(async ar =>
                          await route.PutJsonAsync(payload).ReceiveJson<AnnounceTransactionInfoDTO>())

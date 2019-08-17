@@ -65,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             }
         }
 
-        /*
+        
         [Fact]
         public async Task Get_MultiSignAccountInfo_By_Address()
         {
@@ -75,7 +75,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                     TestHelper.LoadJsonFileToObject(@"Testdata\\Account\\GetMultiSigAccountByAddress.json");
 
                 httpTest.RespondWithJson(fakeJson);
-                const string rawAddress = "SCE5YTZZCMV44MGCXGTKV7PRBOZVNAXY66QSOGNK";
+
+                const string rawAddress = "SDCLRIBJKS4HTRYL2GN5MZRNHSRCKJSMGQ44FDIC";
                 var address = Address.CreateFromRawAddress(rawAddress);
                 var accountInfo = await _accountHttp.GetMultisigAccountInfo(address);
                 accountInfo.Should().NotBeNull();
@@ -95,6 +96,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                     TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetMultiSigAccountGraphByAddress.json");
 
                 httpTest.RespondWithJson(fakeJson);
+
                 const string rawAddress = "SCE5YTZZCMV44MGCXGTKV7PRBOZVNAXY66QSOGNK";
                 var address = Address.CreateFromRawAddress(rawAddress);
                 var graphInfo = await _accountHttp.GetMultisigAccountGraphInfo(address);
@@ -102,7 +104,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 graphInfo.MultisigAccounts.Should().HaveCountGreaterThan(0);
 
             }
-        }*/
+        }
 
         [Fact]
         public async Task Get_AccountInfo_By_PublicKey()
