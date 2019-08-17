@@ -26,10 +26,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public SiriusWebSocketClient WebSocket { get; set; }
 
+        public Account MultiSigAccount { get; set; }
+
+        public Account Cosignatory1 { get; set; }
+
+        public Account Cosignatory2 { get; set; }
+
+        public Account Cosignatory3 { get; set; }
 
         public E2ETestFixture()
         {
-            Task.Run(InitializeFixture);
+            InitializeFixture().Wait();
         }
 
         private async Task InitializeFixture()
@@ -41,10 +48,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             WebSocket = new SiriusWebSocketClient(Environment.Host, Environment.Port);
             Client = new SiriusClient(Environment.BaseUrl);
-
             SeedAccount = await GetSeedAccount();
-
-
+            MultiSigAccount = await GenerateAccountAndSendSomeMoney(100);
+            var networkType = await Client.NetworkHttp.GetNetworkType();
+            Cosignatory1 = Account.GenerateNewAccount(networkType);
+            Cosignatory2 = Account.GenerateNewAccount(networkType);
+            Cosignatory3 = Account.GenerateNewAccount(networkType);
             //set default timeout
             DefaultTimeout = TimeSpan.FromSeconds(100);
         }
@@ -155,6 +164,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
                     });
         }
+
 
         public void WatchForFailure(CosignatureSignedTransaction transaction)
         {

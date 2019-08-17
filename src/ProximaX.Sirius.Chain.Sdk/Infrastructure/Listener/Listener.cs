@@ -301,6 +301,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
 
             SubscribeToChannel(string.Concat("status/", address.Plain));
 
+
             return _subject.Where(e =>
                     JObject.Parse(e).Properties().ToArray().Any(i => i.Name.ToString().Contains("status")))
                 .Select(i => new TransactionStatus(null,
