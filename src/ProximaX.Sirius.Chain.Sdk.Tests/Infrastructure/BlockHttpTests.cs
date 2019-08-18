@@ -75,5 +75,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 generationHash.Should().BeEquivalentTo("7C175E628183275364959BEA811897111C5AFCA014DD991FC0D87AD7C16BB41F");
             }
         }
+
+
+        [Fact]
+        public async Task Should_Return_The_Receipt_From_Block()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Block\\GetReceiptFromBlock.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                var receipts = await _blockchainHttp.GetBlockReceipts(2830);
+                receipts.MosaicResolutionStatements.Should().HaveCountGreaterThan(0);
+                receipts.TransactionStatement.Should().HaveCountGreaterThan(0);
+            }
+        }
     }
 }

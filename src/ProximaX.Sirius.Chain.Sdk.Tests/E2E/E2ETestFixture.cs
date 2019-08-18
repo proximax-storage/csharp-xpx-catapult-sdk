@@ -34,6 +34,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public Account Cosignatory3 { get; set; }
 
+        public Account Cosignatory4 { get; set; }
+
         public E2ETestFixture()
         {
             InitializeFixture().Wait();
@@ -51,9 +53,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             SeedAccount = await GetSeedAccount();
             MultiSigAccount = await GenerateAccountAndSendSomeMoney(100);
             var networkType = await Client.NetworkHttp.GetNetworkType();
-            Cosignatory1 = Account.GenerateNewAccount(networkType);
+            Cosignatory1 = await GenerateAccountAndSendSomeMoney(100);
             Cosignatory2 = Account.GenerateNewAccount(networkType);
             Cosignatory3 = Account.GenerateNewAccount(networkType);
+            Cosignatory4 = Account.GenerateNewAccount(networkType);
             //set default timeout
             DefaultTimeout = TimeSpan.FromSeconds(100);
         }

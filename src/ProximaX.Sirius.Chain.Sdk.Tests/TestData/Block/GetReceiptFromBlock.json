@@ -2,7 +2,7 @@
   "transactionStatements": [
     {
       "height": [
-        13186,
+        2830,
         0
       ],
       "source": {
@@ -19,7 +19,19 @@
             231112638
           ],
           "amount": [
-            0,
+            100,
+            0
+          ]
+        },
+        {
+          "version": 1,
+          "type": 20803,
+          "mosaicId": [
+            481110499,
+            231112638
+          ],
+          "amount": [
+            100,
             0
           ]
         }
@@ -27,5 +39,28 @@
     }
   ],
   "addressResolutionStatements": [],
-  "mosaicResolutionStatements": []
+  "mosaicResolutionStatements": [
+    {
+      "height": [
+        2830,
+        0
+      ],
+      "unresolved": [
+        2855265186,
+        2553603033
+      ],
+      "resolutionEntries": [
+        {
+          "source": {
+            "primaryId": 1,
+            "secondaryId": 0
+          },
+          "resolved": [
+            3796365617,
+            55345548
+          ]
+        }
+      ]
+    }
+  ]
 }
