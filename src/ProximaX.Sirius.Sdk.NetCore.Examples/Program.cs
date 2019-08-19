@@ -30,7 +30,7 @@ namespace ProximaX.Sirius.Chain.Sdk.NetCore.Examples
             string privateKey = "67FDDE70AD258FE1450203F6D63EF1129044FE0D5321EDD92FB451532B35ED43";
 
             // Create account from pk
-            var account = Account.CreateFromPrivateKey(privateKey, NetworkType.PUBLIC_TEST);
+            var account = Account.CreateFromPrivateKey(privateKey, NetworkType.TEST_NET);
 
             Console.WriteLine($"{nameof(Account)} : {account.Address.Plain}");
 

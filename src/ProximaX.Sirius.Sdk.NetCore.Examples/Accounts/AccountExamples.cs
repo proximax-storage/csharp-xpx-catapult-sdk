@@ -189,8 +189,10 @@ namespace ProximaX.Sirius.Chain.Sdk.NetCore.Examples.Accounts
                 NetworkType.MIJIN_TEST
             );
 
+            var generationHash = _client.BlockHttp.GetGenerationHash().Wait();
+
             // Signs the transaction
-            var signedTransaction = account.Sign(namespaceAddressLinkTransaction);
+            var signedTransaction = account.Sign(namespaceAddressLinkTransaction, generationHash);
 
             // Announce the transaction to the network
             await _client.TransactionHttp.Announce(signedTransaction);
@@ -214,7 +216,7 @@ namespace ProximaX.Sirius.Chain.Sdk.NetCore.Examples.Accounts
                 _client.NetworkHttp.GetNetworkType().Wait());
 
             // Signs the transaction
-            signedTransaction = seedAccount.Sign(transferTransaction);
+            signedTransaction = seedAccount.Sign(transferTransaction, generationHash);
 
             // Announce the transaction to the network
             await _client.TransactionHttp.Announce(signedTransaction);

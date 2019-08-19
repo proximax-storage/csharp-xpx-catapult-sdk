@@ -42,7 +42,10 @@ namespace ProximaX.Sirius.Chain.SdkNetCore.Examples.Accounts
             var account = Account.CreateFromPrivateKey("85CFAB0E6079DAA58D7FF0990ACA64E571EC58527A16DB9391C87C436261190C"
                 , NetworkType.MIJIN_TEST);
 
-            var signedTransaction = account.Sign(registerNamespaceTransaction);
+            var generationHash = client.BlockHttp.GetGenerationHash().Wait();
+
+
+            var signedTransaction = account.Sign(registerNamespaceTransaction, generationHash);
 
             // Announce transaction
             await client.TransactionHttp.Announce(signedTransaction);

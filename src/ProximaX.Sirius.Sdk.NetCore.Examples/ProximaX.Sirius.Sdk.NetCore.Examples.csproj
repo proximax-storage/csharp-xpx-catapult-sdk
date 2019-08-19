@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="csharp-xpx-chain-sdk" Version="0.2.1" />
+    <PackageReference Include="csharp-xpx-chain-sdk" Version="0.4.0" />
   </ItemGroup>
 
 </Project>
