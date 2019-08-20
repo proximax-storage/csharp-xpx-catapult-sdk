@@ -1,0 +1,44 @@
+using System;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+
+namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
+
+  /// <summary>
+  /// 
+  /// </summary>
+  [DataContract]
+  public class PublicKeys {
+    /// <summary>
+    /// Gets or Sets _PublicKeys
+    /// </summary>
+    [DataMember(Name="publicKeys", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "publicKeys")]
+    public List<string> _PublicKeys { get; set; }
+
+
+    /// <summary>
+    /// Get the string presentation of the object
+    /// </summary>
+    /// <returns>String presentation of the object</returns>
+    public override string ToString()  {
+      var sb = new StringBuilder();
+      sb.Append("class PublicKeys {\n");
+      sb.Append("  _PublicKeys: ").Append(_PublicKeys).Append("\n");
+      sb.Append("}\n");
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Get the JSON string presentation of the object
+    /// </summary>
+    /// <returns>JSON string presentation of the object</returns>
+    public string ToJson() {
+      return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+
+}
+}

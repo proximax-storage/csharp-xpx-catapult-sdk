@@ -1,0 +1,19 @@
+﻿{
+  "meta": {},
+  "account": {
+    "address": "90506CBD4D664E1FE6897307D461B5A210CEAA9037761C4E39",
+    "addressHeight": [
+      7659,
+      0
+    ],
+    "publicKey": "8FBA5ABC4DBC890BD2182CE92EF7B71CABFCE3ABEFB9C397D1AFDEBF9C228595",
+    "publicKeyHeight": [
+      7659,
+      0
+    ],
+    "accountType": 1,
+    "linkedAccountKey": "29646721A55041C411BDF5A8428B94CEB47C7B6295F9559C3F3ACD70963321AA",
+    "mosaics": [],
+    "snapshots": []
+  }
+}

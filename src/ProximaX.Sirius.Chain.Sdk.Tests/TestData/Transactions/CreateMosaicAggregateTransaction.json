@@ -1,0 +1,67 @@
+﻿{
+  "meta": {
+    "height": [ 2567, 0 ],
+    "hash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
+    "merkleComponentHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
+    "index": 0,
+    "id": "5CE927D74E38FD00013402ED"
+  },
+  "transaction": {
+    "signature": "7AC16F7B21508F22C4279AE6D42826076D20B597FAD61F6539FAC45FBD0388CCDFBCA429A61915087B7252ABB45DAD7DFC5C3A8495991CABCB11552EC5A7F300",
+    "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
+    "version": 36866,
+    "type": 16705,
+    "maxFee": [ 0, 0 ],
+    "deadline": [ 534487082, 23 ],
+    "cosignatures": [],
+    "transactions": [
+      {
+        "meta": {
+          "height": [ 2567, 0 ],
+          "aggregateHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
+          "aggregateId": "5CE927D74E38FD00013402ED",
+          "index": 0,
+          "id": "5CE927D74E38FD00013402EE"
+        },
+        "transaction": {
+          "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
+          "version": 36867,
+          "type": 16717,
+          "mosaicNonce": 1314064558,
+          "mosaicId": [ 4173744509, 1898199047 ],
+          "properties": [
+            {
+              "id": 0,
+              "value": [ 3, 0 ]
+            },
+            {
+              "id": 1,
+              "value": [ 0, 0 ]
+            },
+            {
+              "id": 2,
+              "value": [ 1000, 0 ]
+            }
+          ]
+        }
+      },
+      {
+        "meta": {
+          "height": [ 2567, 0 ],
+          "aggregateHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
+          "aggregateId": "5CE927D74E38FD00013402ED",
+          "index": 1,
+          "id": "5CE927D74E38FD00013402EF"
+        },
+        "transaction": {
+          "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
+          "version": 36866,
+          "type": 16973,
+          "mosaicId": [ 4173744509, 1898199047 ],
+          "direction": 1,
+          "delta": [ 1000000, 0 ]
+        }
+      }
+    ]
+  }
+}

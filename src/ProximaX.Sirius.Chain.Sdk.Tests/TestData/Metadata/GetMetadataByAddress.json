@@ -1,0 +1,16 @@
+﻿{
+	"metadata": {
+		"metadataId": "90C8012D0464B3480AB9315C078999F5B101080C61DCEC1564",
+		"metadataType": 1,
+		"fields": [
+			{
+				"key": "productId",
+				"value": "123"
+			},
+			{
+				"key": "productName",
+				"value": "TestProduct"
+			}
+		]
+	}
+}

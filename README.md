@@ -12,7 +12,20 @@ See [!here](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) for p
 
 ## Installation 
 
-> Install-Package io.proximax.sdk
+In .Net Core
+
+```cli
+dotnet add package csharp-xpx-chain-sdk
+
+dotnet restore
+```
+
+If you are using legacy .Net Framework 4.6.1 and above
+
+```nuget
+Install-Package csharp-xpx-chain-sdk
+```
+
 
 ## Wiki and Examples ##
 

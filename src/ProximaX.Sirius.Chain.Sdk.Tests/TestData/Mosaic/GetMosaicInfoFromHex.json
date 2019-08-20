@@ -1,0 +1,24 @@
+﻿{
+  "meta": { "id": "5D4BF0BA9EEB54FCB5CD4E7F" },
+  "mosaic": {
+    "mosaicId": [ 1691433928, 562876090 ],
+    "supply": [ 1000000, 0 ],
+    "height": [ 883, 0 ],
+    "owner": "BB21D7E3742F7D64063FD8784E30FE9E88D023CFDC4CBC2A6705C643D3B45D9C",
+    "revision": 1,
+    "properties": [
+      {
+        "id": 0,
+        "value": [ 3, 0 ]
+      },
+      {
+        "id": 1,
+        "value": [ 0, 0 ]
+      },
+      {
+        "id": 2,
+        "value": [ 1000, 0 ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+﻿[
+  {
+    "meta": {
+      "height": [ 16403, 0 ],
+      "hash": "06B1D5BD54FA453F8953E4E6C2E9509F2F1138C7E034C93C01E08FAB682F5E0D",
+      "merkleComponentHash": "06B1D5BD54FA453F8953E4E6C2E9509F2F1138C7E034C93C01E08FAB682F5E0D",
+      "index": 0,
+      "id": "5CF647134E38FD0001347182"
+    },
+    "transaction": {
+      "signature": "9514AA3915F44C0F5A908C01BF01EFDEF78D9F3782C028EF418DEF0548BD1FEB9E4F8973EB9B3855E6029197F89AB713C1F2C7E1DCF7DCEDA473E3A2A7D44C08",
+      "signer": "68F50E10E5B8BE2B7E9DDB687A667D6E94DD55FE02B4AED8195F51F9A242558B",
+      "version": 36867,
+      "type": 16724,
+      "maxFee": [ 0, 0 ],
+      "deadline": [ 1394290978, 23 ],
+      "recipient": "90B150DF575727495E8C93260B02D07C4BC328E7B5D104EEC8",
+      "message": {
+        "type": 0,
+        "payload": "7472616E7366657254657374"
+      },
+      "mosaics": [
+        {
+          "id": [ 481110499, 231112638 ],
+          "amount": [ 10000000, 0 ]
+        }
+      ]
+    }
+  }
+]
