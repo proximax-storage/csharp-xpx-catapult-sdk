@@ -34,16 +34,16 @@ public struct SecretProofTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetSignerBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSignerArray() { return __p.__vector_as_array<byte>(8); }
-  public ushort Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public uint Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public ushort Type { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public uint Fee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int FeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int MaxFeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFeeBytes() { return __p.__vector_as_span(14); }
+  public Span<byte> GetMaxFeeBytes() { return __p.__vector_as_span(14); }
 #else
-  public ArraySegment<byte>? GetFeeBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetMaxFeeBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public uint[] GetFeeArray() { return __p.__vector_as_array<uint>(14); }
+  public uint[] GetMaxFeeArray() { return __p.__vector_as_array<uint>(14); }
   public uint Deadline(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int DeadlineLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -61,44 +61,54 @@ public struct SecretProofTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetSecretBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetSecretArray() { return __p.__vector_as_array<byte>(20); }
-  public ushort ProofSize { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public byte Proof(int j) { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int ProofLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte Recipient(int j) { int o = __p.__offset(22); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int RecipientLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetProofBytes() { return __p.__vector_as_span(24); }
+  public Span<byte> GetRecipientBytes() { return __p.__vector_as_span(22); }
 #else
-  public ArraySegment<byte>? GetProofBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetRecipientBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetProofArray() { return __p.__vector_as_array<byte>(24); }
+  public byte[] GetRecipientArray() { return __p.__vector_as_array<byte>(22); }
+  public ushort ProofSize { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public byte Proof(int j) { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int ProofLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetProofBytes() { return __p.__vector_as_span(26); }
+#else
+  public ArraySegment<byte>? GetProofBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetProofArray() { return __p.__vector_as_array<byte>(26); }
 
   public static Offset<SecretProofTransactionBuffer> CreateSecretProofTransactionBuffer(FlatBufferBuilder builder,
       uint size = 0,
       VectorOffset signatureOffset = default(VectorOffset),
       VectorOffset signerOffset = default(VectorOffset),
-      ushort version = 0,
+      uint version = 0,
       ushort type = 0,
-      VectorOffset feeOffset = default(VectorOffset),
+      VectorOffset maxFeeOffset = default(VectorOffset),
       VectorOffset deadlineOffset = default(VectorOffset),
       byte hashAlgorithm = 0,
       VectorOffset secretOffset = default(VectorOffset),
+      VectorOffset recipientOffset = default(VectorOffset),
       ushort proofSize = 0,
       VectorOffset proofOffset = default(VectorOffset)) {
-    builder.StartObject(11);
+    builder.StartObject(12);
     SecretProofTransactionBuffer.AddProof(builder, proofOffset);
+    SecretProofTransactionBuffer.AddRecipient(builder, recipientOffset);
     SecretProofTransactionBuffer.AddSecret(builder, secretOffset);
     SecretProofTransactionBuffer.AddDeadline(builder, deadlineOffset);
-    SecretProofTransactionBuffer.AddFee(builder, feeOffset);
+    SecretProofTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
+    SecretProofTransactionBuffer.AddVersion(builder, version);
     SecretProofTransactionBuffer.AddSigner(builder, signerOffset);
     SecretProofTransactionBuffer.AddSignature(builder, signatureOffset);
     SecretProofTransactionBuffer.AddSize(builder, size);
     SecretProofTransactionBuffer.AddProofSize(builder, proofSize);
     SecretProofTransactionBuffer.AddType(builder, type);
-    SecretProofTransactionBuffer.AddVersion(builder, version);
     SecretProofTransactionBuffer.AddHashAlgorithm(builder, hashAlgorithm);
     return SecretProofTransactionBuffer.EndSecretProofTransactionBuffer(builder);
   }
 
-  public static void StartSecretProofTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(11); }
+  public static void StartSecretProofTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(12); }
   public static void AddSize(FlatBufferBuilder builder, uint size) { builder.AddUint(0, size, 0); }
   public static void AddSignature(FlatBufferBuilder builder, VectorOffset signatureOffset) { builder.AddOffset(1, signatureOffset.Value, 0); }
   public static VectorOffset CreateSignatureVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
@@ -108,12 +118,12 @@ public struct SecretProofTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateSignerVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSignerVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartSignerVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddVersion(FlatBufferBuilder builder, ushort version) { builder.AddUshort(3, version, 0); }
+  public static void AddVersion(FlatBufferBuilder builder, uint version) { builder.AddUint(3, version, 0); }
   public static void AddType(FlatBufferBuilder builder, ushort type) { builder.AddUshort(4, type, 0); }
-  public static void AddFee(FlatBufferBuilder builder, VectorOffset feeOffset) { builder.AddOffset(5, feeOffset.Value, 0); }
-  public static VectorOffset CreateFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static void StartFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMaxFee(FlatBufferBuilder builder, VectorOffset maxFeeOffset) { builder.AddOffset(5, maxFeeOffset.Value, 0); }
+  public static VectorOffset CreateMaxFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateMaxFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartMaxFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddDeadline(FlatBufferBuilder builder, VectorOffset deadlineOffset) { builder.AddOffset(6, deadlineOffset.Value, 0); }
   public static VectorOffset CreateDeadlineVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateDeadlineVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -123,8 +133,12 @@ public struct SecretProofTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateSecretVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSecretVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartSecretVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddProofSize(FlatBufferBuilder builder, ushort proofSize) { builder.AddUshort(9, proofSize, 0); }
-  public static void AddProof(FlatBufferBuilder builder, VectorOffset proofOffset) { builder.AddOffset(10, proofOffset.Value, 0); }
+  public static void AddRecipient(FlatBufferBuilder builder, VectorOffset recipientOffset) { builder.AddOffset(9, recipientOffset.Value, 0); }
+  public static VectorOffset CreateRecipientVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateRecipientVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static void StartRecipientVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddProofSize(FlatBufferBuilder builder, ushort proofSize) { builder.AddUshort(10, proofSize, 0); }
+  public static void AddProof(FlatBufferBuilder builder, VectorOffset proofOffset) { builder.AddOffset(11, proofOffset.Value, 0); }
   public static VectorOffset CreateProofVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateProofVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartProofVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }

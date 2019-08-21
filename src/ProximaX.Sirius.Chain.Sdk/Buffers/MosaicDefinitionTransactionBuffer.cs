@@ -34,16 +34,16 @@ public struct MosaicDefinitionTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetSignerBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSignerArray() { return __p.__vector_as_array<byte>(8); }
-  public ushort Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public uint Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public ushort Type { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public uint Fee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int FeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int MaxFeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFeeBytes() { return __p.__vector_as_span(14); }
+  public Span<byte> GetMaxFeeBytes() { return __p.__vector_as_span(14); }
 #else
-  public ArraySegment<byte>? GetFeeBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetMaxFeeBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public uint[] GetFeeArray() { return __p.__vector_as_array<uint>(14); }
+  public uint[] GetMaxFeeArray() { return __p.__vector_as_array<uint>(14); }
   public uint Deadline(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int DeadlineLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -64,50 +64,41 @@ public struct MosaicDefinitionTransactionBuffer : IFlatbufferObject
   public byte NumOptionalProperties { get { int o = __p.__offset(22); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public byte Flags { get { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public byte Divisibility { get { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public byte IndicateDuration { get { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public uint Duration(int j) { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int DurationLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDurationBytes() { return __p.__vector_as_span(30); }
-#else
-  public ArraySegment<byte>? GetDurationBytes() { return __p.__vector_as_arraysegment(30); }
-#endif
-  public uint[] GetDurationArray() { return __p.__vector_as_array<uint>(30); }
+  public MosaicProperty? OptionalProperties(int j) { int o = __p.__offset(28); return o != 0 ? (MosaicProperty?)(new MosaicProperty()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int OptionalPropertiesLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<MosaicDefinitionTransactionBuffer> CreateMosaicDefinitionTransactionBuffer(FlatBufferBuilder builder,
       uint size = 0,
       VectorOffset signatureOffset = default(VectorOffset),
       VectorOffset signerOffset = default(VectorOffset),
-      ushort version = 0,
+      uint version = 0,
       ushort type = 0,
-      VectorOffset feeOffset = default(VectorOffset),
+      VectorOffset maxFeeOffset = default(VectorOffset),
       VectorOffset deadlineOffset = default(VectorOffset),
       uint mosaicNonce = 0,
       VectorOffset mosaicIdOffset = default(VectorOffset),
       byte numOptionalProperties = 0,
       byte flags = 0,
       byte divisibility = 0,
-      byte indicateDuration = 0,
-      VectorOffset durationOffset = default(VectorOffset)) {
-    builder.StartObject(14);
-    MosaicDefinitionTransactionBuffer.AddDuration(builder, durationOffset);
+      VectorOffset optionalPropertiesOffset = default(VectorOffset)) {
+    builder.StartObject(13);
+    MosaicDefinitionTransactionBuffer.AddOptionalProperties(builder, optionalPropertiesOffset);
     MosaicDefinitionTransactionBuffer.AddMosaicId(builder, mosaicIdOffset);
     MosaicDefinitionTransactionBuffer.AddMosaicNonce(builder, mosaicNonce);
     MosaicDefinitionTransactionBuffer.AddDeadline(builder, deadlineOffset);
-    MosaicDefinitionTransactionBuffer.AddFee(builder, feeOffset);
+    MosaicDefinitionTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
+    MosaicDefinitionTransactionBuffer.AddVersion(builder, version);
     MosaicDefinitionTransactionBuffer.AddSigner(builder, signerOffset);
     MosaicDefinitionTransactionBuffer.AddSignature(builder, signatureOffset);
     MosaicDefinitionTransactionBuffer.AddSize(builder, size);
     MosaicDefinitionTransactionBuffer.AddType(builder, type);
-    MosaicDefinitionTransactionBuffer.AddVersion(builder, version);
-    MosaicDefinitionTransactionBuffer.AddIndicateDuration(builder, indicateDuration);
     MosaicDefinitionTransactionBuffer.AddDivisibility(builder, divisibility);
     MosaicDefinitionTransactionBuffer.AddFlags(builder, flags);
     MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, numOptionalProperties);
     return MosaicDefinitionTransactionBuffer.EndMosaicDefinitionTransactionBuffer(builder);
   }
 
-  public static void StartMosaicDefinitionTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(14); }
+  public static void StartMosaicDefinitionTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(13); }
   public static void AddSize(FlatBufferBuilder builder, uint size) { builder.AddUint(0, size, 0); }
   public static void AddSignature(FlatBufferBuilder builder, VectorOffset signatureOffset) { builder.AddOffset(1, signatureOffset.Value, 0); }
   public static VectorOffset CreateSignatureVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
@@ -117,12 +108,12 @@ public struct MosaicDefinitionTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateSignerVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSignerVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartSignerVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddVersion(FlatBufferBuilder builder, ushort version) { builder.AddUshort(3, version, 0); }
+  public static void AddVersion(FlatBufferBuilder builder, uint version) { builder.AddUint(3, version, 0); }
   public static void AddType(FlatBufferBuilder builder, ushort type) { builder.AddUshort(4, type, 0); }
-  public static void AddFee(FlatBufferBuilder builder, VectorOffset feeOffset) { builder.AddOffset(5, feeOffset.Value, 0); }
-  public static VectorOffset CreateFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static void StartFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMaxFee(FlatBufferBuilder builder, VectorOffset maxFeeOffset) { builder.AddOffset(5, maxFeeOffset.Value, 0); }
+  public static VectorOffset CreateMaxFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateMaxFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartMaxFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddDeadline(FlatBufferBuilder builder, VectorOffset deadlineOffset) { builder.AddOffset(6, deadlineOffset.Value, 0); }
   public static VectorOffset CreateDeadlineVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateDeadlineVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -135,11 +126,10 @@ public struct MosaicDefinitionTransactionBuffer : IFlatbufferObject
   public static void AddNumOptionalProperties(FlatBufferBuilder builder, byte numOptionalProperties) { builder.AddByte(9, numOptionalProperties, 0); }
   public static void AddFlags(FlatBufferBuilder builder, byte flags) { builder.AddByte(10, flags, 0); }
   public static void AddDivisibility(FlatBufferBuilder builder, byte divisibility) { builder.AddByte(11, divisibility, 0); }
-  public static void AddIndicateDuration(FlatBufferBuilder builder, byte indicateDuration) { builder.AddByte(12, indicateDuration, 0); }
-  public static void AddDuration(FlatBufferBuilder builder, VectorOffset durationOffset) { builder.AddOffset(13, durationOffset.Value, 0); }
-  public static VectorOffset CreateDurationVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateDurationVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static void StartDurationVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddOptionalProperties(FlatBufferBuilder builder, VectorOffset optionalPropertiesOffset) { builder.AddOffset(12, optionalPropertiesOffset.Value, 0); }
+  public static VectorOffset CreateOptionalPropertiesVector(FlatBufferBuilder builder, Offset<MosaicProperty>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateOptionalPropertiesVectorBlock(FlatBufferBuilder builder, Offset<MosaicProperty>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartOptionalPropertiesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<MosaicDefinitionTransactionBuffer> EndMosaicDefinitionTransactionBuffer(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<MosaicDefinitionTransactionBuffer>(o);

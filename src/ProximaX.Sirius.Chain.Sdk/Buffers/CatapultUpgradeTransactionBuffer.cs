@@ -8,14 +8,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Buffers
 using global::System;
 using global::FlatBuffers;
 
-public struct AggregateTransactionBuffer : IFlatbufferObject
+public struct CatapultUpgradeTransactionBuffer : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static AggregateTransactionBuffer GetRootAsAggregateTransactionBuffer(ByteBuffer _bb) { return GetRootAsAggregateTransactionBuffer(_bb, new AggregateTransactionBuffer()); }
-  public static AggregateTransactionBuffer GetRootAsAggregateTransactionBuffer(ByteBuffer _bb, AggregateTransactionBuffer obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static CatapultUpgradeTransactionBuffer GetRootAsCatapultUpgradeTransactionBuffer(ByteBuffer _bb) { return GetRootAsCatapultUpgradeTransactionBuffer(_bb, new CatapultUpgradeTransactionBuffer()); }
+  public static CatapultUpgradeTransactionBuffer GetRootAsCatapultUpgradeTransactionBuffer(ByteBuffer _bb, CatapultUpgradeTransactionBuffer obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public AggregateTransactionBuffer __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public CatapultUpgradeTransactionBuffer __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Size { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public byte Signature(int j) { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
@@ -52,17 +52,24 @@ public struct AggregateTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetDeadlineBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public uint[] GetDeadlineArray() { return __p.__vector_as_array<uint>(16); }
-  public uint TransactionsSize { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public byte Transactions(int j) { int o = __p.__offset(20); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int TransactionsLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint UpgradePeriod(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int UpgradePeriodLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTransactionsBytes() { return __p.__vector_as_span(20); }
+  public Span<byte> GetUpgradePeriodBytes() { return __p.__vector_as_span(18); }
 #else
-  public ArraySegment<byte>? GetTransactionsBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetUpgradePeriodBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetTransactionsArray() { return __p.__vector_as_array<byte>(20); }
+  public uint[] GetUpgradePeriodArray() { return __p.__vector_as_array<uint>(18); }
+  public uint NewCatapultVersion(int j) { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int NewCatapultVersionLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNewCatapultVersionBytes() { return __p.__vector_as_span(20); }
+#else
+  public ArraySegment<byte>? GetNewCatapultVersionBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public uint[] GetNewCatapultVersionArray() { return __p.__vector_as_array<uint>(20); }
 
-  public static Offset<AggregateTransactionBuffer> CreateAggregateTransactionBuffer(FlatBufferBuilder builder,
+  public static Offset<CatapultUpgradeTransactionBuffer> CreateCatapultUpgradeTransactionBuffer(FlatBufferBuilder builder,
       uint size = 0,
       VectorOffset signatureOffset = default(VectorOffset),
       VectorOffset signerOffset = default(VectorOffset),
@@ -70,22 +77,22 @@ public struct AggregateTransactionBuffer : IFlatbufferObject
       ushort type = 0,
       VectorOffset maxFeeOffset = default(VectorOffset),
       VectorOffset deadlineOffset = default(VectorOffset),
-      uint transactionsSize = 0,
-      VectorOffset transactionsOffset = default(VectorOffset)) {
+      VectorOffset upgradePeriodOffset = default(VectorOffset),
+      VectorOffset newCatapultVersionOffset = default(VectorOffset)) {
     builder.StartObject(9);
-    AggregateTransactionBuffer.AddTransactions(builder, transactionsOffset);
-    AggregateTransactionBuffer.AddTransactionsSize(builder, transactionsSize);
-    AggregateTransactionBuffer.AddDeadline(builder, deadlineOffset);
-    AggregateTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
-    AggregateTransactionBuffer.AddVersion(builder, version);
-    AggregateTransactionBuffer.AddSigner(builder, signerOffset);
-    AggregateTransactionBuffer.AddSignature(builder, signatureOffset);
-    AggregateTransactionBuffer.AddSize(builder, size);
-    AggregateTransactionBuffer.AddType(builder, type);
-    return AggregateTransactionBuffer.EndAggregateTransactionBuffer(builder);
+    CatapultUpgradeTransactionBuffer.AddNewCatapultVersion(builder, newCatapultVersionOffset);
+    CatapultUpgradeTransactionBuffer.AddUpgradePeriod(builder, upgradePeriodOffset);
+    CatapultUpgradeTransactionBuffer.AddDeadline(builder, deadlineOffset);
+    CatapultUpgradeTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
+    CatapultUpgradeTransactionBuffer.AddVersion(builder, version);
+    CatapultUpgradeTransactionBuffer.AddSigner(builder, signerOffset);
+    CatapultUpgradeTransactionBuffer.AddSignature(builder, signatureOffset);
+    CatapultUpgradeTransactionBuffer.AddSize(builder, size);
+    CatapultUpgradeTransactionBuffer.AddType(builder, type);
+    return CatapultUpgradeTransactionBuffer.EndCatapultUpgradeTransactionBuffer(builder);
   }
 
-  public static void StartAggregateTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(9); }
+  public static void StartCatapultUpgradeTransactionBuffer(FlatBufferBuilder builder) { builder.StartObject(9); }
   public static void AddSize(FlatBufferBuilder builder, uint size) { builder.AddUint(0, size, 0); }
   public static void AddSignature(FlatBufferBuilder builder, VectorOffset signatureOffset) { builder.AddOffset(1, signatureOffset.Value, 0); }
   public static VectorOffset CreateSignatureVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
@@ -105,17 +112,20 @@ public struct AggregateTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateDeadlineVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateDeadlineVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartDeadlineVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddTransactionsSize(FlatBufferBuilder builder, uint transactionsSize) { builder.AddUint(7, transactionsSize, 0); }
-  public static void AddTransactions(FlatBufferBuilder builder, VectorOffset transactionsOffset) { builder.AddOffset(8, transactionsOffset.Value, 0); }
-  public static VectorOffset CreateTransactionsVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateTransactionsVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
-  public static void StartTransactionsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static Offset<AggregateTransactionBuffer> EndAggregateTransactionBuffer(FlatBufferBuilder builder) {
+  public static void AddUpgradePeriod(FlatBufferBuilder builder, VectorOffset upgradePeriodOffset) { builder.AddOffset(7, upgradePeriodOffset.Value, 0); }
+  public static VectorOffset CreateUpgradePeriodVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUpgradePeriodVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartUpgradePeriodVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNewCatapultVersion(FlatBufferBuilder builder, VectorOffset newCatapultVersionOffset) { builder.AddOffset(8, newCatapultVersionOffset.Value, 0); }
+  public static VectorOffset CreateNewCatapultVersionVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateNewCatapultVersionVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartNewCatapultVersionVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static Offset<CatapultUpgradeTransactionBuffer> EndCatapultUpgradeTransactionBuffer(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<AggregateTransactionBuffer>(o);
+    return new Offset<CatapultUpgradeTransactionBuffer>(o);
   }
-  public static void FinishAggregateTransactionBufferBuffer(FlatBufferBuilder builder, Offset<AggregateTransactionBuffer> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedAggregateTransactionBufferBuffer(FlatBufferBuilder builder, Offset<AggregateTransactionBuffer> offset) { builder.FinishSizePrefixed(offset.Value); }
+  public static void FinishCatapultUpgradeTransactionBufferBuffer(FlatBufferBuilder builder, Offset<CatapultUpgradeTransactionBuffer> offset) { builder.Finish(offset.Value); }
+  public static void FinishSizePrefixedCatapultUpgradeTransactionBufferBuffer(FlatBufferBuilder builder, Offset<CatapultUpgradeTransactionBuffer> offset) { builder.FinishSizePrefixed(offset.Value); }
 };
 
 

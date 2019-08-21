@@ -34,16 +34,16 @@ public struct ModifyContractTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetSignerBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSignerArray() { return __p.__vector_as_array<byte>(8); }
-  public ushort Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public uint Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public ushort Type { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public uint Fee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int FeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int MaxFeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFeeBytes() { return __p.__vector_as_span(14); }
+  public Span<byte> GetMaxFeeBytes() { return __p.__vector_as_span(14); }
 #else
-  public ArraySegment<byte>? GetFeeBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetMaxFeeBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public uint[] GetFeeArray() { return __p.__vector_as_array<uint>(14); }
+  public uint[] GetMaxFeeArray() { return __p.__vector_as_array<uint>(14); }
   public uint Deadline(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int DeadlineLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -82,9 +82,9 @@ public struct ModifyContractTransactionBuffer : IFlatbufferObject
       uint size = 0,
       VectorOffset signatureOffset = default(VectorOffset),
       VectorOffset signerOffset = default(VectorOffset),
-      ushort version = 0,
+      uint version = 0,
       ushort type = 0,
-      VectorOffset feeOffset = default(VectorOffset),
+      VectorOffset maxFeeOffset = default(VectorOffset),
       VectorOffset deadlineOffset = default(VectorOffset),
       VectorOffset durationDeltaOffset = default(VectorOffset),
       VectorOffset hashOffset = default(VectorOffset),
@@ -101,12 +101,12 @@ public struct ModifyContractTransactionBuffer : IFlatbufferObject
     ModifyContractTransactionBuffer.AddHash(builder, hashOffset);
     ModifyContractTransactionBuffer.AddDurationDelta(builder, durationDeltaOffset);
     ModifyContractTransactionBuffer.AddDeadline(builder, deadlineOffset);
-    ModifyContractTransactionBuffer.AddFee(builder, feeOffset);
+    ModifyContractTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
+    ModifyContractTransactionBuffer.AddVersion(builder, version);
     ModifyContractTransactionBuffer.AddSigner(builder, signerOffset);
     ModifyContractTransactionBuffer.AddSignature(builder, signatureOffset);
     ModifyContractTransactionBuffer.AddSize(builder, size);
     ModifyContractTransactionBuffer.AddType(builder, type);
-    ModifyContractTransactionBuffer.AddVersion(builder, version);
     ModifyContractTransactionBuffer.AddNumVerifiers(builder, numVerifiers);
     ModifyContractTransactionBuffer.AddNumExecutors(builder, numExecutors);
     ModifyContractTransactionBuffer.AddNumCustomers(builder, numCustomers);
@@ -123,12 +123,12 @@ public struct ModifyContractTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateSignerVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSignerVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartSignerVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddVersion(FlatBufferBuilder builder, ushort version) { builder.AddUshort(3, version, 0); }
+  public static void AddVersion(FlatBufferBuilder builder, uint version) { builder.AddUint(3, version, 0); }
   public static void AddType(FlatBufferBuilder builder, ushort type) { builder.AddUshort(4, type, 0); }
-  public static void AddFee(FlatBufferBuilder builder, VectorOffset feeOffset) { builder.AddOffset(5, feeOffset.Value, 0); }
-  public static VectorOffset CreateFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
-  public static VectorOffset CreateFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static void StartFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMaxFee(FlatBufferBuilder builder, VectorOffset maxFeeOffset) { builder.AddOffset(5, maxFeeOffset.Value, 0); }
+  public static VectorOffset CreateMaxFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateMaxFeeVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static void StartMaxFeeVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddDeadline(FlatBufferBuilder builder, VectorOffset deadlineOffset) { builder.AddOffset(6, deadlineOffset.Value, 0); }
   public static VectorOffset CreateDeadlineVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateDeadlineVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }

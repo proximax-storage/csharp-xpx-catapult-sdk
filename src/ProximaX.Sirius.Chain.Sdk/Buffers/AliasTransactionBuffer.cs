@@ -34,7 +34,7 @@ public struct AliasTransactionBuffer : IFlatbufferObject
   public ArraySegment<byte>? GetSignerBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSignerArray() { return __p.__vector_as_array<byte>(8); }
-  public ushort Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public uint Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public ushort Type { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int MaxFeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -75,7 +75,7 @@ public struct AliasTransactionBuffer : IFlatbufferObject
       uint size = 0,
       VectorOffset signatureOffset = default(VectorOffset),
       VectorOffset signerOffset = default(VectorOffset),
-      ushort version = 0,
+      uint version = 0,
       ushort type = 0,
       VectorOffset maxFeeOffset = default(VectorOffset),
       VectorOffset deadlineOffset = default(VectorOffset),
@@ -87,11 +87,11 @@ public struct AliasTransactionBuffer : IFlatbufferObject
     AliasTransactionBuffer.AddNamespaceId(builder, namespaceIdOffset);
     AliasTransactionBuffer.AddDeadline(builder, deadlineOffset);
     AliasTransactionBuffer.AddMaxFee(builder, maxFeeOffset);
+    AliasTransactionBuffer.AddVersion(builder, version);
     AliasTransactionBuffer.AddSigner(builder, signerOffset);
     AliasTransactionBuffer.AddSignature(builder, signatureOffset);
     AliasTransactionBuffer.AddSize(builder, size);
     AliasTransactionBuffer.AddType(builder, type);
-    AliasTransactionBuffer.AddVersion(builder, version);
     AliasTransactionBuffer.AddActionType(builder, actionType);
     return AliasTransactionBuffer.EndAliasTransactionBuffer(builder);
   }
@@ -106,7 +106,7 @@ public struct AliasTransactionBuffer : IFlatbufferObject
   public static VectorOffset CreateSignerVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSignerVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static void StartSignerVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddVersion(FlatBufferBuilder builder, ushort version) { builder.AddUshort(3, version, 0); }
+  public static void AddVersion(FlatBufferBuilder builder, uint version) { builder.AddUint(3, version, 0); }
   public static void AddType(FlatBufferBuilder builder, ushort type) { builder.AddUshort(4, type, 0); }
   public static void AddMaxFee(FlatBufferBuilder builder, VectorOffset maxFeeOffset) { builder.AddOffset(5, maxFeeOffset.Value, 0); }
   public static VectorOffset CreateMaxFeeVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
