@@ -193,7 +193,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var signerVector = AggregateTransactionBuffer.CreateSignerVector(builder, GetSigner());
             var deadlineVector =
                 AggregateTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var feeVector = AggregateTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = AggregateTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var transactionsVector = AggregateTransactionBuffer.CreateTransactionsVector(builder, transactionsBytes);
 
             var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
@@ -208,7 +208,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             AggregateTransactionBuffer.AddSigner(builder, signerVector);
             AggregateTransactionBuffer.AddVersion(builder, version);
             AggregateTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            AggregateTransactionBuffer.AddFee(builder, feeVector);
+            AggregateTransactionBuffer.AddMaxFee(builder, feeVector);
             AggregateTransactionBuffer.AddDeadline(builder, deadlineVector);
             AggregateTransactionBuffer.AddTransactionsSize(builder, (uint) transactionsBytes.Length);
             AggregateTransactionBuffer.AddTransactions(builder, transactionsVector);

@@ -109,7 +109,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = ModifyMultisigAccountTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = ModifyMultisigAccountTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = ModifyMultisigAccountTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = ModifyMultisigAccountTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 ModifyMultisigAccountTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var modificationVector =
@@ -126,7 +126,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             ModifyMultisigAccountTransactionBuffer.AddSigner(builder, signerVector);
             ModifyMultisigAccountTransactionBuffer.AddVersion(builder, version);
             ModifyMultisigAccountTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            ModifyMultisigAccountTransactionBuffer.AddFee(builder, feeVector);
+            ModifyMultisigAccountTransactionBuffer.AddMaxFee(builder, feeVector);
             ModifyMultisigAccountTransactionBuffer.AddDeadline(builder, deadlineVector);
             ModifyMultisigAccountTransactionBuffer.AddMinRemovalDelta(builder, Convert.ToSByte(MinRemovalDelta));
             ModifyMultisigAccountTransactionBuffer.AddMinApprovalDelta(builder, Convert.ToSByte(MinApprovalDelta));

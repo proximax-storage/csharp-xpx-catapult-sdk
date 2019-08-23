@@ -86,7 +86,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var builder = new FlatBufferBuilder(1);
             var signatureVector = MosaicSupplyChangeTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = MosaicSupplyChangeTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = MosaicSupplyChangeTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = MosaicSupplyChangeTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 MosaicSupplyChangeTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var mosaicIdVector =
@@ -103,7 +103,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MosaicSupplyChangeTransactionBuffer.AddSigner(builder, signerVector);
             MosaicSupplyChangeTransactionBuffer.AddVersion(builder, version);
             MosaicSupplyChangeTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            MosaicSupplyChangeTransactionBuffer.AddFee(builder, feeVector);
+            MosaicSupplyChangeTransactionBuffer.AddMaxFee(builder, feeVector);
             MosaicSupplyChangeTransactionBuffer.AddDeadline(builder, deadlineVector);
             MosaicSupplyChangeTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             MosaicSupplyChangeTransactionBuffer.AddDirection(builder, MosaicSupplyType.GetValueInByte());

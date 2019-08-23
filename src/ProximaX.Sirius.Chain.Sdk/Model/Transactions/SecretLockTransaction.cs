@@ -119,7 +119,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = SecretLockTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = SecretLockTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = SecretLockTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = SecretLockTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 SecretLockTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var mosaicIdVector = SecretLockTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.ToUInt8Array());
@@ -141,7 +141,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             SecretLockTransactionBuffer.AddSigner(builder, signerVector);
             SecretLockTransactionBuffer.AddVersion(builder, version);
             SecretLockTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            SecretLockTransactionBuffer.AddFee(builder, feeVector);
+            SecretLockTransactionBuffer.AddMaxFee(builder, feeVector);
             SecretLockTransactionBuffer.AddDeadline(builder, deadlineVector);
             SecretLockTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             SecretLockTransactionBuffer.AddMosaicAmount(builder, mosaicAmountVector);

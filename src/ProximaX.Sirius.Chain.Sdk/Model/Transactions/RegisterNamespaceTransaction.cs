@@ -152,7 +152,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = RegisterNamespaceTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = RegisterNamespaceTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = TransferTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 RegisterNamespaceTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var namespaceIdVector =
@@ -177,7 +177,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             RegisterNamespaceTransactionBuffer.AddSigner(builder, signerVector);
             RegisterNamespaceTransactionBuffer.AddVersion(builder, version);
             RegisterNamespaceTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            RegisterNamespaceTransactionBuffer.AddFee(builder, feeVector);
+            RegisterNamespaceTransactionBuffer.AddMaxFee(builder, feeVector);
             RegisterNamespaceTransactionBuffer.AddDeadline(builder, deadlineVector);
             RegisterNamespaceTransactionBuffer.AddNamespaceType(builder, NamespaceType.GetValueInByte());
             RegisterNamespaceTransactionBuffer.AddDurationParentId(builder, durationParentIdVector);

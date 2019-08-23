@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -49,6 +50,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             Message = message ?? EmptyMessage.Create();
             Mosaics = mosaics;
         }
+
+        public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
+          Recipient recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
+          PublicAccount signer = null, TransactionInfo transactionInfo = null)
+          : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
+        {
+            Recipient = recipient;
+            Message = message ?? EmptyMessage.Create();
+            Mosaics = mosaics;
+        }
+
+        public Recipient Recipient { get; }
 
         /// <summary>
         ///     Gets the address.
@@ -96,11 +109,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var signatureVector = TransferTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = TransferTransactionBuffer.CreateSignerVector(builder, GetSigner());
 
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = TransferTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector = TransferTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
 
-            byte[] recipientBytes = { };
+            byte[] recipientBytes = Recipient.GetBytes();
 
+            /*
             if (NamespaceId != null)
             {
                 recipientBytes = NamespaceId.AliasToRecipient();
@@ -109,7 +123,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (Address != null)
             {
                 recipientBytes = Address.Plain.FromBase32String();
-            }
+            }*/
 
             var recipientVector =
                 TransferTransactionBuffer.CreateRecipientVector(builder, recipientBytes);
@@ -140,7 +154,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 mosaics[index] = MosaicBuffer.EndMosaicBuffer(builder);
             }
 
-            var fixedSize = 120 + 25 + 2 + 1 + 1 + (16 * Mosaics.Count) + bytePayload.Length;
+            var fixedSize = HEADER_SIZE 
+                + 25 // recipient
+                + 2 // message size
+                + 1 // message type
+                + 1 // no of mosaics
+                + (16 * Mosaics.Count) //each mosaic has id(8bytes) and amount(8bytes)
+                + bytePayload.Length; // number of message bytes
 
             var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaics);
             // add vectors
@@ -150,19 +170,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             TransferTransactionBuffer.AddSigner(builder, signerVector);
             TransferTransactionBuffer.AddVersion(builder, version);
             TransferTransactionBuffer.AddType(builder, TransactionType.TRANSFER.GetValue());
-            TransferTransactionBuffer.AddFee(builder, feeVector);
+            TransferTransactionBuffer.AddMaxFee(builder, feeVector);
             TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
             TransferTransactionBuffer.AddRecipient(builder, recipientVector);
             TransferTransactionBuffer.AddNumMosaics(builder, (byte) Mosaics.Count);
             TransferTransactionBuffer.AddMessageSize(builder, (ushort)(bytePayload.Length + 1));
             TransferTransactionBuffer.AddMessage(builder, message);
             TransferTransactionBuffer.AddMosaics(builder, mosaicsVector);
-
+           
             // end build
             var codedTransfer = TransferTransactionBuffer.EndTransferTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            return new TransferTransactionSchema().Serialize(builder.SizedByteArray());
+            // validate size
+            var output = new TransferTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
         }
     }
 }

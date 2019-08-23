@@ -69,6 +69,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var aliceAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(aliceAccount.Address);
 
             aliceAccountInfo.Mosaics[0]?.Amount.Should().BeGreaterThan(0);
+
+            var outgoingTxs = _fixture.Client.AccountHttp.OutgoingTransactions(aliceAccountInfo.PublicAccount).Wait();
+
+            var recipientAddress = "VDG4WG-FS7EQJ-KFQKXM-4IUCQG-PXUW5H-DJVIJB-OXJG";
+            var address = Address.CreateFromRawAddress(recipientAddress);
+
+            var mosaicAmounts = (from TransferTransaction t in outgoingTxs
+                                 where t.TransactionType == TransactionType.TRANSFER &&
+                                       t.Recipient.Address.Plain == address.Plain &&
+                                       t.Mosaics.Count == 1 && 
+                                       t.Mosaics[0].HexId == NetworkCurrencyMosaic.Id.HexId
+                                 select (long)t.Mosaics[0].Amount).ToList();
+
+            Console.WriteLine($"Total xpx send to account {address.Plain} is {mosaicAmounts.Sum()}");
+
         }
 
 

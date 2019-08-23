@@ -85,16 +85,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var builder = new FlatBufferBuilder(1);
 
             // create vectors
-            var signatureVector = RegisterNamespaceTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
-            var signerVector = RegisterNamespaceTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var signatureVector = MosaicDefinitionTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
+            var signerVector = MosaicDefinitionTransactionBuffer.CreateSignerVector(builder, GetSigner());
+            var feeVector = MosaicDefinitionTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
-                RegisterNamespaceTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
+                MosaicDefinitionTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var mosaicIdVector =
                 MosaicDefinitionTransactionBuffer.CreateMosaicIdVector(builder, MosaicId.Id.ToUInt8Array());
-            var durationVector =
-                MosaicDefinitionTransactionBuffer.CreateDurationVector(builder, Properties.Duration.ToUInt8Array());
-
+           /* var durationVector =
+                MosaicDefinitionTransactionBuffer.Crea(builder, Properties.Duration.ToUInt8Array());
+                */
             var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
@@ -106,15 +106,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MosaicDefinitionTransactionBuffer.AddSigner(builder, signerVector);
             MosaicDefinitionTransactionBuffer.AddVersion(builder, version);
             MosaicDefinitionTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            MosaicDefinitionTransactionBuffer.AddFee(builder, feeVector);
+            MosaicDefinitionTransactionBuffer.AddMaxFee(builder, feeVector);
             MosaicDefinitionTransactionBuffer.AddDeadline(builder, deadlineVector);
             MosaicDefinitionTransactionBuffer.AddMosaicNonce(builder, BitConverter.ToUInt32(MosaicNonce.Nonce, 0));
             MosaicDefinitionTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, 1);
             MosaicDefinitionTransactionBuffer.AddFlags(builder, flags);
             MosaicDefinitionTransactionBuffer.AddDivisibility(builder, (byte) Properties.Divisibility);
-            MosaicDefinitionTransactionBuffer.AddIndicateDuration(builder, 2);
-            MosaicDefinitionTransactionBuffer.AddDuration(builder, durationVector);
+            //MosaicDefinitionTransactionBuffer.Add(builder, 2);
+            //MosaicDefinitionTransactionBuffer.AddDuration(builder, durationVector);
 
             var t = BitConverter.ToUInt32(MosaicNonce.Nonce, 0);
             // Calculate size
