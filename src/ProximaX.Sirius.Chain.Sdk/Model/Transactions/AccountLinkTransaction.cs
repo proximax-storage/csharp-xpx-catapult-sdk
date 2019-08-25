@@ -59,13 +59,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             var fixedSize =
             // header
-            120 +
+            HEADER_SIZE +
             // remote account public key
             32 +
             // link action
             1;
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
 

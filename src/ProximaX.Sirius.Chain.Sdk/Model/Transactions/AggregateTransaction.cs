@@ -196,14 +196,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var feeVector = AggregateTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var transactionsVector = AggregateTransactionBuffer.CreateTransactionsVector(builder, transactionsBytes);
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            const int fixedSize = 124; //120 + 4
+             int fixedSize = HEADER_SIZE 
+                + 4 
+                + transactionsBytes.Length; 
 
             // add vectors
             AggregateTransactionBuffer.StartAggregateTransactionBuffer(builder);
-            AggregateTransactionBuffer.AddSize(builder, (uint) (fixedSize + transactionsBytes.Length));
+            AggregateTransactionBuffer.AddSize(builder,(uint)fixedSize);
             AggregateTransactionBuffer.AddSignature(builder, signatureVector);
             AggregateTransactionBuffer.AddSigner(builder, signerVector);
             AggregateTransactionBuffer.AddVersion(builder, version);
