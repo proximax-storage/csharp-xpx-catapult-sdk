@@ -196,7 +196,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             }
 
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
             var signatureVector = ModifyMetadataTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
@@ -223,7 +223,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 ModifyMetadataTransactionBuffer.CreateModificationsVector(builder, modificationVectors);
 
             // add size of stuff with constant size and size of metadata id
-            var fixedSize = 120 + +1 + metadataIdBytes.Length + totalSize;
+            var fixedSize = HEADER_SIZE + 1 + metadataIdBytes.Length + totalSize;
 
             ModifyMetadataTransactionBuffer.StartModifyMetadataTransactionBuffer(builder);
             ModifyMetadataTransactionBuffer.AddSize(builder, (uint) fixedSize);

@@ -157,7 +157,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 modificationVectors[i] = PropertyModificationBuffer.EndPropertyModificationBuffer(builder);
             }
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
             var signatureVector = AccountPropertiesTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
@@ -169,7 +169,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 AccountPropertiesTransactionBuffer.CreateModificationsVector(builder, modificationVectors);
 
             // add size of the header (120) + size of prop type (1) + size of mod count (1)
-            var fixedSize = 120 + +1 + 1 + totalSize;
+            var fixedSize = HEADER_SIZE + +1 + 1 + totalSize;
 
             AccountPropertiesTransactionBuffer.StartAccountPropertiesTransactionBuffer(builder);
             AccountPropertiesTransactionBuffer.AddSize(builder, (uint) fixedSize);

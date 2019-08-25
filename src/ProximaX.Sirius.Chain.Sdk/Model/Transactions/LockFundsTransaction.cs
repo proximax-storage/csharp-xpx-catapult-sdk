@@ -100,13 +100,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var durationVector = LockFundsTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());
             var hashVector = LockFundsTransactionBuffer.CreateHashVector(builder, Transaction.Hash.FromHex());
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            const int fixedSize = 176;
+            int fixedSize = HEADER_SIZE 
+                + 8 //mosaic id
+                + 8 //amount
+                + 8 //duration
+                + 32; //hash
+                
 
             LockFundsTransactionBuffer.StartLockFundsTransactionBuffer(builder);
-            LockFundsTransactionBuffer.AddSize(builder, fixedSize);
+            LockFundsTransactionBuffer.AddSize(builder, (uint)fixedSize);
             LockFundsTransactionBuffer.AddSignature(builder, signatureVector);
             LockFundsTransactionBuffer.AddSigner(builder, signerVector);
             LockFundsTransactionBuffer.AddVersion(builder, version);
