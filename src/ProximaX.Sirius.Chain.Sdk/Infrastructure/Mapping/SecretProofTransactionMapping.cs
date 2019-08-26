@@ -51,12 +51,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
+            var recipient = Recipient.From(Address.CreateFromHex(transaction["recipient"].ToObject<string>()));
             var hashType = HashTypeExtension.GetRawValue(transaction["hashAlgorithm"].ToObject<int>());
             var secret = transaction["secret"].ToObject<string>();
             var proof = transaction["proof"].ToObject<string>();
 
             return new SecretProofTransaction(
-                network, version, deadline, maxFee, hashType, secret,
+                network, version, deadline, maxFee, hashType, recipient,secret,
                 proof, signature, signer, txInfo);
         }
     }

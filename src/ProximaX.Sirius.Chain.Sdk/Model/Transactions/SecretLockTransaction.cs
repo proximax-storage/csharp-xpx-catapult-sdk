@@ -130,16 +130,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var recipientVector =
                 SecretLockTransactionBuffer.CreateRecipientVector(builder, Recipient.Plain.FromBase32String());
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            const int fixedSize = 202;
+            // header + mosaicID, amount, duration, hash algo, secret, recipient
+            int fixedSize = HEADER_SIZE + 8 + 8 + 8 + 1 + 32 + 25;
 
             SecretLockTransactionBuffer.StartSecretLockTransactionBuffer(builder);
-            SecretLockTransactionBuffer.AddSize(builder, fixedSize);
+            SecretLockTransactionBuffer.AddSize(builder, (uint)fixedSize);
             SecretLockTransactionBuffer.AddSignature(builder, signatureVector);
             SecretLockTransactionBuffer.AddSigner(builder, signerVector);
-            SecretLockTransactionBuffer.AddVersion(builder, version);
+            SecretLockTransactionBuffer.AddVersion(builder,(uint)version);
             SecretLockTransactionBuffer.AddType(builder, TransactionType.GetValue());
             SecretLockTransactionBuffer.AddMaxFee(builder, feeVector);
             SecretLockTransactionBuffer.AddDeadline(builder, deadlineVector);

@@ -163,19 +163,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var durationParentIdVector =
                 RegisterNamespaceTransactionBuffer.CreateDurationParentIdVector(builder, durationParentId);
 
-            const int fixedSize = 138;
+        
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            // header, ns type, duration, ns id, name size, name
+            int fixedSize = HEADER_SIZE + 1 + 8 + 8 + 1 + NamespaceName.Length;
+
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
             var name = builder.CreateString(NamespaceName);
 
             // ADD to buffer
             RegisterNamespaceTransactionBuffer.StartRegisterNamespaceTransactionBuffer(builder);
-            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint) (fixedSize + NamespaceName.Length));
+            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint) fixedSize);
             RegisterNamespaceTransactionBuffer.AddSignature(builder, signatureVector);
             RegisterNamespaceTransactionBuffer.AddSigner(builder, signerVector);
-            RegisterNamespaceTransactionBuffer.AddVersion(builder, version);
+            RegisterNamespaceTransactionBuffer.AddVersion(builder, (uint)version);
             RegisterNamespaceTransactionBuffer.AddType(builder, TransactionType.GetValue());
             RegisterNamespaceTransactionBuffer.AddMaxFee(builder, feeVector);
             RegisterNamespaceTransactionBuffer.AddDeadline(builder, deadlineVector);

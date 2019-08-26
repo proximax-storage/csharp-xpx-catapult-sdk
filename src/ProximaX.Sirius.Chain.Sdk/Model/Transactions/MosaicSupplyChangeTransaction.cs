@@ -93,15 +93,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 MosaicSupplyChangeTransactionBuffer.CreateMosaicIdVector(builder, MosaicId.Id.ToUInt8Array());
             var deltaVector = MosaicSupplyChangeTransactionBuffer.CreateDeltaVector(builder, Delta.ToUInt8Array());
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
-            const int fixedSize = 137;
+
+
+            int fixedSize = HEADER_SIZE
+                + 8 //mosaic id, 
+                + 1 //supply type
+                + 8; //delta
 
             MosaicSupplyChangeTransactionBuffer.StartMosaicSupplyChangeTransactionBuffer(builder);
-            MosaicSupplyChangeTransactionBuffer.AddSize(builder, fixedSize);
+            MosaicSupplyChangeTransactionBuffer.AddSize(builder, (uint)fixedSize);
             MosaicSupplyChangeTransactionBuffer.AddSignature(builder, signatureVector);
             MosaicSupplyChangeTransactionBuffer.AddSigner(builder, signerVector);
-            MosaicSupplyChangeTransactionBuffer.AddVersion(builder, version);
+            MosaicSupplyChangeTransactionBuffer.AddVersion(builder, (uint)version);
             MosaicSupplyChangeTransactionBuffer.AddType(builder, TransactionType.GetValue());
             MosaicSupplyChangeTransactionBuffer.AddMaxFee(builder, feeVector);
             MosaicSupplyChangeTransactionBuffer.AddDeadline(builder, deadlineVector);

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
@@ -84,6 +85,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             var builder = new FlatBufferBuilder(1);
 
+            List<int> optinalPropertiesVector = new List<int>();
+
             // create vectors
             var signatureVector = MosaicDefinitionTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = MosaicDefinitionTransactionBuffer.CreateSignerVector(builder, GetSigner());
@@ -95,16 +98,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
            /* var durationVector =
                 MosaicDefinitionTransactionBuffer.Crea(builder, Properties.Duration.ToUInt8Array());
                 */
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            const int fixSize = 144;
+            var fixedSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * optinalPropertiesVector.Count;
+
             // add vectors to buffer
             MosaicDefinitionTransactionBuffer.StartMosaicDefinitionTransactionBuffer(builder);
-            MosaicDefinitionTransactionBuffer.AddSize(builder, fixSize);
+            MosaicDefinitionTransactionBuffer.AddSize(builder, (uint)fixedSize);
             MosaicDefinitionTransactionBuffer.AddSignature(builder, signatureVector);
             MosaicDefinitionTransactionBuffer.AddSigner(builder, signerVector);
-            MosaicDefinitionTransactionBuffer.AddVersion(builder, version);
+            MosaicDefinitionTransactionBuffer.AddVersion(builder, (uint)version);
             MosaicDefinitionTransactionBuffer.AddType(builder, TransactionType.GetValue());
             MosaicDefinitionTransactionBuffer.AddMaxFee(builder, feeVector);
             MosaicDefinitionTransactionBuffer.AddDeadline(builder, deadlineVector);
@@ -116,7 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             //MosaicDefinitionTransactionBuffer.Add(builder, 2);
             //MosaicDefinitionTransactionBuffer.AddDuration(builder, durationVector);
 
-            var t = BitConverter.ToUInt32(MosaicNonce.Nonce, 0);
+            //var t = BitConverter.ToUInt32(MosaicNonce.Nonce, 0);
             // Calculate size
             var codedMosaicDefinition = MosaicDefinitionTransactionBuffer.EndMosaicDefinitionTransactionBuffer(builder);
             builder.Finish(codedMosaicDefinition.Value);
