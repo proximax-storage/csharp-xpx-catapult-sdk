@@ -55,7 +55,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        protected ModifyAccountPropertyTransaction(NetworkType networkType, int version,
+        public ModifyAccountPropertyTransaction(NetworkType networkType, int version,
             TransactionType transactionType,
             Deadline deadline, PropertyType propertyType, IList<AccountPropertyModification<T>> propertyModifications,
             ulong? maxFee, string signature = null, PublicAccount signer = null,

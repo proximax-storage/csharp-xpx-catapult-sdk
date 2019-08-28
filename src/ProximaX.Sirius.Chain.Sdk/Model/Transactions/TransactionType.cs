@@ -114,7 +114,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Modify namespace related metadata transaction type
         /// </summary>
-        MODIFY_NAMESPACE_METADATA = 0x433D
+        MODIFY_NAMESPACE_METADATA = 0x433D,
+
+        /// <summary>
+        ///    Blockchain configuration change transaction
+        /// </summary>
+  
+        BLOCKCHAIN_CONFIG = 0x4159,
+
+        /// <summary>
+        ///    Blockchain version update transaction
+        /// </summary>
+        BLOCKCHAIN_UPGRADE = 0x4158
     }
 
     public static class TransactionTypeExtension

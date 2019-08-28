@@ -85,7 +85,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             var builder = new FlatBufferBuilder(1);
 
-            List<int> optinalPropertiesVector = new List<int>();
+            
+            IList<KeyValuePair<MosaicPropertyId, ulong>> propertyList = new List<KeyValuePair<MosaicPropertyId, ulong>>();
+
+            var duration = Properties.Duration;
+            if(duration > 0)
+            {
+                propertyList.Add(new KeyValuePair<MosaicPropertyId, ulong>(MosaicPropertyId.DURATION,duration));
+            }
+
+            var mosaicProperties = new Offset<MosaicProperty>[propertyList.Count];
+            for (var index = 0; index < propertyList.Count; index++)
+            {
+                KeyValuePair<MosaicPropertyId, ulong> mp = propertyList[index];
+                var valueOffset = MosaicProperty.CreateValueVector(builder, mp.Value.ToUInt8Array());
+                MosaicProperty.StartMosaicProperty(builder);
+                MosaicProperty.AddMosaicPropertyId(builder, mp.Key.GetValueInByte());
+                MosaicProperty.AddValue(builder, valueOffset);
+                mosaicProperties[index] = MosaicProperty.EndMosaicProperty(builder);
+            }
+
+          
 
             // create vectors
             var signatureVector = MosaicDefinitionTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
@@ -95,13 +115,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 MosaicDefinitionTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var mosaicIdVector =
                 MosaicDefinitionTransactionBuffer.CreateMosaicIdVector(builder, MosaicId.Id.ToUInt8Array());
-           /* var durationVector =
-                MosaicDefinitionTransactionBuffer.Crea(builder, Properties.Duration.ToUInt8Array());
-                */
+            var mosaicPropertiesVector =
+                MosaicDefinitionTransactionBuffer.CreateOptionalPropertiesVector(builder, mosaicProperties);
+            
             var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            var fixedSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * optinalPropertiesVector.Count;
+            var fixedSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * mosaicProperties.Length;
 
             // add vectors to buffer
             MosaicDefinitionTransactionBuffer.StartMosaicDefinitionTransactionBuffer(builder);
@@ -117,11 +137,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, 1);
             MosaicDefinitionTransactionBuffer.AddFlags(builder, flags);
             MosaicDefinitionTransactionBuffer.AddDivisibility(builder, (byte) Properties.Divisibility);
-            //MosaicDefinitionTransactionBuffer.Add(builder, 2);
-            //MosaicDefinitionTransactionBuffer.AddDuration(builder, durationVector);
+            MosaicDefinitionTransactionBuffer.AddOptionalProperties(builder, mosaicPropertiesVector);
 
-            //var t = BitConverter.ToUInt32(MosaicNonce.Nonce, 0);
-            // Calculate size
+            
+             // Calculate size
             var codedMosaicDefinition = MosaicDefinitionTransactionBuffer.EndMosaicDefinitionTransactionBuffer(builder);
             builder.Finish(codedMosaicDefinition.Value);
 

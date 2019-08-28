@@ -36,7 +36,13 @@ public struct CatapultConfigTransactionBuffer : IFlatbufferObject
   public byte[] GetSignerArray() { return __p.__vector_as_array<byte>(8); }
   public uint Version { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public ushort Type { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
-  public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+
+        internal static object CreateMaxFeeVector(FlatBufferBuilder builder, object p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public uint MaxFee(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int MaxFeeLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMaxFeeBytes() { return __p.__vector_as_span(14); }
