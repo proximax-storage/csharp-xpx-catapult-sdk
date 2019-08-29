@@ -39,8 +39,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
 
         public ulong GetVersionValue()
         {
-            var version = Major.ToString("X") + Minor.ToString("X") + Revision.ToString("X") + Build.ToString("X");
-            return ulong.Parse(version);
+
+            var version = new BigInteger(Major) << 16;
+            version = (version + new BigInteger(Minor)) << 16;
+            version = (version + new BigInteger(Revision)) << 16;
+            version += new BigInteger(Build);
+
+            return (ulong)version;
         }
     }
 }

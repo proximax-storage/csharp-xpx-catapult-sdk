@@ -85,7 +85,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransfer = CatapultConfigTransactionBuffer.EndCatapultConfigTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            var output = new CatapultConfigTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new BlockchainConfigTransactionSchema().Serialize(builder.SizedByteArray());
             if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;

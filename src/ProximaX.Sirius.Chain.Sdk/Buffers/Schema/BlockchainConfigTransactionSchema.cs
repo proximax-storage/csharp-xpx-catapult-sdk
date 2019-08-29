@@ -19,9 +19,9 @@ using System.Text;
 
 namespace ProximaX.Sirius.Chain.Sdk.Buffers.Schema
 {
-    internal class CatapultConfigTransactionSchema : SchemaHelpers.Schema
+    internal class BlockchainConfigTransactionSchema : SchemaHelpers.Schema
     {
-        internal CatapultConfigTransactionSchema() : base(
+        internal BlockchainConfigTransactionSchema() : base(
             new List<SchemaAttribute>
             {
                 new ScalarAttribute("size", Constants.Value.SIZEOF_INT),

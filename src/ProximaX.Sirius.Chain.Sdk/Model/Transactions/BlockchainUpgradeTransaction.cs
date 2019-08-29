@@ -80,7 +80,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransfer = CatapultUpgradeTransactionBuffer.EndCatapultUpgradeTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            var output = new CatapultUpgradeTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new BlockchainUpgradeTransactionSchema().Serialize(builder.SizedByteArray());
             if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;

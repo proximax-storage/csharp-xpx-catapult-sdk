@@ -22,9 +22,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Buffers.Schema
 {
 
 
-    internal class CatapultUpgradeTransactionSchema : SchemaHelpers.Schema
+    internal class BlockchainUpgradeTransactionSchema : SchemaHelpers.Schema
     {
-        internal CatapultUpgradeTransactionSchema() : base(
+        internal BlockchainUpgradeTransactionSchema() : base(
             new List<SchemaAttribute>
             {
                 new ScalarAttribute("size", Constants.Value.SIZEOF_INT),
