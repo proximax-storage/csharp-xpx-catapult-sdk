@@ -452,7 +452,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             _output.WriteLine($"Cosignatory1 account {cosignatory1}");
             var transferTransaction = TransferTransaction.Create(
                 Deadline.Create(),
-                recipient.Address,
+                Recipient.From(recipient.Address),
                 new List<Mosaic> { NetworkCurrencyMosaic.CreateAbsolute(10) },
                 PlainMessage.Create("sending 10 prx.xpx"),
                 networkType);

@@ -94,9 +94,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="propertyModifications"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static ModifyAccountPropertyTransaction<MosaicId> CreateForMosaic(Deadline deadline, ulong? maxFee,
+        public static ModifyAccountPropertyTransaction<IUInt64Id> CreateForMosaic(Deadline deadline, ulong? maxFee,
             PropertyType propertyType,
-            List<AccountPropertyModification<MosaicId>> propertyModifications, NetworkType networkType)
+            List<AccountPropertyModification<IUInt64Id>> propertyModifications, NetworkType networkType)
         {
             return new MosaicModification(networkType,
                 TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC.GetValue(),

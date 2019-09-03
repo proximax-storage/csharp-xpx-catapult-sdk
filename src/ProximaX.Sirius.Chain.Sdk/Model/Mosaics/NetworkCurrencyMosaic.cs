@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System;
-using ProximaX.Sirius.Chain.Sdk.Utils;
+using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 {
@@ -25,12 +26,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <summary>
         ///     NetworkCurrencyMosaicHex
         /// </summary>
-        private const string NetworkCurrencyMosaicHex = "0DC67FBE1CAD29E3";
+        //private const string NetworkCurrencyMosaicHex = "0DC67FBE1CAD29E3";
+
+        private const string NetworkCurrencyMosaicHex = "prx.xpx";
+
 
         /// <summary>
         ///     The network currency mosaic
         /// </summary>
-        public new static MosaicId Id = new MosaicId(Hex.Hex2UInt64(NetworkCurrencyMosaicHex));
+        public new static IUInt64Id Id = new NamespaceId(NetworkCurrencyMosaicHex);
 
         /// <summary>
         ///     The network currency mosaic divisibility
@@ -61,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         ///     Constructor
         /// </summary>
         /// <param name="amount"></param>
-        public NetworkCurrencyMosaic(ulong amount) : base(Id.Id, amount)
+        public NetworkCurrencyMosaic(ulong amount) : base(Id, amount)
         {
         }
 

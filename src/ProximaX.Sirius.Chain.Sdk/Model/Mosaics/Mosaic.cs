@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
-using ProximaX.Sirius.Chain.Sdk.Utils;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 {
@@ -27,7 +27,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// </summary>
         /// <param name="id">The mosaic identifier</param>
         /// <param name="amount">The mosaic account</param>
-        public Mosaic(ulong id, ulong amount)
+        public Mosaic(IUInt64Id id, ulong amount)
         {
             Id = id;
             Amount = amount;
@@ -38,11 +38,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// </summary>
         /// <param name="id">The mosaic identifier</param>
         /// <param name="amount">The mosaic account</param>
-        public Mosaic(MosaicId id, ulong amount)
+        /*public Mosaic(MosaicId id, ulong amount)
         {
-            Id = id.Id;
+            Id = id;
             Amount = amount;
-        }
+        }*/
 
 
         /// <summary>
@@ -52,24 +52,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <param name="amount">The mosaic account</param>
         public Mosaic(NamespaceId id, ulong amount)
         {
-            Id = id.Id;
+            Id = id;
             Amount = amount;
         }
 
         /// <summary>
         ///     The mosaic id.
         /// </summary>
-        public ulong Id { get; }
+        public IUInt64Id Id { get; }
 
         /// <summary>
         ///     The mosaic hex Id
         /// </summary>
-        public string HexId => Id.ToHex();
+        public string HexId => Id.HexId; //.ToHex();
 
         /// <summary>
         ///     The mosaic amount
         /// </summary>
         public ulong Amount { get; }
+
+        /// <summary>
+        ///     The mosaic full name
+        /// </summary>
+        //public string FullName { get; set; }
 
         public override string ToString()
         {

@@ -39,7 +39,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         {
             var transaction = tx["transaction"].ToObject<JObject>();
             var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var network = TransactionMappingUtils.ExtractNetworkType(version);
             var deadline = transaction["deadline"].ToObject<UInt64DTO>().ToUInt64();
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var recipient = transaction["recipient"]?.ToObject<string>();
@@ -48,11 +48,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var signature = transaction["signature"].ToObject<string>();
             var signer = transaction["signer"].ToObject<string>();
             return new TransferTransaction(network,
-                version.ExtractVersion(),
+                TransactionMappingUtils.ExtractTransactionVersion(version),
                 new Deadline(deadline),
                 maxFee,
-                Address.CreateFromHex(recipient),
-                mosaics.Select(m => new Mosaic(new MosaicId(m.Id.ToUInt64()).Id, m.Amount.ToUInt64())).ToList(),
+                Recipient.From(Address.CreateFromHex(recipient)),
+                mosaics.Select(m => new Mosaic(new MosaicId(m.Id.ToUInt64()), m.Amount.ToUInt64())).ToList(),
                 GetMessage(message),
                 signature,
                 new PublicAccount(signer, network),

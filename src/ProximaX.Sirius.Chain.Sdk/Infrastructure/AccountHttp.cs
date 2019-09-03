@@ -75,7 +75,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     info.Account.PublicKey,
                     info.Account.PublicKeyHeight.ToUInt64(),
                     info.Account.Mosaics.Select(mosaic =>
-                        new Mosaic(new MosaicId(mosaic.Id.ToUInt64()).Id, mosaic.Amount.ToUInt64())).ToList(),
+                        new Mosaic(new MosaicId(mosaic.Id.ToUInt64()), mosaic.Amount.ToUInt64())).ToList(),
                     info.Account.LinkedAccountKey,
                     info.Meta
                 ));
@@ -106,7 +106,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                         info.Account.PublicKey,
                         info.Account.PublicKeyHeight.ToUInt64(),
                         info.Account.Mosaics.Select(mosaic =>
-                            new Mosaic(new MosaicId(mosaic.Id.ToUInt64()).Id, mosaic.Amount.ToUInt64())).ToList(),
+                            new Mosaic(new MosaicId(mosaic.Id.ToUInt64()), mosaic.Amount.ToUInt64())).ToList(),
                          info.Account.LinkedAccountKey,
                         info.Meta
                     )).ToList());

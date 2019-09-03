@@ -1,10 +1,9 @@
 
 using System;
-using System.Linq;
 using System.Text;
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {

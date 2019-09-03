@@ -21,6 +21,25 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         }
 
         [Fact]
+        public async Task Should_Return_Transfer_Transaction_Details()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\TransferTransactionWithPlainMessage.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                const string transactionHash = "D88C48782537108AE069225CF07F81122E068A60E5825B1C6E57373B0FC2437A";
+
+                var transaction = await _transactionHttp.GetTransaction(transactionHash);
+
+                var agTx = (TransferTransaction)transaction;
+
+                transaction.Should().BeOfType<TransferTransaction>();
+            }
+        }
+
+        [Fact]
         public async Task Get_Transaction_By_Hash_Should_Return_Aggregate_Transaction()
         {
             using (var httpTest = new HttpTest())

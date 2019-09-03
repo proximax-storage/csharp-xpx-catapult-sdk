@@ -1,9 +1,13 @@
 ﻿using FluentAssertions;
 using Flurl.Http.Testing;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
 using ProximaX.Sirius.Chain.Sdk.Tests.Utils;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,7 +20,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
         public BlockHttpTests()
         {
+            
             _blockchainHttp = new BlockHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
+
+
         }
 
         [Fact]

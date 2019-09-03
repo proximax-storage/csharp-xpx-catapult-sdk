@@ -46,7 +46,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var recipient = Address.CreateFromHex(transaction["recipient"].ToObject<string>());
 
             return new SecretLockTransaction(
-                network, version, deadline, maxFee, new Mosaic(mosaic.Id, amount),
+                network, version, deadline, maxFee, new Mosaic(mosaic, amount),
                 duration, hashType, secret, recipient, signature, signer, txInfo);
         }
     }

@@ -386,7 +386,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var transferTransaction = TransferTransaction.Create(
                 Deadline.Create(),
-                newAccount.Address, 
+                Recipient.From(newAccount.Address), 
                 new List<Mosaic>()
                 {
                     new Mosaic(nsInfo.Id, 10)

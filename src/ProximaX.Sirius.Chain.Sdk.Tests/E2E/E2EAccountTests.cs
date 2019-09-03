@@ -142,13 +142,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var allowedMosaic = NetworkCurrencyMosaic.Id;
 
-            var accountFilter = ModifyAccountPropertyTransaction<MosaicId>.CreateForMosaic(
+            var accountFilter = ModifyAccountPropertyTransaction<IUInt64Id>.CreateForMosaic(
                 Deadline.Create(),
                 (ulong)0,
                 PropertyType.ALLOW_MOSAIC,
-                new List<AccountPropertyModification<MosaicId>>()
+                new List<AccountPropertyModification<IUInt64Id>>()
                 {
-                    new AccountPropertyModification<MosaicId>(PropertyModificationType.ADD, allowedMosaic)
+                    new AccountPropertyModification<IUInt64Id>(PropertyModificationType.ADD, allowedMosaic)
                 },
                 networkType);
 

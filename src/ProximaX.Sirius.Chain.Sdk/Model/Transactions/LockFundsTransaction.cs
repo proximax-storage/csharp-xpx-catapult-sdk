@@ -94,7 +94,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var feeVector = LockFundsTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 LockFundsTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var mosaicIdVector = LockFundsTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.ToUInt8Array());
+            var mosaicIdVector = LockFundsTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.Id.ToUInt8Array());
             var mosaicAmountVector =
                 LockFundsTransactionBuffer.CreateMosaicAmountVector(builder, Mosaic.Amount.ToUInt8Array());
             var durationVector = LockFundsTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());

@@ -19,11 +19,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         
             var mosaics = new List<Mosaic>()
             {
-                new Mosaic((new MosaicId(992621222383397347)).Id, 20)
+                new Mosaic((new MosaicId(992621222383397347)), 20)
             };
 
             var transferTransaction = TransferTransaction.Create(Deadline.Create(1),
-                new Address("SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC", NetworkType.MIJIN_TEST),
+                Recipient.From(new Address("SBILTA367K2LX2FEXG5TFWAS7GEFYAGY7QLFBYKC", NetworkType.MIJIN_TEST)),
                 mosaics,
                 PlainMessage.Create("test-message"),
                 NetworkType.MIJIN_TEST,

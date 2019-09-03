@@ -35,7 +35,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public new ModifyAccountPropertyTransaction<MosaicId> Apply(JObject input)
+        public new ModifyAccountPropertyTransaction<IUInt64Id> Apply(JObject input)
         {
             return ToModifyAccountPropertyTransaction(input, TransactionMappingHelper.CreateTransactionInfo(input));
         }
@@ -46,7 +46,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         /// <param name="tx"></param>
         /// <param name="txInfo"></param>
         /// <returns></returns>
-        private static ModifyAccountPropertyTransaction<MosaicId> ToModifyAccountPropertyTransaction(JObject tx,
+        private static ModifyAccountPropertyTransaction<IUInt64Id> ToModifyAccountPropertyTransaction(JObject tx,
             TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
@@ -61,13 +61,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
             var modifications = transaction["modifications"];
             var modificationList = modifications == null
-                ? new List<AccountPropertyModification<MosaicId>>()
+                ? new List<AccountPropertyModification<IUInt64Id>>()
                 : modifications.Select(e =>
                 {
                     var modificationType =
                         PropertyModificationTypeExtension.GetRawValue(e["modificationType"].ToObject<int>());
                     var mosaicId = new MosaicId(e["value"].ToObject<UInt64DTO>().ToUInt64());
-                    var modification = new AccountPropertyModification<MosaicId>(modificationType,
+                    var modification = new AccountPropertyModification<IUInt64Id>(modificationType,
                         mosaicId);
                     return modification;
                 }).ToList();

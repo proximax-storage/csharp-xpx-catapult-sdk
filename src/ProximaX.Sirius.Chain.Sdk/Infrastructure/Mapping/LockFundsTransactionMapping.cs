@@ -44,7 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var hash = transaction["hash"].ToObject<string>();
 
             return new LockFundsTransaction(network, version, deadline, maxFee,
-                new Mosaic(mosaic.Id, amount), duration,
+                new Mosaic(mosaic, amount), duration,
                 new SignedTransaction(string.Empty, hash, string.Empty,
                     TransactionType.AGGREGATE_BONDED, network),
                 signature, signer, txInfo);
