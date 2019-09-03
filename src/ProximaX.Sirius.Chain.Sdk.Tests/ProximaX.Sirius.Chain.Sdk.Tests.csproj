@@ -104,6 +104,9 @@
     <None Update="TestData\Node\GetNodeTime.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Transactions\AggreateTransactionWithPlainMessage.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Transactions\TransferTransactionWithPlainMessage.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

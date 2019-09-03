@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -34,8 +35,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         private static ModifyMetadataTransaction ToModifyMetadataTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var version = transaction["version"];
+
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue;
+            try
+            {
+                versionValue = (int)((uint)version);
+            }
+            catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
+            var txVersion = TransactionMappingUtils.ExtractTransactionVersion(versionValue);
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
@@ -74,20 +90,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 case TransactionType.MODIFY_ADDRESS_METADATA:
                     var address = Address.CreateFromHex(transaction["metadataId"].ToObject<string>());
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
-                        network, version, type, deadline, maxFee, metaType, null, address,
+                        network, txVersion, type, deadline, maxFee, metaType, null, address,
                         modificationList, signature, signer, txInfo);
                     break;
 
                 case TransactionType.MODIFY_MOSAIC_METADATA:
                     var mosaicId = transaction["metadataId"].ToObject<UInt64DTO>().ToUInt64();
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
-                        network, version, type, deadline, maxFee, metaType, mosaicId, null,
+                        network, txVersion, type, deadline, maxFee, metaType, mosaicId, null,
                         modificationList, signature, signer, txInfo);
                     break;
                 case TransactionType.MODIFY_NAMESPACE_METADATA:
                     var namespaceId = transaction["metadataId"].ToObject<UInt64DTO>().ToUInt64();
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
-                        network, version, type, deadline, maxFee, metaType, namespaceId, null,
+                        network, txVersion, type, deadline, maxFee, metaType, namespaceId, null,
                         modificationList, signature, signer, txInfo);
                     break;
             }

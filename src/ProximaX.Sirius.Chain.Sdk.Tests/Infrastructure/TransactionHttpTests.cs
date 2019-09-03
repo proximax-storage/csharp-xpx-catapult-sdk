@@ -40,6 +40,25 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         }
 
         [Fact]
+        public async Task Get_Transaction_By_Hash_Should_Return_Aggregate_Transaction_Plain_Message()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\AggreateTransactionWithPlainMessage.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                const string transactionHash = "0E91936DFEF1DC659B1EA4F32F1CD8EE4AFADF804B812E3966245FD0888CDD74";
+
+                var transaction = await _transactionHttp.GetTransaction(transactionHash);
+                var agTx = (AggregateTransaction)transaction;
+
+                transaction.Should().BeOfType<AggregateTransaction>();
+            }
+        }
+
+
+        [Fact]
         public async Task Get_Transaction_By_Hash_Should_Return_Aggregate_Transaction()
         {
             using (var httpTest = new HttpTest())
@@ -132,7 +151,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 transaction.Should().BeOfType<TransferTransaction>();
                 var transferTransaction = ((TransferTransaction)transaction);
                 var messageType = MessageTypeExtension.GetRawValue(transferTransaction.Message.GetMessageType());
-                messageType.Should().BeEquivalentTo(MessageType.ENCRYPTED_MESSAGE);
+                messageType.Should().BeEquivalentTo(MessageType.SECURED_MESSAGE);
 
                 var securedMessage = (SecureMessage)transferTransaction.Message;
                 var payload = securedMessage.DecryptPayload(receiverPrivateKey, senderPublicKey);

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -34,8 +35,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         private AggregateTransaction ToAggregateTransactionTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var version = transaction["version"];
+
+
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue;
+            try
+            {
+                versionValue = (int)((uint)version);
+            }
+            catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
+
             var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
@@ -45,41 +62,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
 
             return new AggregateTransaction(
-                network, version, type, deadline, maxFee,
+                network, TransactionMappingUtils.ExtractTransactionVersion(versionValue), type, deadline, maxFee,
                 innerTransactions, cosignatures, signature, signer, txInfo);
         }
 
         private static List<Transaction> MapInnerTransactions(JObject transaction)
         {
-            /*
-            var txs = new List<Transaction>();
-
-
-            for (var i = 0; i < tx["transaction"]["transactions"].ToList().Count; i++)
-            {
-                var innerTransaction = tx["transaction"]["transactions"].ToList()[i] as JObject;
-
-                var innerInnerTransaction = innerTransaction?["transaction"].ToObject<JObject>();
-                var deadline = tx["transaction"]["deadline"].ToObject<JToken>();
-                var fee = tx["transaction"]["maxFee"].ToObject<JToken>();
-                var signature = tx["transaction"]["signer"].ToObject<JToken>();
-                innerInnerTransaction?.ADD("deadline", deadline);
-                innerInnerTransaction?.ADD("fee", fee);
-                innerInnerTransaction?.ADD("signature", signature);
-                if (innerTransaction != null)
-                {
-                    innerTransaction["transaction"] = innerInnerTransaction;
-                    if (innerTransaction["meta"] == null)
-                    {
-                        var meta = tx["transaction"]["meta"].ToObject<JToken>();
-                        innerTransaction.ADD("meta", meta);
-                    }
-
-                    txs.ADD(new TransactionMapping().Apply((JObject)innerTransaction.ToString()));
-                }
-            }
-
-            return txs;*/
+          
             var txs = new List<Transaction>();
 
             for (var i = 0; i < transaction["transaction"]["transactions"].ToList().Count; i++)

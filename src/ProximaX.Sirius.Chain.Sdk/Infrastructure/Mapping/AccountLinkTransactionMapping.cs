@@ -46,15 +46,32 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         private static AccountLinkTransaction ToAccountLinkTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var version = transaction["version"];
+
+
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue;
+            try
+            {
+                versionValue = (int)((uint)version);
+            }
+            catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
+            var txVersion = TransactionMappingUtils.ExtractTransactionVersion(versionValue);
+
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
             var remoteAccount = new PublicAccount(transaction["remoteAccountKey"].ToObject<string>(), network);
             var linkAccount = AccountLinkActionExtension.GetRawValue(transaction["linkAction"].ToObject<int>());
-            return new AccountLinkTransaction(network, version, deadline, maxFee, TransactionType.LINK_ACCOUNT,
+            return new AccountLinkTransaction(network, txVersion, deadline, maxFee, TransactionType.LINK_ACCOUNT,
               remoteAccount, linkAccount,signature,signer);
         }
     }

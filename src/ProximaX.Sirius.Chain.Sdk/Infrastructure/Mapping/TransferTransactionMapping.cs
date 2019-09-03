@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,8 +39,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         private static TransferTransaction ToTransferTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = TransactionMappingUtils.ExtractNetworkType(version);
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue = -1879048189;
+            var version = transaction["version"];
+
+            try
+            {
+                versionValue = (int)((uint)version);
+            } catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
             var deadline = transaction["deadline"].ToObject<UInt64DTO>().ToUInt64();
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var recipient = transaction["recipient"]?.ToObject<string>();
@@ -48,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var signature = transaction["signature"].ToObject<string>();
             var signer = transaction["signer"].ToObject<string>();
             return new TransferTransaction(network,
-                TransactionMappingUtils.ExtractTransactionVersion(version),
+                TransactionMappingUtils.ExtractTransactionVersion(versionValue),
                 new Deadline(deadline),
                 maxFee,
                 Recipient.From(Address.CreateFromHex(recipient)),
@@ -69,7 +83,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             {
                 case MessageType.PLAIN_MESSAGE:
                     return PlainMessage.Create(Encoding.UTF8.GetString(payload));
-                case MessageType.ENCRYPTED_MESSAGE:
+                case MessageType.SECURED_MESSAGE:
                     return SecureMessage.CreateFromEncodedPayload(payload);
                 default:
                     return EmptyMessage.Create();

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -34,8 +35,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var version = transaction["version"];
+
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue;
+            try
+            {
+                versionValue = (int)((uint)version);
+            }
+            catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
+            var txVersion = TransactionMappingUtils.ExtractTransactionVersion(versionValue);
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
@@ -54,7 +70,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                         new PublicAccount(e["cosignatoryPublicKey"].ToObject<string>(), network))).ToList();
 
             return new ModifyMultisigAccountTransaction(
-                network, version, deadline, maxFee, minApproved,
+                network, txVersion, deadline, maxFee, minApproved,
                 minRemoved, modificationList,
                 signature, signer, txInfo);
         }

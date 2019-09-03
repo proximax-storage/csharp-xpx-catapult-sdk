@@ -74,12 +74,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Gets the address.
         /// </summary>
         /// <value>The address.</value>
-        public Address Address { get; }
+        //public Address Address { get; }
 
         /// <summary>
         ///  Get the namespace id
         /// </summary>
-        public NamespaceId NamespaceId { get; }
+        //public NamespaceId NamespaceId { get; }
 
         /// <summary>
         ///     Gets or sets the message.

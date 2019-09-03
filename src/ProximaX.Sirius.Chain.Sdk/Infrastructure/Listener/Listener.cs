@@ -366,7 +366,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
             var isReceptor = false;
 
             if (transaction.TransactionType.GetValue() == TransactionType.TRANSFER.GetValue())
-                isReceptor = ((TransferTransaction) transaction).Address.Plain == address.Plain;
+                isReceptor = ((TransferTransaction) transaction).Recipient.Address.Plain == address.Plain;
 
             return Address.CreateFromPublicKey(transaction.Signer.PublicKey, address.NetworkType).Plain ==
                    address.Plain || isReceptor;

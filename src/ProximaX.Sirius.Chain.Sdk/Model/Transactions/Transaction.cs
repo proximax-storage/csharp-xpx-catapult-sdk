@@ -167,8 +167,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>Transaction</returns>
         public Transaction ToAggregate(PublicAccount signer)
         {
-            Signer = PublicAccount.CreateFromPublicKey(signer.PublicKey, NetworkType);
-
+            //Signer = PublicAccount.CreateFromPublicKey(signer.PublicKey, NetworkType);
+            Signer = signer;
             return this;
         }
 
@@ -216,7 +216,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>System.Byte[].</returns>
         internal byte[] ToAggregate()
         {
+            /*
            var bytes = GenerateBytes();
+
 
             var aggregate = bytes.Take(4 + 64, 32 + 2 + 2)
                 .Concat(
@@ -231,8 +233,34 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                     , bytes.Length - (4 + 64 + 32 + 4 + 2 + 8 + 8))
                 ).ToArray();
 
-            return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();
-            
+            return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();*/
+
+            // decode signer from hex to byte array
+            var signerBytes = Signer.PublicKey.DecodeHexString();
+
+            // serialize the transaction
+            Bytes = GenerateBytes();
+
+            // we will be removing header (122) and adding size (4), signer (32), version (4), trans type(2)
+            var resultBytes = new byte[Bytes.Length - HEADER_SIZE + 4 + 32 + 4 + 2];
+
+            /* var sizeBytes = ((ulong)resultBytes.Length).ToUInt8Array();
+             Array.Reverse(sizeBytes);*/
+            var sizeBytes = BitConverter.GetBytes(resultBytes.Length);
+
+            // write size of the aggregate transaction bytes - can be less than 4 bytes
+            Buffer.BlockCopy(sizeBytes, 0, resultBytes, 0, sizeBytes.Length);
+
+            // at position 4 start writing 32 bytes of signer
+            Buffer.BlockCopy(signerBytes, 0, resultBytes, 4, 32);
+
+            // version is expected to start at position 100 and be 4 bytes, then take next 2 bytes
+            Buffer.BlockCopy(Bytes, 100, resultBytes, 4 + 32, 6);
+
+            // copy remaining data after header
+            Buffer.BlockCopy(Bytes, HEADER_SIZE, resultBytes, 4 + 32 + 6, Bytes.Length- HEADER_SIZE);
+
+            return resultBytes;
         }
 
         /// <summary>

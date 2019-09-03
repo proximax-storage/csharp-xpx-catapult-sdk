@@ -31,38 +31,105 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         }
 
         [Fact]
-        public async Task Should_Announce_Transfer_Transaction_With_NetworkCurrencyMosaic()
+        public async Task Should_Announce_Transfer_Transaction_With_NetworkCurrencyMosaic_PlainMessage()
         {
-       
             var account = Account.GenerateNewAccount(NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateRelative(10);
+            var message = PlainMessage.Create("Test message");
+            var result = await Transfer(SeedAccount, account.Address, mosaic, message, GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
+            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
+            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.PLAIN_MESSAGE.GetValueInByte());
+        }
 
+        [Fact]
+        public async Task Should_Announce_Aggregate_Transaction_Signed_Aggregate_Transaction()
+        {
+            var account = Account.GenerateNewAccount(NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateAbsolute(1);
+            var message = PlainMessage.Create("c#__ SDK plain message test");
+            var result = await AggregateTransfer(SeedAccount, account.Address, mosaic, message, GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
+            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
+            result.TransactionType.Should().Be(TransactionType.AGGREGATE_COMPLETE);
+        
+        }
+
+        [Fact]
+        public async Task Should_Announce_Transfer_Transaction_With_NetworkCurrencyMosaic_SecureMessage()
+        {
+            var account = Account.GenerateNewAccount(NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateRelative(10);
+            var message = SecureMessage.Create("Test secure message", SeedAccount.KeyPair.PrivateKeyString, account.PublicAccount.PublicKey);
+            var result = await Transfer(SeedAccount, account.Address, mosaic, message, GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
+            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
+            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.SECURED_MESSAGE.GetValueInByte());
+        }
+
+        private async Task<Transaction> Transfer(Account from,Address to, Mosaic mosaic, IMessage message, string generationHash)
+        {
+           
             var transferTransaction = TransferTransaction.Create(
                 Deadline.Create(),
-                Recipient.From(account.Address),
+                Recipient.From(to),
                 new List<Mosaic>()
                 {
-                  NetworkCurrencyMosaic.CreateRelative(10)
+                 mosaic
                 },
-                PlainMessage.Create("transferTest"),
+                message,
                 NetworkType);
 
-            var signedTransaction = SeedAccount.Sign(transferTransaction, GenerationHash);
+            var signedTransaction = from.Sign(transferTransaction, generationHash);
 
             WatchForFailure(signedTransaction);
 
             Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(SeedAccount.Address).Take(1);
+            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
 
             await SiriusClient.TransactionHttp.Announce(signedTransaction);
-            
+
             var result = await tx;
 
-            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
-
-            Log.WriteLine($"Request with transaction status {result.TransactionInfo.Hash}");
-
+            return result;
         }
 
+        private async Task<Transaction> AggregateTransfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
+        {
+
+            var transferTransaction = TransferTransaction.Create(
+                Deadline.Create(),
+                Recipient.From(to),
+                new List<Mosaic>()
+                {
+                 mosaic
+                },
+                message,
+                NetworkType);
+
+            var aggregateTransaction = AggregateTransaction.CreateComplete(
+                Deadline.Create(),
+                new List<Transaction>
+                {
+                    transferTransaction.ToAggregate(from.PublicAccount)
+                }, NetworkType);
+
+            var signedTransaction = from.Sign(aggregateTransaction, generationHash);
+
+            WatchForFailure(signedTransaction);
+
+            Log.WriteLine($"Going to announce signed aggregate transaction {signedTransaction.Hash}");
+
+            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
+
+            await SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+
+            return result;
+        }
     }
 }

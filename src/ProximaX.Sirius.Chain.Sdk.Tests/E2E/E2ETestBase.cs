@@ -24,13 +24,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public E2ETestBase()
         {
+
             var env = GetEnvironment();
 
             SiriusClient = new SiriusClient(env.BaseUrl);
             SiriusWebSocketClient = new SiriusWebSocketClient(env.Host, env.Port);
             NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
             SeedAccount = Account.CreateFromPrivateKey(env.SeedAccountPK, NetworkType);
-           
+            GenerationHash = SiriusClient.BlockHttp.GetGenerationHash().Wait();
         }
 
 
