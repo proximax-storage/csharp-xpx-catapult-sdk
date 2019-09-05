@@ -29,19 +29,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Buffers.Schema
         internal MosaicDefinitionTransactionSchema() : base(new List<SchemaAttribute>
         {
             new ScalarAttribute("size", Constants.Value.SIZEOF_INT),
-            new ArrayAttribute("signature", Constants.Value.SIZEOF_BYTE),
-            new ArrayAttribute("signer", Constants.Value.SIZEOF_BYTE),
+            new ArrayAttribute ("signature", Constants.Value.SIZEOF_BYTE),
+            new ArrayAttribute ("signer", Constants.Value.SIZEOF_BYTE),
             new ScalarAttribute("version", Constants.Value.SIZEOF_INT),
             new ScalarAttribute("type", Constants.Value.SIZEOF_SHORT),
-            new ArrayAttribute("maxFee", Constants.Value.SIZEOF_INT),
-            new ArrayAttribute("deadline", Constants.Value.SIZEOF_INT),
+            new ArrayAttribute ("maxFee", Constants.Value.SIZEOF_INT),
+            new ArrayAttribute ("deadline", Constants.Value.SIZEOF_INT),
             new ScalarAttribute("mosaicNonce", Constants.Value.SIZEOF_INT),
-            new ArrayAttribute("mosaicId", Constants.Value.SIZEOF_INT),
+            new ArrayAttribute ("mosaicId", Constants.Value.SIZEOF_INT),
             new ScalarAttribute("numOptionalProperties", Constants.Value.SIZEOF_BYTE),
             new ScalarAttribute("flags", Constants.Value.SIZEOF_BYTE),
             new ScalarAttribute("divisibility", Constants.Value.SIZEOF_BYTE),
-            new ScalarAttribute("indicateDuration", Constants.Value.SIZEOF_BYTE),
-            new ArrayAttribute("duration", Constants.Value.SIZEOF_INT)
+            new TableArrayAttribute("optionalProperties", new List<SchemaAttribute>
+            {
+              new ScalarAttribute("mosaicPropertyId", Constants.Value.SIZEOF_BYTE),
+              new ArrayAttribute ("value", Constants.Value.SIZEOF_INT)
+            })
+
         })
         {
         }

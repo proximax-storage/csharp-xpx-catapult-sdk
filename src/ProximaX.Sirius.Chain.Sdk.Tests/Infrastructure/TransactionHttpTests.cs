@@ -67,7 +67,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string transactionHash = "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE";
+                const string transactionHash = "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D";
 
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
                 var agTx = (AggregateTransaction) transaction;

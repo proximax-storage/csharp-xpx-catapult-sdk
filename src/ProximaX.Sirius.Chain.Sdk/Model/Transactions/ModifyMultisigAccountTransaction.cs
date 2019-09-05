@@ -115,9 +115,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var modificationVector =
                 ModifyMultisigAccountTransactionBuffer.CreateModificationsVector(builder, modificationsArray);
 
-            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
-
+            // create version
+            var version = GetTxVersionSerialization();
 
             var fixedSize = HEADER_SIZE +
                 +1 // min approval
@@ -129,7 +128,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             ModifyMultisigAccountTransactionBuffer.AddSize(builder, (uint)fixedSize);
             ModifyMultisigAccountTransactionBuffer.AddSignature(builder, signatureVector);
             ModifyMultisigAccountTransactionBuffer.AddSigner(builder, signerVector);
-            ModifyMultisigAccountTransactionBuffer.AddVersion(builder, version);
+            ModifyMultisigAccountTransactionBuffer.AddVersion(builder,(uint) version);
             ModifyMultisigAccountTransactionBuffer.AddType(builder, TransactionType.GetValue());
             ModifyMultisigAccountTransactionBuffer.AddMaxFee(builder, feeVector);
             ModifyMultisigAccountTransactionBuffer.AddDeadline(builder, deadlineVector);

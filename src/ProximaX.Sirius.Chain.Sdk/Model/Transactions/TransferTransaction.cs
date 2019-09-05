@@ -15,9 +15,7 @@
 
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.Serialization;
-
 using FlatBuffers;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Buffers;

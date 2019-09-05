@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -115,36 +115,45 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 MosaicDefinitionTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var mosaicIdVector =
                 MosaicDefinitionTransactionBuffer.CreateMosaicIdVector(builder, MosaicId.Id.ToUInt8Array());
-            var mosaicPropertiesVector =
+            var optionalPropertiesVector =
                 MosaicDefinitionTransactionBuffer.CreateOptionalPropertiesVector(builder, mosaicProperties);
-            
-            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
 
-            var fixedSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * mosaicProperties.Length;
+            // create version
+            var version = (uint)GetTxVersionSerialization();
+
+            // header + nonce + id + numOptProp + flags + divisibility + (id + value)*numOptProp
+            var totalSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * mosaicProperties.Length;
 
             // add vectors to buffer
             MosaicDefinitionTransactionBuffer.StartMosaicDefinitionTransactionBuffer(builder);
-            MosaicDefinitionTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            MosaicDefinitionTransactionBuffer.AddSize(builder, (uint)totalSize);
             MosaicDefinitionTransactionBuffer.AddSignature(builder, signatureVector);
             MosaicDefinitionTransactionBuffer.AddSigner(builder, signerVector);
             MosaicDefinitionTransactionBuffer.AddVersion(builder, (uint)version);
             MosaicDefinitionTransactionBuffer.AddType(builder, TransactionType.GetValue());
             MosaicDefinitionTransactionBuffer.AddMaxFee(builder, feeVector);
             MosaicDefinitionTransactionBuffer.AddDeadline(builder, deadlineVector);
+
             MosaicDefinitionTransactionBuffer.AddMosaicNonce(builder, BitConverter.ToUInt32(MosaicNonce.Nonce, 0));
             MosaicDefinitionTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
-            MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, 1);
+            MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, (byte)mosaicProperties.Length);
             MosaicDefinitionTransactionBuffer.AddFlags(builder, flags);
             MosaicDefinitionTransactionBuffer.AddDivisibility(builder, (byte) Properties.Divisibility);
-            MosaicDefinitionTransactionBuffer.AddOptionalProperties(builder, mosaicPropertiesVector);
+            MosaicDefinitionTransactionBuffer.AddOptionalProperties(builder, optionalPropertiesVector);
 
             
              // Calculate size
             var codedMosaicDefinition = MosaicDefinitionTransactionBuffer.EndMosaicDefinitionTransactionBuffer(builder);
             builder.Finish(codedMosaicDefinition.Value);
 
-            return new MosaicDefinitionTransactionSchema().Serialize(builder.SizedByteArray());
+            // validate size
+            var output = new MosaicDefinitionTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
+          
         }
     }
 }

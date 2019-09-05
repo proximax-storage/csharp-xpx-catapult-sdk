@@ -120,7 +120,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
         /// </summary>
         internal async void LoopRead()
         {
-            while (true) _subject.OnNext(await ReadSocket());
+            try
+            {
+                while (true) _subject.OnNext(await ReadSocket());
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
+
         }
 
         /// <summary>
@@ -340,16 +348,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
 
             if (!transactionFromAddress && typeof(AggregateTransaction) == transaction.GetType())
             {
-                ((AggregateTransaction) transaction).Cosignatures?.ForEach(e =>
-                {
-                    if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkType).Plain == address.Plain)
-                        transactionFromAddress = true;
-                });
-                ((AggregateTransaction) transaction).InnerTransactions.ForEach(e =>
-                {
-                    if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkType).Plain == address.Plain)
-                        transactionFromAddress = true;
-                });
+                ((AggregateTransaction)transaction).Cosignatures?.ForEach(e =>
+               {
+                   if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkType).Plain == address.Plain)
+                       transactionFromAddress = true;
+               });
+                ((AggregateTransaction)transaction).InnerTransactions.ForEach(e =>
+               {
+                   if (Address.CreateFromPublicKey(e.Signer.PublicKey, address.NetworkType).Plain == address.Plain)
+                       transactionFromAddress = true;
+               });
             }
 
             return transactionFromAddress;
@@ -366,7 +374,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
             var isReceptor = false;
 
             if (transaction.TransactionType.GetValue() == TransactionType.TRANSFER.GetValue())
-                isReceptor = ((TransferTransaction) transaction).Recipient.Address.Plain == address.Plain;
+                isReceptor = ((TransferTransaction)transaction).Recipient.Address.Plain == address.Plain;
 
             return Address.CreateFromPublicKey(transaction.Signer.PublicKey, address.NetworkType).Plain ==
                    address.Plain || isReceptor;

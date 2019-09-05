@@ -20,7 +20,6 @@ using Newtonsoft.Json.Linq;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
-using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;

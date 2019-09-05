@@ -70,9 +70,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
             var remoteAccount = new PublicAccount(transaction["remoteAccountKey"].ToObject<string>(), network);
-            var linkAccount = AccountLinkActionExtension.GetRawValue(transaction["linkAction"].ToObject<int>());
+
+            var action = transaction["action"] ?? transaction["linkAction"];
+            var linkAction = AccountLinkActionExtension.GetRawValue(action.ToObject<int>());
+
             return new AccountLinkTransaction(network, txVersion, deadline, maxFee, TransactionType.LINK_ACCOUNT,
-              remoteAccount, linkAccount,signature,signer);
+              remoteAccount, linkAction, signature,signer);
         }
     }
 }

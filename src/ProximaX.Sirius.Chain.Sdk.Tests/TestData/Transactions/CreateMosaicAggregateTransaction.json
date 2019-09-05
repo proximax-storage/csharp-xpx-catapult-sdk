@@ -1,34 +1,34 @@
 ﻿{
   "meta": {
-    "height": [ 2567, 0 ],
-    "hash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
-    "merkleComponentHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
+    "height": [ 1520, 0 ],
+    "hash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
+    "merkleComponentHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
     "index": 0,
-    "id": "5CE927D74E38FD00013402ED"
+    "id": "5D71023B36C956000139FE38"
   },
   "transaction": {
-    "signature": "7AC16F7B21508F22C4279AE6D42826076D20B597FAD61F6539FAC45FBD0388CCDFBCA429A61915087B7252ABB45DAD7DFC5C3A8495991CABCB11552EC5A7F300",
-    "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
-    "version": 36866,
+    "signature": "1E6C6F24A78DC64298C5D78F1A74871076889C879C57E9FD86AC1EDFDB349945834B7AAAFB8E9DE90C882C770BAB4F8B81FD108DFDFD4D9613F0BB298C59840D",
+    "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
+    "version": -1879048190,
     "type": 16705,
     "maxFee": [ 0, 0 ],
-    "deadline": [ 534487082, 23 ],
+    "deadline": [ 847822775, 25 ],
     "cosignatures": [],
     "transactions": [
       {
         "meta": {
-          "height": [ 2567, 0 ],
-          "aggregateHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
-          "aggregateId": "5CE927D74E38FD00013402ED",
+          "height": [ 1520, 0 ],
+          "aggregateHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
+          "aggregateId": "5D71023B36C956000139FE38",
           "index": 0,
-          "id": "5CE927D74E38FD00013402EE"
+          "id": "5D71023B36C956000139FE39"
         },
         "transaction": {
-          "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
-          "version": 36867,
+          "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
+          "version": -1879048189,
           "type": 16717,
-          "mosaicNonce": 1314064558,
-          "mosaicId": [ 4173744509, 1898199047 ],
+          "mosaicNonce": 216775253,
+          "mosaicId": [ 3545691576, 1549121704 ],
           "properties": [
             {
               "id": 0,
@@ -47,17 +47,17 @@
       },
       {
         "meta": {
-          "height": [ 2567, 0 ],
-          "aggregateHash": "72CA2DA47931D995887592E3E9A93719DED92A12452655F1E88811CD2602ADCE",
-          "aggregateId": "5CE927D74E38FD00013402ED",
+          "height": [ 1520, 0 ],
+          "aggregateHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
+          "aggregateId": "5D71023B36C956000139FE38",
           "index": 1,
-          "id": "5CE927D74E38FD00013402EF"
+          "id": "5D71023B36C956000139FE3A"
         },
         "transaction": {
-          "signer": "0EB448D07C7CCB312989AC27AA052738FF589E2F83973F909B506B450DC5C4E2",
-          "version": 36866,
+          "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
+          "version": -1879048190,
           "type": 16973,
-          "mosaicId": [ 4173744509, 1898199047 ],
+          "mosaicId": [ 3545691576, 1549121704 ],
           "direction": 1,
           "delta": [ 1000000, 0 ]
         }

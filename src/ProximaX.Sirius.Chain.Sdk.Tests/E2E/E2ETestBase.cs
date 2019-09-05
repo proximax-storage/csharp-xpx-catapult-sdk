@@ -1,12 +1,11 @@
 ﻿using ProximaX.Sirius.Chain.Sdk.Client;
-using ProximaX.Sirius.Chain.Sdk.Infrastructure;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Tests.Utils;
 using System;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
@@ -22,9 +21,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         protected readonly string GenerationHash;
 
-        public E2ETestBase()
-        {
+        protected readonly ITestOutputHelper Log;
 
+        public E2ETestBase(ITestOutputHelper log)
+        {
+            Log = log;
             var env = GetEnvironment();
 
             SiriusClient = new SiriusClient(env.BaseUrl);

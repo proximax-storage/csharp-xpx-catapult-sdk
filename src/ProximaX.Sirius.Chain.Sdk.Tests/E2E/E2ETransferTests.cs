@@ -16,12 +16,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
     public class E2ETransferTests: E2ETestBase, IDisposable
     {
        
-        private readonly ITestOutputHelper Log;
+       
 
-        public E2ETransferTests(ITestOutputHelper log)
+        public E2ETransferTests(ITestOutputHelper log): base(log)
         {
-
-            Log = log;
             SiriusWebSocketClient.Listener.Open().Wait();
         }
 
