@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
+using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -251,14 +254,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             mosaicInfo.Supply.Should().Be(expectedAmount);
 
         }
-        /*
+        
         [Fact]
         public async Task Should_Link_Namespace_To_Mosaic()
         {
             #region Create mosaic
             var NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
 
-            var account = await _fixture.GenerateAccountAndSendSomeMoney(1000);
+            var account = SeedAccount;
 
             var nonce = MosaicNonce.CreateRandom();
 
@@ -338,7 +341,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var expectedId = new NamespaceId(namespaceName);
 
-            var nsInfo = await SiriusClient.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
+            var nsInfo = await SiriusClient.NamespaceHttp.GetNamespace(expectedId);
 
             Log.WriteLine(
                 $"Retrieved namespace {namespaceName} successfully. The namespace HexId {nsInfo.Id.HexId}");
@@ -413,19 +416,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             #endregion
         }
 
-        internal void WatchForFailure(SignedTransaction transaction)
-        {
-            SiriusWebSocketClient.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, SiriusClient.NetworkHttp.GetNetworkType().Wait()))
-                .Subscribe(
-                    e =>
-                    {
-                        Log.WriteLine($"Transaction status {e.Hash} - {e.Status}");
-                    },
-                    err =>
-                    {
-                        Log.WriteLine($"Transaction error - {err}");
-                    });
-        }
 
         internal void WatchForNewBlock()
         {
@@ -442,6 +432,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                         SiriusWebSocketClient.Listener.Close();
 
                     });
-        }*/
+        }
     }
 }
