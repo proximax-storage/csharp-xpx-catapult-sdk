@@ -157,8 +157,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 modificationVectors[i] = PropertyModificationBuffer.EndPropertyModificationBuffer(builder);
             }
 
-            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
             var signatureVector = AccountPropertiesTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = AccountPropertiesTransactionBuffer.CreateSignerVector(builder, GetSigner());
@@ -175,7 +175,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             AccountPropertiesTransactionBuffer.AddSize(builder, (uint) fixedSize);
             AccountPropertiesTransactionBuffer.AddSignature(builder, signatureVector);
             AccountPropertiesTransactionBuffer.AddSigner(builder, signerVector);
-            AccountPropertiesTransactionBuffer.AddVersion(builder, version);
+            AccountPropertiesTransactionBuffer.AddVersion(builder,(uint)version);
             AccountPropertiesTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AccountPropertiesTransactionBuffer.AddMaxFee(builder, feeVector);
             AccountPropertiesTransactionBuffer.AddDeadline(builder, deadlineVector);

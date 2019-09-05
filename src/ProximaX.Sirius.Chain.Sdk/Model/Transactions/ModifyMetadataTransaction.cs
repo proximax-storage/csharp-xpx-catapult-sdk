@@ -195,9 +195,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 modificationVectors[i] = MetadataModificationBuffer.EndMetadataModificationBuffer(builder);
             }
 
-
-            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
             var signatureVector = ModifyMetadataTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = ModifyMetadataTransactionBuffer.CreateSignerVector(builder, GetSigner());
@@ -229,7 +228,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             ModifyMetadataTransactionBuffer.AddSize(builder, (uint) fixedSize);
             ModifyMetadataTransactionBuffer.AddSignature(builder, signatureVector);
             ModifyMetadataTransactionBuffer.AddSigner(builder, signerVector);
-            ModifyMetadataTransactionBuffer.AddVersion(builder, version);
+            ModifyMetadataTransactionBuffer.AddVersion(builder, (uint)version);
             ModifyMetadataTransactionBuffer.AddType(builder, TransactionType.GetValue());
             ModifyMetadataTransactionBuffer.AddMaxFee(builder, feeVector);
             ModifyMetadataTransactionBuffer.AddDeadline(builder, deadlineVector);

@@ -93,9 +93,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 MosaicSupplyChangeTransactionBuffer.CreateMosaicIdVector(builder, MosaicId.Id.ToUInt8Array());
             var deltaVector = MosaicSupplyChangeTransactionBuffer.CreateDeltaVector(builder, Delta.ToUInt8Array());
 
-            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
-
+            // create version
+            var version = GetTxVersionSerialization();
 
             int fixedSize = HEADER_SIZE
                 + 8 //mosaic id, 

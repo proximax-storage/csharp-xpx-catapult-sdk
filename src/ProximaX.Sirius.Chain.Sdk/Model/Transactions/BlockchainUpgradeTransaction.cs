@@ -49,8 +49,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             var builder = new FlatBufferBuilder(1);
 
-            var version = uint.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-               NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
             var signatureVector = CatapultUpgradeTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = CatapultUpgradeTransactionBuffer.CreateSignerVector(builder, GetSigner());
@@ -69,7 +69,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             CatapultUpgradeTransactionBuffer.AddSize(builder, (uint)fixedSize);
             CatapultUpgradeTransactionBuffer.AddSignature(builder, signatureVector);
             CatapultUpgradeTransactionBuffer.AddSigner(builder, signerVector);
-            CatapultUpgradeTransactionBuffer.AddVersion(builder, version);
+            CatapultUpgradeTransactionBuffer.AddVersion(builder, (uint)version);
             CatapultUpgradeTransactionBuffer.AddType(builder, TransactionType.GetValue());
             CatapultUpgradeTransactionBuffer.AddMaxFee(builder, feeVector);
             CatapultUpgradeTransactionBuffer.AddDeadline(builder, deadlineVector);
