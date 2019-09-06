@@ -67,7 +67,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.SECURED_MESSAGE.GetValueInByte());
         }
 
-        private async Task<Transaction> Transfer(Account from,Address to, Mosaic mosaic, IMessage message, string generationHash)
+        /*private async Task<Transaction> Transfer(Account from,Address to, Mosaic mosaic, IMessage message, string generationHash)
         {
            
             var transferTransaction = TransferTransaction.Create(
@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var result = await tx;
 
             return result;
-        }
+        }*/
 
         private async Task<Transaction> AggregateTransfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
         {

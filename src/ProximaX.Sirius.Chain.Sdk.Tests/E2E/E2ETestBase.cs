@@ -1,10 +1,14 @@
 ﻿using ProximaX.Sirius.Chain.Sdk.Client;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
 using ProximaX.Sirius.Chain.Sdk.Tests.Utils;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
@@ -63,6 +67,44 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var seedAccountPK = TestHelper.GetConfig()[$"Environments:{env}:SeedAccountPrivateKey"]; 
             return new TestEnvironment(host, protocol, Convert.ToInt32(port), generationHash,seedAccountPK);
 
+        }
+
+        protected async Task<Account> GenerateAccountWithCurrency(ulong amount)
+        {
+            var account = Account.GenerateNewAccount(NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateRelative(amount);
+            var message = PlainMessage.Create("Send some money");
+            var tx = await Transfer(SeedAccount, account.Address, mosaic, message, GenerationHash);
+
+            return account;
+        }
+
+        protected async Task<Transaction> Transfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
+        {
+
+            var transferTransaction = TransferTransaction.Create(
+                Deadline.Create(),
+                Recipient.From(to),
+                new List<Mosaic>()
+                {
+                 mosaic
+                },
+                message,
+                NetworkType);
+
+            var signedTransaction = from.Sign(transferTransaction, generationHash);
+
+            WatchForFailure(signedTransaction);
+
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+
+            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
+
+            await SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+
+            return result;
         }
 
         protected void WatchForFailure(SignedTransaction transaction)

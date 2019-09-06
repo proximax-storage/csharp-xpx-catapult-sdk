@@ -167,9 +167,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             // header, ns type, duration, ns id, name size, name
             int fixedSize = HEADER_SIZE + 1 + 8 + 8 + 1 + NamespaceName.Length;
-
-            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+           
+            // create version
+            var version = GetTxVersionSerialization();
 
             var name = builder.CreateString(NamespaceName);
 

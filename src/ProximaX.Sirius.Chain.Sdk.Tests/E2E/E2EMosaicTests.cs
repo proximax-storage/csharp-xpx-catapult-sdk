@@ -259,9 +259,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         public async Task Should_Link_Namespace_To_Mosaic()
         {
             #region Create mosaic
-            var NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
-
-            var account = SeedAccount;
+          
+            var account = await GenerateAccountWithCurrency(1500);
 
             var nonce = MosaicNonce.CreateRandom();
 
@@ -411,7 +410,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             Log.WriteLine($"Account {newAccountInfo.Address.Plain} with mosaic {newAccountInfo.Mosaics[0]} after transfer to the namespace alias");
 
             var expectedMosaicAmount = Convert.ToUInt64(10);
-            newAccountInfo.Mosaics[0].Id.Should().Be(mosaicInfo.MosaicId.Id);
+            newAccountInfo.Mosaics[0].Id.Id.Should().Be(mosaicInfo.MosaicId.Id);
             newAccountInfo.Mosaics[0]?.Amount.Should().Be(expectedMosaicAmount);
             #endregion
         }
