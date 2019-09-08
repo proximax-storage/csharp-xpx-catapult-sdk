@@ -13,32 +13,55 @@ using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
-    public class E2ETestBase
+    public class E2EBaseFixture: IDisposable
     {
-        protected readonly SiriusClient SiriusClient;
+        public readonly SiriusClient SiriusClient;
 
-        protected readonly SiriusWebSocketClient SiriusWebSocketClient;
+        public readonly SiriusWebSocketClient SiriusWebSocketClient;
 
-        protected readonly NetworkType NetworkType;
+        public readonly NetworkType NetworkType;
 
-        protected readonly Account SeedAccount;
+        public readonly Account SeedAccount;
+        public Account MultiSigAccount;
+        public Account Cosignatory1;
+        public Account Cosignatory2;
+        public Account Cosignatory3;
+        public Account Cosignatory4;
+        public readonly string GenerationHash;
 
-        protected readonly string GenerationHash;
+   
 
-        protected readonly ITestOutputHelper Log;
-
-        public E2ETestBase(ITestOutputHelper log)
+        public E2EBaseFixture()
         {
-            Log = log;
+          
             var env = GetEnvironment();
 
             SiriusClient = new SiriusClient(env.BaseUrl);
-            SiriusWebSocketClient = new SiriusWebSocketClient(env.Host, env.Port);
-            NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
-            SeedAccount = Account.CreateFromPrivateKey(env.SeedAccountPK, NetworkType);
             GenerationHash = SiriusClient.BlockHttp.GetGenerationHash().Wait();
+            SiriusWebSocketClient = new SiriusWebSocketClient(env.Host, env.Port);
+            SiriusWebSocketClient.Listener.Open().Wait();
+
+            NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
+
+            SeedAccount = Account.CreateFromPrivateKey(env.SeedAccountPK, NetworkType);
+
+            Task.Run(() => InitializeAccounts()).Wait();
+
         }
 
+        public void Dispose()
+        {
+            SiriusWebSocketClient.Listener.Close();
+        }
+
+        private async Task InitializeAccounts()
+        {
+            MultiSigAccount = await GenerateAccountWithCurrency(1000);
+            Cosignatory1 = await GenerateAccountWithCurrency(1000);
+            Cosignatory2 = Account.GenerateNewAccount(NetworkType);
+            Cosignatory3 = Account.GenerateNewAccount(NetworkType);
+            Cosignatory4 = Account.GenerateNewAccount(NetworkType);
+        }
 
         private TestEnvironment GetEnvironment()
         {
@@ -69,7 +92,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         }
 
-        protected async Task<Account> GenerateAccountWithCurrency(ulong amount)
+        public async Task<Account> GenerateAccountWithCurrency(ulong amount)
         {
             var account = Account.GenerateNewAccount(NetworkType);
             var mosaic = NetworkCurrencyMosaic.CreateRelative(amount);
@@ -79,7 +102,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             return account;
         }
 
-        protected async Task<Transaction> Transfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
+        public async Task<Transaction> Transfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
         {
 
             var transferTransaction = TransferTransaction.Create(
@@ -96,7 +119,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             WatchForFailure(signedTransaction);
 
-            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+            //Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
             var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
 
@@ -107,7 +130,93 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             return result;
         }
 
-        protected void WatchForFailure(SignedTransaction transaction)
+        public async Task<Transaction> AggregateTransfer(Account from, Address to, Mosaic mosaic, IMessage message, string GenerationHash)
+        {
+
+            var transferTransaction = TransferTransaction.Create(
+                Deadline.Create(),
+                Recipient.From(to),
+                new List<Mosaic>()
+                {
+                 mosaic
+                },
+                message,
+                NetworkType);
+
+            var aggregateTransaction = AggregateTransaction.CreateComplete(
+                Deadline.Create(),
+                new List<Transaction>
+                {
+                    transferTransaction.ToAggregate(from.PublicAccount)
+                }, NetworkType);
+
+            var signedTransaction = from.Sign(aggregateTransaction, GenerationHash);
+
+            WatchForFailure(signedTransaction);
+
+         
+            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
+
+            await  SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+
+            return result;
+        }
+
+        public async Task<MosaicId> CreateMosaic(Account account)
+        {
+            var nonce = MosaicNonce.CreateRandom();
+            var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
+               
+            var mosaicDefinitionTransaction = MosaicDefinitionTransaction.Create(
+                nonce,
+                mosaicId,
+                Deadline.Create(),
+                MosaicProperties.Create(
+                    supplyMutable: true,
+                    transferable: true,
+                    levyMutable: false,
+                    divisibility: 0,
+                    duration: 1000
+                ),
+                NetworkType);
+        
+            var mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.Create(
+              Deadline.Create(),
+              mosaicDefinitionTransaction.MosaicId,
+              MosaicSupplyType.INCREASE,
+              1000000,
+              NetworkType);
+
+            var aggregateTransaction = AggregateTransaction.CreateComplete(
+               Deadline.Create(),
+               new List<Transaction>
+               {
+                       mosaicDefinitionTransaction.ToAggregate(account.PublicAccount),
+                       mosaicSupplyChangeTransaction.ToAggregate(account.PublicAccount)
+               },
+               NetworkType);
+
+            var signedTransaction = account.Sign(aggregateTransaction, GenerationHash);
+
+            WatchForFailure(signedTransaction);
+
+      
+
+            var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+                .Timeout(TimeSpan.FromSeconds(3000));
+
+            await SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+
+
+            return mosaicId;
+        }
+
+
+        public void WatchForFailure(SignedTransaction transaction)
         {
             SiriusWebSocketClient.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType))
                 .Subscribe(
@@ -115,6 +224,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     {
                         Console.WriteLine(e.Status);
 
+                    });
+        }
+
+        public void WatchForFailure(CosignatureSignedTransaction transaction)
+        {
+            SiriusWebSocketClient.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, NetworkType))
+                .Subscribe(
+                    e =>
+                    {
+                        Console.WriteLine(e.Status);
                     });
         }
     }

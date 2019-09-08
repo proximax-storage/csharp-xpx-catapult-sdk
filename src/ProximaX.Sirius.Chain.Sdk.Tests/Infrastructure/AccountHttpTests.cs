@@ -204,7 +204,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var account = PublicAccount.CreateFromPublicKey("B00D4317CC4FEB2976DF3EBEEF6A788B769F6F37B61883F24282ACA034C15DDF", NetworkType.MIJIN_TEST);
+                var account = PublicAccount.CreateFromPublicKey("D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B", NetworkType.MIJIN_TEST);
 
                 var transactions = await _accountHttp.OutgoingTransactions(account, new QueryParams(10, "", Order.DESC));
 

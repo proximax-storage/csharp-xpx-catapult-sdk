@@ -80,8 +80,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 ? new List<AccountPropertyModification<Address>>()
                 : modifications.Select(e =>
                 {
+                    var mt = e["modificationType"] ?? e["type"];
                     var modificationType =
-                        PropertyModificationTypeExtension.GetRawValue(e["modificationType"].ToObject<int>());
+                        PropertyModificationTypeExtension.GetRawValue(mt.ToObject<int>());
                     var value = Address.CreateFromHex(e["value"].ToObject<string>());
                     var modification = new AccountPropertyModification<Address>(modificationType,
                         value);

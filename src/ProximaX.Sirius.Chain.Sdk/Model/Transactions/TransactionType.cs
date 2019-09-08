@@ -106,7 +106,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         MODIFY_ADDRESS_METADATA = 0x413D,
 
-        /// <summary>
+        /// <summary>434E
         ///     Modify mosaic related metadata transaction type
         /// </summary>
         MODIFY_MOSAIC_METADATA = 0x423D,

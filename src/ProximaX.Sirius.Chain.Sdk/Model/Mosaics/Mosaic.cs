@@ -14,6 +14,7 @@
 
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 {
@@ -64,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <summary>
         ///     The mosaic hex Id
         /// </summary>
-        public string HexId => Id.HexId; //.ToHex();
+        public string HexId => Id.Id.ToHex(); //.ToHex();
 
         /// <summary>
         ///     The mosaic amount

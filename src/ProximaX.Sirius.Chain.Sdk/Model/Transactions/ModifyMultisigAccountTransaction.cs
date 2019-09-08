@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // Create modifications vector
             var modificationsArray = new Offset<CosignatoryModificationBuffer>[Modifications.Count];
 
-            for (var index = 0; index < Modifications.Count; index++)
+            for (var index = 0; index < Modifications.Count; ++index)
             {
                 var modification = Modifications[index];
 

@@ -15,6 +15,7 @@
 using System;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 {
@@ -35,6 +36,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         ///     The network currency mosaic
         /// </summary>
         public new static IUInt64Id Id = new NamespaceId(NetworkCurrencyMosaicHex);
+
 
         /// <summary>
         ///     The network currency mosaic divisibility

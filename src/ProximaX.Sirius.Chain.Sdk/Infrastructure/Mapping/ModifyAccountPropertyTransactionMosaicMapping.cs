@@ -79,9 +79,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 ? new List<AccountPropertyModification<IUInt64Id>>()
                 : modifications.Select(e =>
                 {
+                    var mt = e["modificationType"] ?? e["type"];
                     var modificationType =
-                        PropertyModificationTypeExtension.GetRawValue(e["modificationType"].ToObject<int>());
-                    var mosaicId = new MosaicId(e["value"].ToObject<UInt64DTO>().ToUInt64());
+                        PropertyModificationTypeExtension.GetRawValue(mt.ToObject<int>());
+                      var mosaicId = new MosaicId(e["value"].ToObject<UInt64DTO>().ToUInt64());
                     var modification = new AccountPropertyModification<IUInt64Id>(modificationType,
                         mosaicId);
                     return modification;

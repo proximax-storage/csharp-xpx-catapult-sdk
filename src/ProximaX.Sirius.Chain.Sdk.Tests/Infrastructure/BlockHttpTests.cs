@@ -56,14 +56,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             using (var httpTest = new HttpTest())
             {
                 var fakeJson =
-                    TestHelper.LoadJsonFileToObject(@"Testdata\\Block\\GetBlockTransaction.json");
+                    TestHelper.LoadJsonFileToArray(@"Testdata\\Block\\GetBlockTransaction.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var transactions = await _blockchainHttp.GetBlockTransactions(12423);
+                var transactions = await _blockchainHttp.GetBlockTransactions(7279);
                 transactions.Should().HaveCountGreaterThan(0);
-                transactions[0].TransactionType.Should().Be(TransactionType.LINK_ACCOUNT);
-                transactions[0].TransactionInfo.Hash.Should().BeEquivalentTo("A31CEDA95DE3FE97B551D1AA56A7282F5A54780BD670FFD42D7876AD984520E0");
+                transactions[0].TransactionType.Should().Be(TransactionType.MOSAIC_ALIAS);
+                transactions[0].TransactionInfo.Hash.Should().BeEquivalentTo("4B34BE7C58DC23A6C75CB38F18AB4C3749FCDA68D9B686975996606398EDDFF8");
                 transactions[0].NetworkType.Should().Be(NetworkType.MIJIN_TEST);
             }
         }

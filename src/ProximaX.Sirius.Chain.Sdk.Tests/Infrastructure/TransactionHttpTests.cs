@@ -85,7 +85,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string transactionHash = "549E6C78D2708CC6BA14DEB6D7F313A4E130A4655C2DCCD723EED4B6ECAA81AF";
+                const string transactionHash = "EE59F16783514F00C5B0E6F46E528BDE8170DD27D38C54DB2A82815D1407A52C";
 
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
                 
@@ -102,7 +102,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string transactionHash = "EE038F41EDE24587C98E234675026DECA6625F77DA818F9FEA3BE56BCEB073E6";
+                const string transactionHash = "4B34BE7C58DC23A6C75CB38F18AB4C3749FCDA68D9B686975996606398EDDFF8";
 
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
 
@@ -122,7 +122,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string transactionHash = "79463E18A0F91B9D191E058037B0AF3A3B9003F9BA1B94B6A4A8CFE6AADE7C27";
+                const string transactionHash = "A8472B76CE1C0D052F75C294E7194C16A73AA618750EE7FCEB059FB4AE10540B";
 
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
 
@@ -135,7 +135,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_Transfer_Transaction_With_Secure_Message()
         {
-            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
 
             using (var httpTest = new HttpTest())
             {
@@ -143,9 +143,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string transactionHash = "68B465D832DD2FE6976414FE3D7F645DFA438051760C5C20DF42B75D3560D2AC";
-                const string receiverPrivateKey = "DBD900D56FF058729079B97A0E447FA4DED723D74C8081632C08F6CE49CAC9C0";
-                const string senderPublicKey = "95de2ffdcc397bb9688da28a18a70fdd23f4ce2ef4240a4a7b6baf5dfa07e5dc";
+                const string transactionHash = "1C296D86E85C0C80981FCD8302A96E41D9229316E1EE329E7BFECC4BF0282120";
+                const string receiverPrivateKey = "EA947AB9CA50C31CFCD60B2C172173EAA7B0C56B173DDF235078A9A59AD218C5";
+                const string senderPublicKey = "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B";
                 var transaction = await transactionHttp.GetTransaction(transactionHash);
 
                 transaction.Should().BeOfType<TransferTransaction>();
@@ -155,7 +155,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 var securedMessage = (SecureMessage)transferTransaction.Message;
                 var payload = securedMessage.DecryptPayload(receiverPrivateKey, senderPublicKey);
-                payload.Should().BeEquivalentTo("Hi Thomas");
+                payload.Should().BeEquivalentTo("Test secure message");
                 
             }
         }

@@ -99,6 +99,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 LockFundsTransactionBuffer.CreateMosaicAmountVector(builder, Mosaic.Amount.ToUInt8Array());
             var durationVector = LockFundsTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());
             var hashVector = LockFundsTransactionBuffer.CreateHashVector(builder, Transaction.Hash.FromHex());
+            
             // create version
             var version = GetTxVersionSerialization();
 

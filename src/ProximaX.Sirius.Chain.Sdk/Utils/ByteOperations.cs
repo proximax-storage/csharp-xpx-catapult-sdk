@@ -60,6 +60,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
             };
         }
 
+        public static int[] ToInt8Array(this ulong src)
+        {
+            return new[]
+            {
+                (int) src,
+                (int) (src >> 32)
+            };
+        }
+
         public static ulong FromUInt8Array(this uint[] src)
         {
             var s1 = Convert.ToUInt32(src[0]);

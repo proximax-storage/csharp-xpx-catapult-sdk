@@ -79,8 +79,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 ? new List<AccountPropertyModification<TransactionType>>()
                 : modifications.Select(e =>
                 {
+                    var mt = e["modificationType"] ?? e["type"];
                     var modificationType =
-                        PropertyModificationTypeExtension.GetRawValue(e["modificationType"].ToObject<int>());
+                        PropertyModificationTypeExtension.GetRawValue(mt.ToObject<int>());
                     var value = TransactionTypeExtension.GetRawValue(e["value"].ToObject<int>());
                     var modification = new AccountPropertyModification<TransactionType>(modificationType,
                         value);
