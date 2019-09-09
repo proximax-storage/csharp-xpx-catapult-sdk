@@ -107,7 +107,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
 
                 transaction.Should().BeOfType<AliasTransaction>();
-                transaction.TransactionType.Should().BeEquivalentTo(TransactionType.MOSAIC_ALIAS);
+                transaction.TransactionType.Should().BeEquivalentTo(EntityType.MOSAIC_ALIAS);
                 ((AliasTransaction)transaction).MosaicId.Should().NotBeNull();
             }
         }
@@ -127,7 +127,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var transaction = await _transactionHttp.GetTransaction(transactionHash);
 
                 transaction.Should().BeOfType<AliasTransaction>();
-                transaction.TransactionType.Should().BeEquivalentTo(TransactionType.ADDRESS_ALIAS);
+                transaction.TransactionType.Should().BeEquivalentTo(EntityType.ADDRESS_ALIAS);
                 ((AliasTransaction) transaction).Address.Should().NotBeNull();
             }
         }

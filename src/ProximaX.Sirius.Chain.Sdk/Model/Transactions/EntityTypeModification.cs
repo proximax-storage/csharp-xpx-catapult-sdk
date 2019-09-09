@@ -23,7 +23,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     /// <summary>
     ///     Class EntityTypeModification
     /// </summary>
-    public class EntityTypeModification : ModifyAccountPropertyTransaction<TransactionType>
+    public class EntityTypeModification : ModifyAccountPropertyTransaction<EntityType>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="EntityTypeModification" /> class.
@@ -39,11 +39,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="transactionInfo"></param>
         public EntityTypeModification(NetworkType networkType, int version, Deadline deadline,
             PropertyType propertyType,
-            IList<AccountPropertyModification<TransactionType>> propertyModifications,
+            IList<AccountPropertyModification<EntityType>> propertyModifications,
             ulong? maxFee,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(networkType, version,
-            TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, deadline, propertyType,
+            EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, deadline, propertyType,
             propertyModifications, maxFee, signature, signer, transactionInfo)
         {
         }
@@ -53,7 +53,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="mod">The modification property</param>
         /// <returns>byte[]</returns>
-        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<TransactionType> mod)
+        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<EntityType> mod)
         {
             const int valueByteLength = 2;
 

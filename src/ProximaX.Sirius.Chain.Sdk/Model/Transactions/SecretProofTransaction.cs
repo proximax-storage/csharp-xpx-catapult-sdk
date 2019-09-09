@@ -29,7 +29,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public SecretProofTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             HashType hashType,Recipient recipient, string secret, string proof, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.SECRET_PROOF, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.SECRET_PROOF, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Guard.NotNullOrEmpty(secret, "Secret must not be null");
@@ -79,7 +79,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static SecretProofTransaction Create(Deadline deadline, HashType hashType,Recipient recipient, string secret, string proof,
             NetworkType networkType)
         {
-            return new SecretProofTransaction(networkType, TransactionVersion.SECRET_PROOF.GetValue(),
+            return new SecretProofTransaction(networkType, EntityVersion.SECRET_PROOF.GetValue(),
                 deadline, 0, hashType, recipient, secret, proof);
         }
 

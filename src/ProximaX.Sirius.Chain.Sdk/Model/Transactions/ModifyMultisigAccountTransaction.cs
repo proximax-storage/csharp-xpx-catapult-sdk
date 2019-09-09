@@ -43,7 +43,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public ModifyMultisigAccountTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications,
             string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MODIFY_MULTISIG_ACCOUNT, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MODIFY_MULTISIG_ACCOUNT, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             MinApprovalDelta = minApprovalDelta;
@@ -82,7 +82,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             int minRemovalDelta, List<MultisigCosignatoryModification> modifications, NetworkType networkType)
         {
             return new ModifyMultisigAccountTransaction(networkType,
-                TransactionVersion.MODIFY_MULTISIG_ACCOUNT.GetValue(),
+                EntityVersion.MODIFY_MULTISIG_ACCOUNT.GetValue(),
                 deadline, 0L, minApprovalDelta, minRemovalDelta, modifications);
         }
 

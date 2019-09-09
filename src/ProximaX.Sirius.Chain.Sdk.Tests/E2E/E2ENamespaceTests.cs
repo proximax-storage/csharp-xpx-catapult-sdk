@@ -108,7 +108,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            result.TransactionType.Should().BeEquivalentTo(TransactionType.AGGREGATE_COMPLETE);
+            result.TransactionType.Should().BeEquivalentTo(EntityType.AGGREGATE_COMPLETE);
 
             /*
             var rootNsInfo = await Fixture.SiriusClient.NamespaceHttp.GetNamespace(rootId).Timeout(_fixture.DefaultTimeout);

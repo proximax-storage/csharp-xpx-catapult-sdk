@@ -44,7 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
             ulong? maxFee,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(networkType, version,
-            TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC, deadline, propertyType,
+            EntityType.MODIFY_ACCOUNT_PROPERTY_MOSAIC, deadline, propertyType,
             propertyModifications, maxFee, signature, signer, transactionInfo)
         {
         }

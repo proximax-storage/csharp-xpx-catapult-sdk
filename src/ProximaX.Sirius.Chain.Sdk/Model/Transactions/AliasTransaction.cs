@@ -33,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public AliasActionType AliasActionType;
 
         public AliasTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-            TransactionType transactionType, NamespaceId namespaceId, AliasActionType actionType,
+            EntityType transactionType, NamespaceId namespaceId, AliasActionType actionType,
             MosaicId mosaicId = null, Address address = null, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null)
             : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
@@ -70,8 +70,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (mosaicId == null)
                 throw new ArgumentNullException(nameof(mosaicId));
 
-            return new AliasTransaction(networkType, TransactionVersion.MOSAIC_ALIAS.GetValue(),
-                deadline, 0, TransactionType.MOSAIC_ALIAS, namespaceId, actionType, mosaicId);
+            return new AliasTransaction(networkType, EntityVersion.MOSAIC_ALIAS.GetValue(),
+                deadline, 0, EntityType.MOSAIC_ALIAS, namespaceId, actionType, mosaicId);
         }
 
         public static AliasTransaction CreateForAddress(Address address, NamespaceId namespaceId,
@@ -84,8 +84,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
-            return new AliasTransaction(networkType, TransactionVersion.ADDRESS_ALIAS.GetValue(),
-                deadline, 0, TransactionType.ADDRESS_ALIAS, namespaceId, actionType, null, address);
+            return new AliasTransaction(networkType, EntityVersion.ADDRESS_ALIAS.GetValue(),
+                deadline, 0, EntityType.ADDRESS_ALIAS, namespaceId, actionType, null, address);
         }
 
         internal override byte[] GenerateBytes()

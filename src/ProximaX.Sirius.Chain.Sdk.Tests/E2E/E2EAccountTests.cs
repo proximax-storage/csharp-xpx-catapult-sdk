@@ -74,7 +74,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var address = Address.CreateFromRawAddress(recipientAddress);
 
             var mosaicAmounts = (from TransferTransaction t in outgoingTxs
-                                 where t.TransactionType == TransactionType.TRANSFER &&
+                                 where t.TransactionType == EntityType.TRANSFER &&
                                        t.Recipient.Address.Plain == address.Plain &&
                                        t.Mosaics.Count == 1 && 
                                        t.Mosaics[0].HexId == NetworkCurrencyMosaic.Id.HexId
@@ -201,15 +201,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         {
             var company = Account.GenerateNewAccount(Fixture.NetworkType);
 
-            var allowedTransType = TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE;
+            var allowedTransType = EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE;
 
-            var accountFilter = ModifyAccountPropertyTransaction<TransactionType>.CreateForEntityType(
+            var accountFilter = ModifyAccountPropertyTransaction<EntityType>.CreateForEntityType(
                 Deadline.Create(),
                 (ulong)0,
                 PropertyType.ALLOW_TRANSACTION,
-                new List<AccountPropertyModification<TransactionType>>()
+                new List<AccountPropertyModification<EntityType>>()
                 {
-                    new AccountPropertyModification<TransactionType>(PropertyModificationType.ADD, allowedTransType)
+                    new AccountPropertyModification<EntityType>(PropertyModificationType.ADD, allowedTransType)
                 },
                 Fixture.NetworkType);
 
@@ -237,7 +237,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 accountProperties.AccountProperties.Properties.Single(ap =>
                     ap.PropertyType == PropertyType.ALLOW_TRANSACTION);
             var allowedTxType = allowedTransactionProperty.Values.Select(p =>
-                TransactionTypeExtension.GetRawValue((int)p) == allowedTransType);
+                EntityTypeExtension.GetRawValue((int)p) == allowedTransType);
             allowedTxType.Should().NotBeNull();
 
         }

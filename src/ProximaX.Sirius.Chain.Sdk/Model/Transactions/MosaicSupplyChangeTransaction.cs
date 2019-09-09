@@ -40,7 +40,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public MosaicSupplyChangeTransaction(NetworkType networkType, int version, Deadline deadline, ulong maxFee,
             MosaicId mosaicId, MosaicSupplyType mosaicSupplyType, ulong delta, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MOSAIC_SUPPLY_CHANGE, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MOSAIC_SUPPLY_CHANGE, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             MosaicId = mosaicId;
@@ -77,7 +77,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static MosaicSupplyChangeTransaction Create(Deadline deadline, MosaicId mosaicId,
             MosaicSupplyType mosaicSupplyType, ulong delta, NetworkType networkType)
         {
-            return new MosaicSupplyChangeTransaction(networkType, TransactionVersion.MOSAIC_SUPPLY_CHANGE.GetValue(),
+            return new MosaicSupplyChangeTransaction(networkType, EntityVersion.MOSAIC_SUPPLY_CHANGE.GetValue(),
                 deadline, 0, mosaicId, mosaicSupplyType, delta);
         }
 

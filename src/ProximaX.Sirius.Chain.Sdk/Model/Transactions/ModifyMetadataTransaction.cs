@@ -49,7 +49,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        public ModifyMetadataTransaction(NetworkType networkType, int version, TransactionType transactionType,
+        public ModifyMetadataTransaction(NetworkType networkType, int version, EntityType transactionType,
             Deadline deadline, ulong? maxFee,
             MetadataType metadataType, ulong? metadataId, Address address = null,
             IList<MetadataModification> modifications = null,
@@ -94,8 +94,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_MOSAIC_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_MOSAIC_METADATA,
                 deadline,
                 0,
                 MetadataType.MOSAIC,
@@ -116,8 +116,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_NAMESPACE_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_NAMESPACE_METADATA,
                 deadline,
                 0,
                 MetadataType.NAMESPACE,
@@ -138,8 +138,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_ADDRESS_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_ADDRESS_METADATA,
                 deadline,
                 0,
                 MetadataType.ADDRESS,

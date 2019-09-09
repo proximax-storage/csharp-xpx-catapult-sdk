@@ -50,7 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             string namespaceName, NamespaceId namespaceId, NamespaceType namespaceType, ulong? duration,
             NamespaceId parentId = null, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.REGISTER_NAMESPACE, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.REGISTER_NAMESPACE, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             if (string.IsNullOrEmpty(namespaceName))
@@ -117,7 +117,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static RegisterNamespaceTransaction CreateRootNamespace(Deadline deadline,
             string namespaceName, ulong duration, NetworkType networkType, ulong maxFee = 0)
         {
-            return new RegisterNamespaceTransaction(networkType, TransactionVersion.REGISTER_NAMESPACE.GetValue(),
+            return new RegisterNamespaceTransaction(networkType, EntityVersion.REGISTER_NAMESPACE.GetValue(),
                 deadline, maxFee, namespaceName, new NamespaceId(namespaceName),
                 NamespaceType.ROOT_NAMESPACE, duration);
         }
@@ -136,7 +136,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             var subNamespaceId = IdGenerator.GenerateSubNamespaceIdFromParentId(parentId.Id, namespaceName);
 
-            return new RegisterNamespaceTransaction(networkType, TransactionVersion.REGISTER_NAMESPACE.GetValue(),
+            return new RegisterNamespaceTransaction(networkType, EntityVersion.REGISTER_NAMESPACE.GetValue(),
                 deadline, maxFee, namespaceName, new NamespaceId(subNamespaceId),
                 NamespaceType.SUB_NAMESPACE, null, parentId);
         }

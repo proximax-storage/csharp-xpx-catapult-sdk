@@ -74,7 +74,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var action = transaction["action"] ?? transaction["linkAction"];
             var linkAction = AccountLinkActionExtension.GetRawValue(action.ToObject<int>());
 
-            return new AccountLinkTransaction(network, txVersion, deadline, maxFee, TransactionType.LINK_ACCOUNT,
+            return new AccountLinkTransaction(network, txVersion, deadline, maxFee, EntityType.LINK_ACCOUNT,
               remoteAccount, linkAction, signature,signer);
         }
     }

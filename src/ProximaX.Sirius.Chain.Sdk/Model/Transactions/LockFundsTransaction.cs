@@ -42,7 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public LockFundsTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             Mosaic mosaic, ulong duration, SignedTransaction transaction, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.LOCK, deadline, maxFee, signature, signer, transactionInfo)
+            : base(networkType, version, EntityType.LOCK, deadline, maxFee, signature, signer, transactionInfo)
         {
             Mosaic = mosaic;
             Duration = duration;
@@ -79,7 +79,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static LockFundsTransaction Create(Deadline deadline, Mosaic mosaic, ulong duration,
             SignedTransaction signedTransaction, NetworkType networkType)
         {
-            return new LockFundsTransaction(networkType, TransactionVersion.LOCK.GetValue(), deadline, 0, mosaic,
+            return new LockFundsTransaction(networkType, EntityVersion.LOCK.GetValue(), deadline, 0, mosaic,
                 duration, signedTransaction);
         }
 

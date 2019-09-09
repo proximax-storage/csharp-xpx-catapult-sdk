@@ -42,7 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             Deadline deadline, PropertyType propertyType,
             IList<AccountPropertyModification<Address>> propertyModifications, ulong? maxFee, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null) : base(networkType, version,
-            TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, deadline, propertyType, propertyModifications, maxFee,
+            EntityType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, deadline, propertyType, propertyModifications, maxFee,
             signature, signer, transactionInfo)
         {
         }

@@ -16,7 +16,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     {
 
 
-        public BlockchainUpgradeTransaction(NetworkType networkType, int version, TransactionType transactionType,
+        public BlockchainUpgradeTransaction(NetworkType networkType, int version, EntityType transactionType,
            Deadline deadline, ulong? maxFee,
            ulong upgradePeriod, BlockchainVersion newVersion,
            string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
@@ -35,8 +35,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static BlockchainUpgradeTransaction Create(Deadline deadline, ulong upgradePeriod, BlockchainVersion newVersion, NetworkType networkType)
         {
             return new BlockchainUpgradeTransaction(networkType,
-                TransactionVersion.BLOCKCHAIN_CONFIG.GetValue(),
-                TransactionType.BLOCKCHAIN_CONFIG,
+                EntityVersion.BLOCKCHAIN_CONFIG.GetValue(),
+                EntityType.BLOCKCHAIN_CONFIG,
                 deadline,
                 0,
                 upgradePeriod,

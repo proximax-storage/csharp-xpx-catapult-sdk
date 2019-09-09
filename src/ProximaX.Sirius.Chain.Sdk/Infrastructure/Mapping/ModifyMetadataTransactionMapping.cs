@@ -56,7 +56,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
-            var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
+            var type = EntityTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var metaType = MetadataTypeExtension.GetRawValue(transaction["metadataType"].ToObject<int>());
 
 
@@ -87,20 +87,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
             switch (type)
             {
-                case TransactionType.MODIFY_ADDRESS_METADATA:
+                case EntityType.MODIFY_ADDRESS_METADATA:
                     var address = Address.CreateFromHex(transaction["metadataId"].ToObject<string>());
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
                         network, txVersion, type, deadline, maxFee, metaType, null, address,
                         modificationList, signature, signer, txInfo);
                     break;
 
-                case TransactionType.MODIFY_MOSAIC_METADATA:
+                case EntityType.MODIFY_MOSAIC_METADATA:
                     var mosaicId = transaction["metadataId"].ToObject<UInt64DTO>().ToUInt64();
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
                         network, txVersion, type, deadline, maxFee, metaType, mosaicId, null,
                         modificationList, signature, signer, txInfo);
                     break;
-                case TransactionType.MODIFY_NAMESPACE_METADATA:
+                case EntityType.MODIFY_NAMESPACE_METADATA:
                     var namespaceId = transaction["metadataId"].ToObject<UInt64DTO>().ToUInt64();
                     modifyMetadataTransaction = new ModifyMetadataTransaction(
                         network, txVersion, type, deadline, maxFee, metaType, namespaceId, null,

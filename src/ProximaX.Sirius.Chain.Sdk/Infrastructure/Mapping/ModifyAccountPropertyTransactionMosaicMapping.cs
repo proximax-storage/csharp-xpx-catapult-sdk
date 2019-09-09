@@ -71,7 +71,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
-            var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
+            var type = EntityTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var propertyType = PropertyTypeExtension.GetRawValue(transaction["propertyType"].ToObject<int>());
 
             var modifications = transaction["modifications"];
@@ -88,7 +88,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                     return modification;
                 }).ToList();
 
-            if (type == TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC)
+            if (type == EntityType.MODIFY_ACCOUNT_PROPERTY_MOSAIC)
                 return new MosaicModification(
                     network,
                     txVersion,

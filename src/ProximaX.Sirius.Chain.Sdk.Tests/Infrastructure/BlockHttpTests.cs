@@ -62,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 var transactions = await _blockchainHttp.GetBlockTransactions(7279);
                 transactions.Should().HaveCountGreaterThan(0);
-                transactions[0].TransactionType.Should().Be(TransactionType.MOSAIC_ALIAS);
+                transactions[0].TransactionType.Should().Be(EntityType.MOSAIC_ALIAS);
                 transactions[0].TransactionInfo.Hash.Should().BeEquivalentTo("4B34BE7C58DC23A6C75CB38F18AB4C3749FCDA68D9B686975996606398EDDFF8");
                 transactions[0].NetworkType.Should().Be(NetworkType.MIJIN_TEST);
             }

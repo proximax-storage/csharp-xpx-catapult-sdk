@@ -37,7 +37,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var result = await Fixture.Transfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
             Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
             result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
-            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            result.TransactionType.Should().Be(EntityType.TRANSFER);
             ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.PLAIN_MESSAGE.GetValueInByte());
         }
 
@@ -50,7 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var result = await Fixture.AggregateTransfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
             Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
             result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
-            result.TransactionType.Should().Be(TransactionType.AGGREGATE_COMPLETE);
+            result.TransactionType.Should().Be(EntityType.AGGREGATE_COMPLETE);
         
         }
 
@@ -65,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var result = await Fixture.Transfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
             Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
             result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
-            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            result.TransactionType.Should().Be(EntityType.TRANSFER);
             ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.SECURED_MESSAGE.GetValueInByte());
         }
 

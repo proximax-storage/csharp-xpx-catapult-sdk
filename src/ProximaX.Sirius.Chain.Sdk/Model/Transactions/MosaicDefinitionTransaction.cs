@@ -33,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public MosaicDefinitionTransaction(NetworkType networkType, int version, Deadline deadline, ulong maxFee,
             MosaicNonce nonce, MosaicId mosaicId, MosaicProperties properties, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MOSAIC_DEFINITION, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MOSAIC_DEFINITION, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Properties = properties;
@@ -65,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (mosaicId == null)
                 throw new ArgumentNullException(nameof(mosaicId));
 
-            return new MosaicDefinitionTransaction(networkType, TransactionVersion.MOSAIC_DEFINITION.GetValue(),
+            return new MosaicDefinitionTransaction(networkType, EntityVersion.MOSAIC_DEFINITION.GetValue(),
                 deadline, 0, nonce, mosaicId, properties);
         }
 

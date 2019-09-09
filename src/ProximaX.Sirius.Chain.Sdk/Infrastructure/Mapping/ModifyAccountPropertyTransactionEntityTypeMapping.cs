@@ -34,7 +34,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public new ModifyAccountPropertyTransaction<TransactionType> Apply(JObject input)
+        public new ModifyAccountPropertyTransaction<EntityType> Apply(JObject input)
         {
             return ToModifyAccountPropertyTransaction(input, TransactionMappingHelper.CreateTransactionInfo(input));
         }
@@ -45,7 +45,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         /// <param name="tx"></param>
         /// <param name="txInfo"></param>
         /// <returns></returns>
-        private static ModifyAccountPropertyTransaction<TransactionType> ToModifyAccountPropertyTransaction(JObject tx,
+        private static ModifyAccountPropertyTransaction<EntityType> ToModifyAccountPropertyTransaction(JObject tx,
             TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
@@ -71,24 +71,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
-            var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
+            var type = EntityTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var propertyType = PropertyTypeExtension.GetRawValue(transaction["propertyType"].ToObject<int>());
 
             var modifications = transaction["modifications"];
             var modificationList = modifications == null
-                ? new List<AccountPropertyModification<TransactionType>>()
+                ? new List<AccountPropertyModification<EntityType>>()
                 : modifications.Select(e =>
                 {
                     var mt = e["modificationType"] ?? e["type"];
                     var modificationType =
                         PropertyModificationTypeExtension.GetRawValue(mt.ToObject<int>());
-                    var value = TransactionTypeExtension.GetRawValue(e["value"].ToObject<int>());
-                    var modification = new AccountPropertyModification<TransactionType>(modificationType,
+                    var value = EntityTypeExtension.GetRawValue(e["value"].ToObject<int>());
+                    var modification = new AccountPropertyModification<EntityType>(modificationType,
                         value);
                     return modification;
                 }).ToList();
 
-            if (type == TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE)
+            if (type == EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE)
                 return new EntityTypeModification(
                     network,
                     txVersion,

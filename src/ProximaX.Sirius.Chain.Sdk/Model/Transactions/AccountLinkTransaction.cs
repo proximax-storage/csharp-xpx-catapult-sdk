@@ -44,7 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signer">The signer</param>
         /// <param name="transactionInfo">The transaction info</param>
         public AccountLinkTransaction(NetworkType NetworkType, int version, Deadline deadline,
-            ulong? maxFee, TransactionType transactionType,
+            ulong? maxFee, EntityType transactionType,
              PublicAccount remoteAccount, AccountLinkAction action,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(NetworkType, version, transactionType, deadline, maxFee,
@@ -67,8 +67,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>AccountLinkTransaction</returns>
         public static AccountLinkTransaction Create(PublicAccount remoteAccount, AccountLinkAction action, Deadline deadline, ulong? maxFee, NetworkType NetworkType)
         {
-            return new AccountLinkTransaction(NetworkType, TransactionVersion.LINK_ACCOUNT.GetValue(), deadline,
-               maxFee, TransactionType.LINK_ACCOUNT, remoteAccount, action);
+            return new AccountLinkTransaction(NetworkType, EntityVersion.LINK_ACCOUNT.GetValue(), deadline,
+               maxFee, EntityType.LINK_ACCOUNT, remoteAccount, action);
         }
 
         /// <summary>

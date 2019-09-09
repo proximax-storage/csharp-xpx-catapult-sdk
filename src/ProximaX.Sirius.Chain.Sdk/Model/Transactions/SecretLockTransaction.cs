@@ -46,7 +46,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public SecretLockTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             Mosaic mosaic, ulong duration, HashType hashType, string secret, Address recipient,
             string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.SECRET_LOCK, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.SECRET_LOCK, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Guard.NotNull(mosaic, "Mosaic must not be null");
@@ -107,7 +107,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static SecretLockTransaction Create(Deadline deadline, Mosaic mosaic, ulong duration, HashType hashType,
             string secret, Address recipient, NetworkType networkType)
         {
-            return new SecretLockTransaction(networkType, TransactionVersion.SECRET_LOCK.GetValue(),
+            return new SecretLockTransaction(networkType, EntityVersion.SECRET_LOCK.GetValue(),
                 deadline, 0, mosaic, duration, hashType, secret, recipient);
         }
 
