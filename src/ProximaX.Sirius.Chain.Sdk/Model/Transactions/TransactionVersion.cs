@@ -104,7 +104,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Modify metadata transactions version
         /// </summary>
-        MODIFY_METADATA = 1
+        MODIFY_METADATA = 1,
+
+
+        /// <summary>
+        ///     Blockchain configuration change transaction
+        /// </summary>
+        BLOCKCHAIN_CONFIG = 1,
+
+        /// <summary>
+        ///     Blockchain version update transaction
+        /// </summary>
+        BLOCKCHAIN_UPGRADE = 1
     }
 
     public static class TransactionVersionExtension
@@ -128,7 +139,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>int</returns>
         public static int GetValue(this TransactionVersion type)
         {
-            return (int) type;
+            return (int)type;
         }
     }
 }

@@ -25,6 +25,8 @@ using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
 using ProximaX.Sirius.Chain.Sdk.Utils;
+using GuardNet;
+using System.Runtime.Serialization;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
@@ -71,6 +73,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             TransactionInfo transactionInfo)
             : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
         {
+            Guard.NotNull(innerTransactions,nameof(innerTransactions), "InnerTransactions must not be null");
+            Guard.NotNull(cosignatures, nameof(cosignatures), "Cosignatures must not be null");
             InnerTransactions = innerTransactions;
             Cosignatures = cosignatures;
         }
@@ -98,9 +102,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static AggregateTransaction CreateComplete(Deadline deadline, List<Transaction> innerTransactions,
             NetworkType networkType)
         {
-            if (!Enum.IsDefined(typeof(NetworkType), networkType))
-                throw new InvalidEnumArgumentException(nameof(networkType), (int) networkType, typeof(NetworkType));
-
+      
             return new AggregateTransaction(networkType, TransactionVersion.AGGREGATE_COMPLETE.GetValue(),
                 TransactionType.AGGREGATE_COMPLETE, deadline, 0, innerTransactions,
                 new List<AggregateTransactionCosignature>());
@@ -118,9 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static AggregateTransaction CreateBonded(Deadline deadline, List<Transaction> innerTransactions,
             NetworkType networkType)
         {
-            if (!Enum.IsDefined(typeof(NetworkType), networkType))
-                throw new InvalidEnumArgumentException(nameof(networkType), (int) networkType, typeof(NetworkType));
-
+        
             return new AggregateTransaction(networkType, TransactionVersion.AGGREGATE_BONDED.GetValue(),
                 TransactionType.AGGREGATE_BONDED, deadline, 0, innerTransactions,
                 new List<AggregateTransactionCosignature>());
@@ -173,8 +173,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <exception cref="ArgumentNullException">publicAccount</exception>
         public bool IsSignedByAccount(PublicAccount publicAccount)
         {
-            if (publicAccount == null) throw new ArgumentNullException(nameof(publicAccount));
-
+            Guard.NotNull(publicAccount, nameof(publicAccount), "Public account should not be null");
+          
             return Signer.PublicKey == publicAccount.PublicKey ||
                    Cosignatures.Any(e => e.Signer.PublicKey == publicAccount.PublicKey);
         }
@@ -183,6 +183,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             var builder = new FlatBufferBuilder(1);
 
+            // create transaction bytes
             var transactionsBytes = new byte[0];
 
             transactionsBytes = InnerTransactions.Aggregate(transactionsBytes,
@@ -193,23 +194,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var signerVector = AggregateTransactionBuffer.CreateSignerVector(builder, GetSigner());
             var deadlineVector =
                 AggregateTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var feeVector = AggregateTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = AggregateTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var transactionsVector = AggregateTransactionBuffer.CreateTransactionsVector(builder, transactionsBytes);
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // total size of transaction
+            var totalSize = HEADER_SIZE
+                + 4
+                + transactionsBytes.Length;
 
-            const int fixedSize = 124; //120 + 4
+            // create version
+            var version = GetTxVersionSerialization();
+
 
             // add vectors
             AggregateTransactionBuffer.StartAggregateTransactionBuffer(builder);
-            AggregateTransactionBuffer.AddSize(builder, (uint) (fixedSize + transactionsBytes.Length));
+            AggregateTransactionBuffer.AddSize(builder,(uint)totalSize);
             AggregateTransactionBuffer.AddSignature(builder, signatureVector);
             AggregateTransactionBuffer.AddSigner(builder, signerVector);
-            AggregateTransactionBuffer.AddVersion(builder, version);
+            AggregateTransactionBuffer.AddVersion(builder, (uint)version);
             AggregateTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            AggregateTransactionBuffer.AddFee(builder, feeVector);
+            AggregateTransactionBuffer.AddMaxFee(builder, feeVector);
             AggregateTransactionBuffer.AddDeadline(builder, deadlineVector);
+
             AggregateTransactionBuffer.AddTransactionsSize(builder, (uint) transactionsBytes.Length);
             AggregateTransactionBuffer.AddTransactions(builder, transactionsVector);
 
@@ -217,7 +223,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransaction = AggregateTransactionBuffer.EndAggregateTransactionBuffer(builder).Value;
             builder.Finish(codedTransaction);
 
-            return new AggregateTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new AggregateTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
         }
     }
 }

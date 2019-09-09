@@ -55,7 +55,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        protected ModifyAccountPropertyTransaction(NetworkType networkType, int version,
+        public ModifyAccountPropertyTransaction(NetworkType networkType, int version,
             TransactionType transactionType,
             Deadline deadline, PropertyType propertyType, IList<AccountPropertyModification<T>> propertyModifications,
             ulong? maxFee, string signature = null, PublicAccount signer = null,
@@ -94,9 +94,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="propertyModifications"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static ModifyAccountPropertyTransaction<MosaicId> CreateForMosaic(Deadline deadline, ulong? maxFee,
+        public static ModifyAccountPropertyTransaction<IUInt64Id> CreateForMosaic(Deadline deadline, ulong? maxFee,
             PropertyType propertyType,
-            List<AccountPropertyModification<MosaicId>> propertyModifications, NetworkType networkType)
+            List<AccountPropertyModification<IUInt64Id>> propertyModifications, NetworkType networkType)
         {
             return new MosaicModification(networkType,
                 TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC.GetValue(),
@@ -157,8 +157,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 modificationVectors[i] = PropertyModificationBuffer.EndPropertyModificationBuffer(builder);
             }
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
             var signatureVector = AccountPropertiesTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = AccountPropertiesTransactionBuffer.CreateSignerVector(builder, GetSigner());
@@ -169,13 +169,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 AccountPropertiesTransactionBuffer.CreateModificationsVector(builder, modificationVectors);
 
             // add size of the header (120) + size of prop type (1) + size of mod count (1)
-            var fixedSize = 120 + +1 + 1 + totalSize;
+            var fixedSize = HEADER_SIZE + +1 + 1 + totalSize;
 
             AccountPropertiesTransactionBuffer.StartAccountPropertiesTransactionBuffer(builder);
             AccountPropertiesTransactionBuffer.AddSize(builder, (uint) fixedSize);
             AccountPropertiesTransactionBuffer.AddSignature(builder, signatureVector);
             AccountPropertiesTransactionBuffer.AddSigner(builder, signerVector);
-            AccountPropertiesTransactionBuffer.AddVersion(builder, version);
+            AccountPropertiesTransactionBuffer.AddVersion(builder,(uint)version);
             AccountPropertiesTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AccountPropertiesTransactionBuffer.AddMaxFee(builder, feeVector);
             AccountPropertiesTransactionBuffer.AddDeadline(builder, deadlineVector);

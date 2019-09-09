@@ -27,13 +27,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     public class SecretProofTransaction : Transaction
     {
         public SecretProofTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-            HashType hashType, string secret, string proof, string signature = null, PublicAccount signer = null,
+            HashType hashType,Recipient recipient, string secret, string proof, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null)
             : base(networkType, version, TransactionType.SECRET_PROOF, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Guard.NotNullOrEmpty(secret, "Secret must not be null");
             Guard.NotNullOrEmpty(proof, "Proof must not be null");
+            Guard.NotNull(recipient, "Recipient must not be null");
             if (!hashType.Validate(secret))
                 throw new ArgumentOutOfRangeException(
                     "HashType and Secret have incompatible length or not hexadecimal string");
@@ -41,6 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             HashType = hashType;
             Proof = proof;
             Secret = secret;
+            Recipient = recipient;
         }
 
         /// <summary>
@@ -54,6 +56,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         public string Proof { get; }
 
+        /// <summary>
+        ///     The Recipient
+        /// </summary>
+        public Recipient Recipient { get; }
 
         /// <summary>
         ///     Gets or sets the hash type.
@@ -70,11 +76,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="proof"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static SecretProofTransaction Create(Deadline deadline, HashType hashType, string secret, string proof,
+        public static SecretProofTransaction Create(Deadline deadline, HashType hashType,Recipient recipient, string secret, string proof,
             NetworkType networkType)
         {
             return new SecretProofTransaction(networkType, TransactionVersion.SECRET_PROOF.GetValue(),
-                deadline, 0, hashType, secret, proof);
+                deadline, 0, hashType, recipient, secret, proof);
         }
 
         internal override byte[] GenerateBytes()
@@ -85,25 +91,32 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = SecretProofTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = SecretProofTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = SecretProofTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = SecretProofTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 SecretProofTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var secretVector = SecretLockTransactionBuffer.CreateSecretVector(builder, Secret.DecodeHexString());
             var proofVector = SecretProofTransactionBuffer.CreateProofVector(builder, Proof.DecodeHexString());
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
+            var recipientVector = SecretProofTransactionBuffer.CreateRecipientVector(builder, Recipient.GetBytes());
 
-            var fixedSize = 155 + Proof.DecodeHexString().Length;
+            int fixedSize = HEADER_SIZE 
+              + 35 // recipient
+              + Recipient.GetBytes().Length // proof length
+              + Proof.DecodeHexString().Length;
+
+          
 
             SecretProofTransactionBuffer.StartSecretProofTransactionBuffer(builder);
             SecretProofTransactionBuffer.AddSize(builder, (uint) fixedSize);
             SecretProofTransactionBuffer.AddSignature(builder, signatureVector);
             SecretProofTransactionBuffer.AddSigner(builder, signerVector);
-            SecretProofTransactionBuffer.AddVersion(builder, version);
+            SecretProofTransactionBuffer.AddVersion(builder, (uint)version);
             SecretProofTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            SecretProofTransactionBuffer.AddFee(builder, feeVector);
+            SecretProofTransactionBuffer.AddMaxFee(builder, feeVector);
             SecretProofTransactionBuffer.AddDeadline(builder, deadlineVector);
             SecretProofTransactionBuffer.AddHashAlgorithm(builder, HashType.GetValueInByte());
+            SecretProofTransactionBuffer.AddRecipient(builder, recipientVector);
             SecretProofTransactionBuffer.AddSecret(builder, secretVector);
             SecretProofTransactionBuffer.AddProofSize(builder, Convert.ToUInt16(Proof.DecodeHexString().Length));
             SecretProofTransactionBuffer.AddProof(builder, proofVector);

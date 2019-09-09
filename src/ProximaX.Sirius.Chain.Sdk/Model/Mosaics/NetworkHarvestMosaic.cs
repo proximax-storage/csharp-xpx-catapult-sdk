@@ -14,6 +14,7 @@
 
 using System;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 {
@@ -61,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         ///     Constructor
         /// </summary>
         /// <param name="amount"></param>
-        public NetworkHarvestMosaic(ulong amount) : base(Id.Id, amount)
+        public NetworkHarvestMosaic(ulong amount) : base(Id, amount)
         {
         }
 

@@ -91,27 +91,32 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = LockFundsTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = LockFundsTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = LockFundsTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = LockFundsTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 LockFundsTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var mosaicIdVector = LockFundsTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.ToUInt8Array());
+            var mosaicIdVector = LockFundsTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.Id.ToUInt8Array());
             var mosaicAmountVector =
                 LockFundsTransactionBuffer.CreateMosaicAmountVector(builder, Mosaic.Amount.ToUInt8Array());
             var durationVector = LockFundsTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());
             var hashVector = LockFundsTransactionBuffer.CreateHashVector(builder, Transaction.Hash.FromHex());
+            
+            // create version
+            var version = GetTxVersionSerialization();
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
-
-            const int fixedSize = 176;
+            int fixedSize = HEADER_SIZE 
+                + 8 //mosaic id
+                + 8 //amount
+                + 8 //duration
+                + 32; //hash
+                
 
             LockFundsTransactionBuffer.StartLockFundsTransactionBuffer(builder);
-            LockFundsTransactionBuffer.AddSize(builder, fixedSize);
+            LockFundsTransactionBuffer.AddSize(builder, (uint)fixedSize);
             LockFundsTransactionBuffer.AddSignature(builder, signatureVector);
             LockFundsTransactionBuffer.AddSigner(builder, signerVector);
-            LockFundsTransactionBuffer.AddVersion(builder, version);
+            LockFundsTransactionBuffer.AddVersion(builder, (uint)version);
             LockFundsTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            LockFundsTransactionBuffer.AddFee(builder, feeVector);
+            LockFundsTransactionBuffer.AddMaxFee(builder, feeVector);
             LockFundsTransactionBuffer.AddDeadline(builder, deadlineVector);
             LockFundsTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             LockFundsTransactionBuffer.AddMosaicAmount(builder, mosaicAmountVector);

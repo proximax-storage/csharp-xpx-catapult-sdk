@@ -13,10 +13,11 @@
 // limitations under the License.
 
 
-using System;
+
 using System.Collections.Generic;
-using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
+using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
@@ -30,36 +31,53 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     public class TransferTransaction : Transaction
     {
+        /*
+     public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
+         Address recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
+         PublicAccount signer = null, TransactionInfo transactionInfo = null)
+         : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
+     {
+         Address = recipient ?? throw new ArgumentNullException(nameof(recipient));
+         Message = message ?? EmptyMessage.Create();
+         Mosaics = mosaics;
+     }
+
+
+     public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
+         NamespaceId recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
+         PublicAccount signer = null, TransactionInfo transactionInfo = null)
+         : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
+     {
+         NamespaceId = recipient ?? throw new ArgumentNullException(nameof(recipient));
+         Message = message ?? EmptyMessage.Create();
+         Mosaics = mosaics;
+     }
+     */
         public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-            Address recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
-            PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
+          Recipient recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
+          PublicAccount signer = null, TransactionInfo transactionInfo = null)
+          : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
         {
-            Address = recipient ?? throw new ArgumentNullException(nameof(recipient));
-            Message = message ?? EmptyMessage.Create();
+            Guard.NotNull(recipient, nameof(recipient), "Recipient must not be null");
+            Guard.NotNull(recipient, nameof(message), "Message must not be null");
+            Guard.NotNull(recipient, nameof(mosaics), "Mosaics must not be null");
+            Recipient = recipient;
+            Message = message;
             Mosaics = mosaics;
         }
 
-        public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-            NamespaceId recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
-            PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
-        {
-            NamespaceId = recipient ?? throw new ArgumentNullException(nameof(recipient));
-            Message = message ?? EmptyMessage.Create();
-            Mosaics = mosaics;
-        }
+        public Recipient Recipient { get; }
 
         /// <summary>
         ///     Gets the address.
         /// </summary>
         /// <value>The address.</value>
-        public Address Address { get; }
+        //public Address Address { get; }
 
         /// <summary>
         ///  Get the namespace id
         /// </summary>
-        public NamespaceId NamespaceId { get; }
+        //public NamespaceId NamespaceId { get; }
 
         /// <summary>
         ///     Gets or sets the message.
@@ -78,11 +96,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             IMessage message, NetworkType networkType, ulong? maxFee = 0)
         {
             return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
-                recipient, mosaics, message);
+                Recipient.From(recipient), mosaics, message);
         }
 
         public static TransferTransaction Create(Deadline deadline, NamespaceId recipient, List<Mosaic> mosaics,
             IMessage message, NetworkType networkType, ulong? maxFee = 0)
+        {
+            return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
+                Recipient.From(recipient), mosaics, message);
+        }
+
+        public static TransferTransaction Create(Deadline deadline, Recipient recipient, List<Mosaic> mosaics,
+       IMessage message, NetworkType networkType, ulong? maxFee = 0)
         {
             return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
                 recipient, mosaics, message);
@@ -92,77 +117,78 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             var builder = new FlatBufferBuilder(1);
 
-            // create vectors
-            var signatureVector = TransferTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
-            var signerVector = TransferTransactionBuffer.CreateSignerVector(builder, GetSigner());
-
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
-            var deadlineVector = TransferTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-
-            byte[] recipientBytes = { };
-
-            if (NamespaceId != null)
-            {
-                recipientBytes = NamespaceId.AliasToRecipient();
-            }
-
-            if (Address != null)
-            {
-                recipientBytes = Address.Plain.FromBase32String();
-            }
-
-            var recipientVector =
-                TransferTransactionBuffer.CreateRecipientVector(builder, recipientBytes);
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
-
-            if (Message == null) Message = EmptyMessage.Create();
-
-            // create message vector
+            // create message
             var bytePayload = Message.GetPayload();
             var payload = MessageBuffer.CreatePayloadVector(builder, bytePayload);
             MessageBuffer.StartMessageBuffer(builder);
-            if (bytePayload != null) MessageBuffer.AddType(builder, Message.GetMessageType());
+            MessageBuffer.AddType(builder, Message.GetMessageType());
             MessageBuffer.AddPayload(builder, payload);
-            var message = MessageBuffer.EndMessageBuffer(builder);
+            var messageVector = MessageBuffer.EndMessageBuffer(builder);
 
-            // create mosaics vector
-            var mosaics = new Offset<MosaicBuffer>[Mosaics.Count];
-            for (var index = 0; index < Mosaics.Count; index++)
+            // create mosaics
+            var mosaicBuffers = new Offset<MosaicBuffer>[Mosaics.Count];
+            for (var index = 0; index < Mosaics.Count; ++index)
             {
                 var mosaic = Mosaics[index];
-                var idPayload = MosaicBuffer.CreateIdVector(builder, mosaic.Id.ToUInt8Array());
-                var amountVector = MosaicBuffer.CreateAmountVector(builder, mosaic.Amount.ToUInt8Array());
+                var id = MosaicBuffer.CreateIdVector(builder, mosaic.Id.Id.ToUInt8Array());
+                var amount = MosaicBuffer.CreateAmountVector(builder, mosaic.Amount.ToUInt8Array());
                 MosaicBuffer.StartMosaicBuffer(builder);
-                MosaicBuffer.AddId(builder, idPayload);
-                MosaicBuffer.AddAmount(builder, amountVector);
-
-                mosaics[index] = MosaicBuffer.EndMosaicBuffer(builder);
+                MosaicBuffer.AddId(builder, id);
+                MosaicBuffer.AddAmount(builder, amount);
+                mosaicBuffers[index] = MosaicBuffer.EndMosaicBuffer(builder);
             }
 
-            var fixedSize = 120 + 25 + 2 + 1 + 1 + (16 * Mosaics.Count) + bytePayload.Length;
+            // create recipient
+            byte[] recipientBytes = Recipient.GetBytes();
 
-            var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaics);
+            // create vectors
+            var signatureVector = TransferTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
+            var signerVector = TransferTransactionBuffer.CreateSignerVector(builder, GetSigner());
+            var deadlineVector = TransferTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
+            var feeVector = TransferTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
+            var recipientVector =
+               TransferTransactionBuffer.CreateRecipientVector(builder, recipientBytes);
+            var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaicBuffers);
+
+            // total size of transaction
+            var totalSize = HEADER_SIZE
+                + 25 // recipient
+                + 2 // message size is short
+                + 1 // message type byte
+                + 1 // no of mosaics
+                + ((8 + 8) * Mosaics.Count) //each mosaic has id(8bytes) and amount(8bytes)
+                + bytePayload.Length; // number of message bytes
+
+            // create version
+            var version = GetTxVersionSerialization();
+
+
             // add vectors
             TransferTransactionBuffer.StartTransferTransactionBuffer(builder);
-            TransferTransactionBuffer.AddSize(builder, (uint) fixedSize);
+            TransferTransactionBuffer.AddSize(builder, (uint)totalSize);
             TransferTransactionBuffer.AddSignature(builder, signatureVector);
             TransferTransactionBuffer.AddSigner(builder, signerVector);
-            TransferTransactionBuffer.AddVersion(builder, version);
+            TransferTransactionBuffer.AddVersion(builder, (uint)version);
             TransferTransactionBuffer.AddType(builder, TransactionType.TRANSFER.GetValue());
-            TransferTransactionBuffer.AddFee(builder, feeVector);
+            TransferTransactionBuffer.AddMaxFee(builder, feeVector);
             TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
+
             TransferTransactionBuffer.AddRecipient(builder, recipientVector);
-            TransferTransactionBuffer.AddNumMosaics(builder, (byte) Mosaics.Count);
+            TransferTransactionBuffer.AddNumMosaics(builder, (byte)Mosaics.Count);
             TransferTransactionBuffer.AddMessageSize(builder, (ushort)(bytePayload.Length + 1));
-            TransferTransactionBuffer.AddMessage(builder, message);
+            TransferTransactionBuffer.AddMessage(builder, messageVector);
             TransferTransactionBuffer.AddMosaics(builder, mosaicsVector);
 
             // end build
             var codedTransfer = TransferTransactionBuffer.EndTransferTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            return new TransferTransactionSchema().Serialize(builder.SizedByteArray());
+            // validate size
+            var output = new TransferTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
         }
     }
 }

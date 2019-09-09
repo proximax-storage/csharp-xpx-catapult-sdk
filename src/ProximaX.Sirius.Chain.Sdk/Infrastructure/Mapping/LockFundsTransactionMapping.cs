@@ -19,6 +19,7 @@ using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Utils;
+using System;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 {
@@ -32,8 +33,26 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
         private static LockFundsTransaction ToLockFundsTransaction(JObject tx, TransactionInfo txInfo)
         {
             var transaction = tx["transaction"].ToObject<JObject>();
-            var version = transaction["version"].ToObject<int>();
-            var network = version.ExtractNetworkType();
+            var version = transaction["version"];
+
+
+            //Bug - It seems the dotnetcore does not 
+            //understand the Integer.
+            //The workaround it to double cast the version
+            int versionValue;
+            try
+            {
+                versionValue = (int)((uint)version);
+            }
+            catch (Exception)
+            {
+                versionValue = (int)version;
+            }
+
+            var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
+            var txVersion = TransactionMappingUtils.ExtractTransactionVersion(versionValue);
+
+           
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var signature = transaction["signature"].ToObject<string>();
@@ -43,8 +62,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var duration = transaction["duration"].ToObject<UInt64DTO>().ToUInt64();
             var hash = transaction["hash"].ToObject<string>();
 
-            return new LockFundsTransaction(network, version, deadline, maxFee,
-                new Mosaic(mosaic.Id, amount), duration,
+            return new LockFundsTransaction(network, txVersion, deadline, maxFee,
+                new Mosaic(mosaic, amount), duration,
                 new SignedTransaction(string.Empty, hash, string.Empty,
                     TransactionType.AGGREGATE_BONDED, network),
                 signature, signer, txInfo);

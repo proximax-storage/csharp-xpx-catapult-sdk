@@ -14,7 +14,9 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
+using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
@@ -28,23 +30,51 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public PublicAccount RemoteAccount { get; set; }
         public AccountLinkAction Action { get; set; }
 
-        public AccountLinkTransaction(NetworkType networkType, int version, Deadline deadline,
+        /// <summary>
+        /// Create new instance of account link transaction
+        /// </summary>
+        /// <param name="NetworkType">The network type</param>
+        /// <param name="version">The transaction version</param>
+        /// <param name="deadline">The transaction deadline</param>
+        /// <param name="maxFee">The max fee</param>
+        /// <param name="transactionType">The transaction type</param>
+        /// <param name="remoteAccount">The remote account</param>
+        /// <param name="action">The action</param>
+        /// <param name="signature">The signature</param>
+        /// <param name="signer">The signer</param>
+        /// <param name="transactionInfo">The transaction info</param>
+        public AccountLinkTransaction(NetworkType NetworkType, int version, Deadline deadline,
             ulong? maxFee, TransactionType transactionType,
              PublicAccount remoteAccount, AccountLinkAction action,
             string signature = null, PublicAccount signer = null,
-            TransactionInfo transactionInfo = null) : base(networkType, version, transactionType, deadline, maxFee,
+            TransactionInfo transactionInfo = null) : base(NetworkType, version, transactionType, deadline, maxFee,
             signature, signer, transactionInfo)
         {
+            Guard.NotNull(remoteAccount, nameof(remoteAccount), "remoteAccount has to be specified");
+
             RemoteAccount = remoteAccount;
             Action = action;
         }
 
-        public static AccountLinkTransaction Create(PublicAccount remoteAccount, AccountLinkAction action, Deadline deadline, ulong? maxFee, NetworkType networkType)
+        /// <summary>
+        /// Create new instance of account link transaction
+        /// </summary>
+        /// <param name="remoteAccount">The remote account</param>
+        /// <param name="action">The action</param>
+        /// <param name="deadline">The transaction deadline</param>
+        /// <param name="maxFee">The max fee</param>
+        /// <param name="NetworkType">The network type</param>
+        /// <returns>AccountLinkTransaction</returns>
+        public static AccountLinkTransaction Create(PublicAccount remoteAccount, AccountLinkAction action, Deadline deadline, ulong? maxFee, NetworkType NetworkType)
         {
-            return new AccountLinkTransaction(networkType, TransactionVersion.LINK_ACCOUNT.GetValue(), deadline,
+            return new AccountLinkTransaction(NetworkType, TransactionVersion.LINK_ACCOUNT.GetValue(), deadline,
                maxFee, TransactionType.LINK_ACCOUNT, remoteAccount, action);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         internal override byte[] GenerateBytes()
         {
             var builder = new FlatBufferBuilder(1);
@@ -57,23 +87,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var deadlineVector = AccountLinkTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var remoteAccountVector = AccountLinkTransactionBuffer.CreateRemoteAccountKeyVector(builder, RemoteAccount.PublicKey.DecodeHexString());
 
-            var fixedSize =
+            var totalSize =
             // header
-            120 +
+            HEADER_SIZE +
             // remote account public key
             32 +
             // link action
             1;
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
 
             AccountLinkTransactionBuffer.StartAccountLinkTransactionBuffer(builder);
-            AccountLinkTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            AccountLinkTransactionBuffer.AddSize(builder, (uint)totalSize);
             AccountLinkTransactionBuffer.AddSignature(builder, signatureVector);
             AccountLinkTransactionBuffer.AddSigner(builder, signerVector);
-            AccountLinkTransactionBuffer.AddVersion(builder, version);
+            AccountLinkTransactionBuffer.AddVersion(builder, (uint)version);
             AccountLinkTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AccountLinkTransactionBuffer.AddMaxFee(builder, feeVector);
             AccountLinkTransactionBuffer.AddDeadline(builder, deadlineVector);
@@ -84,7 +114,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransaction = AccountLinkTransactionBuffer.EndAccountLinkTransactionBuffer(builder).Value;
             builder.Finish(codedTransaction);
 
-            return new AccountLinkTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new AccountLinkTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
         }
     }
 }

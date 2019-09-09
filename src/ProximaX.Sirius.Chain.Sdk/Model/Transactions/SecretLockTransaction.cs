@@ -119,10 +119,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = SecretLockTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = SecretLockTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = SecretLockTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = SecretLockTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 SecretLockTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
-            var mosaicIdVector = SecretLockTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.ToUInt8Array());
+            var mosaicIdVector = SecretLockTransactionBuffer.CreateMosaicIdVector(builder, Mosaic.Id.Id.ToUInt8Array());
             var mosaicAmountVector =
                 SecretLockTransactionBuffer.CreateMosaicAmountVector(builder, Mosaic.Amount.ToUInt8Array());
             var durationVector = SecretLockTransactionBuffer.CreateDurationVector(builder, Duration.ToUInt8Array());
@@ -130,18 +130,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var recipientVector =
                 SecretLockTransactionBuffer.CreateRecipientVector(builder, Recipient.Plain.FromBase32String());
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+            var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            const int fixedSize = 202;
+            // header + mosaicID, amount, duration, hash algo, secret, recipient
+            int fixedSize = HEADER_SIZE + 8 + 8 + 8 + 1 + 32 + 25;
 
             SecretLockTransactionBuffer.StartSecretLockTransactionBuffer(builder);
-            SecretLockTransactionBuffer.AddSize(builder, fixedSize);
+            SecretLockTransactionBuffer.AddSize(builder, (uint)fixedSize);
             SecretLockTransactionBuffer.AddSignature(builder, signatureVector);
             SecretLockTransactionBuffer.AddSigner(builder, signerVector);
-            SecretLockTransactionBuffer.AddVersion(builder, version);
+            SecretLockTransactionBuffer.AddVersion(builder,(uint)version);
             SecretLockTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            SecretLockTransactionBuffer.AddFee(builder, feeVector);
+            SecretLockTransactionBuffer.AddMaxFee(builder, feeVector);
             SecretLockTransactionBuffer.AddDeadline(builder, deadlineVector);
             SecretLockTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             SecretLockTransactionBuffer.AddMosaicAmount(builder, mosaicAmountVector);

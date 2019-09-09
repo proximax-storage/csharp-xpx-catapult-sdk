@@ -29,7 +29,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages
         /// <summary>
         ///     Encrypted message
         /// </summary>
-        ENCRYPTED_MESSAGE = 1
+        SECURED_MESSAGE = 1
     }
 
 

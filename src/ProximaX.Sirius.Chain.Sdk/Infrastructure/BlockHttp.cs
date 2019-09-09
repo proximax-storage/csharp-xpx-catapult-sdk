@@ -133,6 +133,21 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
         }
 
+
+        /// <summary>
+        ///      Gets config of network at height.
+        /// </summary>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public IObservable<BlockchainUpgrade> GetBlockUpgrade(ulong height)
+        {
+            var route = $"{BasePath}/upgrade/{height}";
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<CatapultUpgradeDTO>())
+                .Select(i => BlockchainUpgrade.FromDto(i.CatapultConfig));
+
+        }
+
         /// <summary>
         /// GetBlockTransactions
         /// </summary>

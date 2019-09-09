@@ -24,7 +24,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
     /// <summary>
     ///     Class MosaicModification
     /// </summary>
-    public class MosaicModification : ModifyAccountPropertyTransaction<MosaicId>
+    public class MosaicModification : ModifyAccountPropertyTransaction<IUInt64Id>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="MosaicModification" /> class.
@@ -40,7 +40,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <param name="transactionInfo"></param>
         public MosaicModification(NetworkType networkType, int version, Deadline deadline,
             PropertyType propertyType,
-            IList<AccountPropertyModification<MosaicId>> propertyModifications,
+            IList<AccountPropertyModification<IUInt64Id>> propertyModifications,
             ulong? maxFee,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(networkType, version,
@@ -54,7 +54,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// </summary>
         /// <param name="mod">The modification property</param>
         /// <returns>byte[]</returns>
-        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<MosaicId> mod)
+        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<IUInt64Id> mod)
         {
             const int valueByteLength = 8;
 

@@ -110,17 +110,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 AliasTransactionBuffer.CreateNamespaceIdVector(builder, NamespaceId.Id.ToUInt8Array());
             var aliasIdVector = AliasTransactionBuffer.CreateAliasIdVector(builder, aliasIdBytes);
 
-            var fixedSize = 120 + aliasIdBytes.Length + 8 + 1;
+            var fixedSize = HEADER_SIZE + aliasIdBytes.Length + 8 + 1;
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
 
             AliasTransactionBuffer.StartAliasTransactionBuffer(builder);
             AliasTransactionBuffer.AddSize(builder, (uint) fixedSize);
             AliasTransactionBuffer.AddSignature(builder, signatureVector);
             AliasTransactionBuffer.AddSigner(builder, signerVector);
-            AliasTransactionBuffer.AddVersion(builder, version);
+            AliasTransactionBuffer.AddVersion(builder, (uint)version);
             AliasTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AliasTransactionBuffer.AddMaxFee(builder, feeVector);
             AliasTransactionBuffer.AddDeadline(builder, deadlineVector);

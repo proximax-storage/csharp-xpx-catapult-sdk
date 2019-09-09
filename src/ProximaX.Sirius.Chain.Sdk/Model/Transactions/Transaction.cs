@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
@@ -23,6 +24,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     public abstract class Transaction
     {
+        public static readonly int HEADER_SIZE = 122;
+
         protected Transaction(NetworkType networkType, int version, TransactionType transactionType, Deadline deadline,
             ulong? maxFee, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
         {
@@ -133,30 +136,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             return SignedTransaction.Create(payload, hash,
                 account.KeyPair.PublicKey, TransactionType, NetworkType);
-            /*
-            var generationHashBytes = generationHash.DecodeHexString();
-
-            Bytes = GenerateBytes();
-
-            var signingBytes = generationHashBytes.Concat(
-                     Bytes.Take(4 + 64 + 32)
-                ).ToArray();
-
-            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType);
-
-
-            var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes);
-
-            var signedBuffer = Bytes.Take(4)
-                .Concat(signature)
-                .Concat(account.KeyPair.PublicKey)
-                .Concat(
-                    Bytes.Take(4+ 64 + 32, Bytes.Length - (4+ 64+32))
-                ).ToArray();
-            
-            return SignedTransaction.Create(signedBuffer, TransactionExtensions.Hasher(signedBuffer,generationHashBytes),
-                account.KeyPair.PublicKey, TransactionType, NetworkType);*/
-            
         }
 
         public static byte[] CreateTransactionHash(byte[] payloadBytes, byte[] generationHashBytes)
@@ -188,8 +167,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>Transaction</returns>
         public Transaction ToAggregate(PublicAccount signer)
         {
-            Signer = PublicAccount.CreateFromPublicKey(signer.PublicKey, NetworkType);
-
+            //Signer = PublicAccount.CreateFromPublicKey(signer.PublicKey, NetworkType);
+            Signer = signer;
             return this;
         }
 
@@ -213,6 +192,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         }
 
         /// <summary>
+        /// Determine whether a transaction has missing signatures
+        /// </summary>
+        /// <returns></returns>
+        public bool HasMissingSignature()
+        {
+            return TransactionInfo == null && TransactionInfo.Height == 0
+                && !TransactionInfo.Hash.Equals(TransactionInfo.MerkleComponentHash);
+        }
+
+        /// <summary>
         ///     Transaction is not known by the network
         /// </summary>
         /// <returns>bool</returns>
@@ -227,14 +216,62 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>System.Byte[].</returns>
         internal byte[] ToAggregate()
         {
-            var bytes = GenerateBytes();
+            /*
+           var bytes = GenerateBytes();
+
 
             var aggregate = bytes.Take(4 + 64, 32 + 2 + 2)
                 .Concat(
-                    bytes.Take(4 + 64 + 32 + 2 + 2 + 8 + 8, bytes.Length - (4 + 64 + 32 + 2 + 2 + 8 + 8))
+                    bytes.Take(
+                      4  //size
+                    + 64 //signature
+                    + 32 //signer
+                    + 4  //version
+                    + 2  //type
+                    + 8  //maxfee
+                    + 8  //deadline
+                    , bytes.Length - (4 + 64 + 32 + 4 + 2 + 8 + 8))
                 ).ToArray();
 
-            return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();
+            return BitConverter.GetBytes(aggregate.Length + 4).Concat(aggregate).ToArray();*/
+
+            // decode signer from hex to byte array
+            var signerBytes = Signer.PublicKey.DecodeHexString();
+
+            // serialize the transaction
+            Bytes = GenerateBytes();
+
+            // we will be removing header (122) and adding size (4), signer (32), version (4), trans type(2)
+            var resultBytes = new byte[Bytes.Length - HEADER_SIZE + 4 + 32 + 4 + 2];
+
+            /* var sizeBytes = ((ulong)resultBytes.Length).ToUInt8Array();
+             Array.Reverse(sizeBytes);*/
+            var sizeBytes = BitConverter.GetBytes(resultBytes.Length);
+
+            // write size of the aggregate transaction bytes - can be less than 4 bytes
+            Buffer.BlockCopy(sizeBytes, 0, resultBytes, 0, sizeBytes.Length);
+
+            // at position 4 start writing 32 bytes of signer
+            Buffer.BlockCopy(signerBytes, 0, resultBytes, 4, 32);
+
+            // version is expected to start at position 100 and be 4 bytes, then take next 2 bytes
+            Buffer.BlockCopy(Bytes, 100, resultBytes, 4 + 32, 6);
+
+            // copy remaining data after header
+            Buffer.BlockCopy(Bytes, HEADER_SIZE, resultBytes, 4 + 32 + 6, Bytes.Length- HEADER_SIZE);
+
+            return resultBytes;
+        }
+
+        /// <summary>
+        /// Get value of the version field for serialization
+        /// </summary>
+        /// <returns>4 bytes</returns>
+        protected int GetTxVersionSerialization()
+        {
+            return TransactionMappingUtils.SerializeVersion(Version, NetworkType.GetValue());
+           /* return int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
+                NumberStyles.HexNumber);*/
         }
 
         /// <summary>

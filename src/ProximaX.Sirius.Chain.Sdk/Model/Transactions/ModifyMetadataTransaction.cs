@@ -195,13 +195,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 modificationVectors[i] = MetadataModificationBuffer.EndMetadataModificationBuffer(builder);
             }
 
-
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // create version
+            var version = GetTxVersionSerialization();
 
             var signatureVector = ModifyMetadataTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = ModifyMetadataTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = ModifyMetadataTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = ModifyMetadataTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 ModifyMetadataTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
 
@@ -223,15 +222,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 ModifyMetadataTransactionBuffer.CreateModificationsVector(builder, modificationVectors);
 
             // add size of stuff with constant size and size of metadata id
-            var fixedSize = 120 + +1 + metadataIdBytes.Length + totalSize;
+            var fixedSize = HEADER_SIZE + 1 + metadataIdBytes.Length + totalSize;
 
             ModifyMetadataTransactionBuffer.StartModifyMetadataTransactionBuffer(builder);
             ModifyMetadataTransactionBuffer.AddSize(builder, (uint) fixedSize);
             ModifyMetadataTransactionBuffer.AddSignature(builder, signatureVector);
             ModifyMetadataTransactionBuffer.AddSigner(builder, signerVector);
-            ModifyMetadataTransactionBuffer.AddVersion(builder, version);
+            ModifyMetadataTransactionBuffer.AddVersion(builder, (uint)version);
             ModifyMetadataTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            ModifyMetadataTransactionBuffer.AddFee(builder, feeVector);
+            ModifyMetadataTransactionBuffer.AddMaxFee(builder, feeVector);
             ModifyMetadataTransactionBuffer.AddDeadline(builder, deadlineVector);
             ModifyMetadataTransactionBuffer.AddMetadataId(builder, metadataIdVector);
             ModifyMetadataTransactionBuffer.AddMetadataType(builder, MetadataType.GetValueInByte());

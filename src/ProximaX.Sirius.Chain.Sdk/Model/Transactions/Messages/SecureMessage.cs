@@ -28,7 +28,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages
         /// <param name="payload"></param>
         public SecureMessage(byte[] payload)
         {
-            Type = MessageType.ENCRYPTED_MESSAGE.GetValueInByte();
+            Type = MessageType.SECURED_MESSAGE.GetValueInByte();
             Payload = payload;
         }
 

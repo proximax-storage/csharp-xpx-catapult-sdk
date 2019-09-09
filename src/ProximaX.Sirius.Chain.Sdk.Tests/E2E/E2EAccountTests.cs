@@ -7,7 +7,6 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
-using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
@@ -18,32 +17,31 @@ using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
-    [Collection("E2ETestFixtureCollection")]
-    public class E2EAccountTests
+  
+    public class E2EAccountTests: IClassFixture<E2EBaseFixture>
     {
-        private readonly E2ETestFixture _fixture;
+        readonly E2EBaseFixture Fixture;
+        readonly ITestOutputHelper Log;
 
-        private readonly ITestOutputHelper _output;
-
-        public E2EAccountTests(E2ETestFixture fixture, ITestOutputHelper output)
+        public E2EAccountTests(E2EBaseFixture fixture, ITestOutputHelper log)
         {
-            _fixture = fixture;
-            _output = output;
-
+            Fixture = fixture;
+            Log = log;
         }
 
-     
+
+
         [Fact]
         public async Task Should_Send_Some_Money_To_New_Account()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-            var aliceAccount = Account.GenerateNewAccount(networkType);
 
-            await _fixture.WebSocket.Listener.Open();
+            var aliceAccount = await Fixture.GenerateAccountWithCurrency(500);
 
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(aliceAccount.Address).Take(1);
+        
 
-            _output.WriteLine($"Alice Account {aliceAccount.Address.Plain} \r\n Private Key: {aliceAccount.PrivateKey} \r\n Public Key {aliceAccount.PublicKey}");
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(aliceAccount.Address).Take(1);
+
+            Log.WriteLine($"Alice Account {aliceAccount.Address.Plain} \r\n Private Key: {aliceAccount.PrivateKey} \r\n Public Key {aliceAccount.PublicKey}");
 
             const ulong amount = (ulong)10;
             var mosaicToTransfer = NetworkCurrencyMosaic.CreateRelative(amount);
@@ -56,28 +54,42 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     mosaicToTransfer
                 },
                 PlainMessage.Create("transferTest"),
-                networkType);
+                Fixture.NetworkType);
 
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
-            _output.WriteLine($"Going to send {amount} XPP to {aliceAccount.Address.Pretty} with transaction {signedTransaction.Hash}");
-            WatchForFailure(signedTransaction);
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
+            var signedTransaction = Fixture.SeedAccount.Sign(transferTransaction, Fixture.GenerationHash);
+            Log.WriteLine($"Going to send {amount} XPP to {aliceAccount.Address.Pretty} with transaction {signedTransaction.Hash}");
+            Fixture.WatchForFailure(signedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
             var result = await tx;
 
-            _output.WriteLine($"Request confirmed with public key {result.Signer.PublicKey}");
+            Log.WriteLine($"Request confirmed with public key {result.Signer.PublicKey}");
 
-            var aliceAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(aliceAccount.Address);
+            var aliceAccountInfo = await Fixture.SiriusClient.AccountHttp.GetAccountInfo(aliceAccount.Address);
 
             aliceAccountInfo.Mosaics[0]?.Amount.Should().BeGreaterThan(0);
+
+            var outgoingTxs = Fixture.SiriusClient.AccountHttp.OutgoingTransactions(aliceAccountInfo.PublicAccount).Wait();
+
+            var recipientAddress = "VDG4WG-FS7EQJ-KFQKXM-4IUCQG-PXUW5H-DJVIJB-OXJG";
+            var address = Address.CreateFromRawAddress(recipientAddress);
+
+            var mosaicAmounts = (from TransferTransaction t in outgoingTxs
+                                 where t.TransactionType == TransactionType.TRANSFER &&
+                                       t.Recipient.Address.Plain == address.Plain &&
+                                       t.Mosaics.Count == 1 && 
+                                       t.Mosaics[0].HexId == NetworkCurrencyMosaic.Id.HexId
+                                 select (long)t.Mosaics[0].Amount).ToList();
+
+            Console.WriteLine($"Total xpx send to account {address.Plain} is {mosaicAmounts.Sum()}");
+
         }
 
 
         [Fact]
         public async Task Should_Add_Account_Filter_With_Block_Address()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-            var company = Account.GenerateNewAccount(networkType);
-            var blocked = Account.GenerateNewAccount(networkType);
+            var company = Account.GenerateNewAccount(Fixture.NetworkType);
+            var blocked = Account.GenerateNewAccount(Fixture.NetworkType);
 
             var addressFilter = ModifyAccountPropertyTransaction<Address>.CreateForAddress(
                 Deadline.Create(),
@@ -87,29 +99,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 {
                     new AccountPropertyModification<Address>(PropertyModificationType.ADD, blocked.Address)
                 },
-                networkType);
+                Fixture.NetworkType);
 
-            _output.WriteLine($"Going to filter the address {company.Address} ");
+            Log.WriteLine($"Going to filter the address {company.Address} ");
 
-            await _fixture.WebSocket.Listener.Open();
+            await Fixture.SiriusWebSocketClient.Listener.Open();
 
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
      
-            var signedTransaction = addressFilter.SignWith(company, _fixture.Environment.GenerationHash);
+            var signedTransaction = addressFilter.SignWith(company, Fixture.GenerationHash);
 
 
-            _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
 
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
-            _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var accountProperties = await _fixture.Client.AccountHttp.GetAccountProperty(company.PublicAccount);
+            var accountProperties = await Fixture.SiriusClient.AccountHttp.GetAccountProperty(company.PublicAccount);
             accountProperties.Should().NotBeNull();
             var blockAddressProperty =
                 accountProperties.AccountProperties.Properties.Single(ap =>
@@ -122,59 +134,72 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Add_Account_Filter_With_Allow_Mosaic()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-            var company = Account.GenerateNewAccount(networkType);
+            var company = await Fixture.GenerateAccountWithCurrency(1000);
 
-            var allowedMosaic = NetworkCurrencyMosaic.Id;
 
-            var accountFilter = ModifyAccountPropertyTransaction<MosaicId>.CreateForMosaic(
+            var allowedMosaic = await Fixture.CreateMosaic(company);
+
+            var accountFilter = ModifyAccountPropertyTransaction<IUInt64Id>.CreateForMosaic(
                 Deadline.Create(),
                 (ulong)0,
                 PropertyType.ALLOW_MOSAIC,
-                new List<AccountPropertyModification<MosaicId>>()
+                new List<AccountPropertyModification<IUInt64Id>>()
                 {
-                    new AccountPropertyModification<MosaicId>(PropertyModificationType.ADD, allowedMosaic)
+                    new AccountPropertyModification<IUInt64Id>(PropertyModificationType.ADD, allowedMosaic)
                 },
-                networkType);
+                Fixture.NetworkType);
 
-            _output.WriteLine($"Going to filter the address {company.Address} ");
+            Log.WriteLine($"Going to filter the address {company.Address} ");
 
-            await _fixture.WebSocket.Listener.Open();
+            await Fixture.SiriusWebSocketClient.Listener.Open();
 
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
        
-            var signedTransaction = accountFilter.SignWith(company, _fixture.Environment.GenerationHash);
+            var signedTransaction = accountFilter.SignWith(company, Fixture.GenerationHash);
 
-            _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
-            _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var accountProperties = await _fixture.Client.AccountHttp.GetAccountProperty(company.PublicAccount);
+            var accountProperties = await Fixture.SiriusClient.AccountHttp.GetAccountProperty(company.PublicAccount);
             accountProperties.Should().NotBeNull();
             var allowMosaicProperty =
                 accountProperties.AccountProperties.Properties.Single(ap =>
                     ap.PropertyType == PropertyType.ALLOW_MOSAIC);
             allowMosaicProperty.Should().NotBeNull();
-            var allowMosaic = allowMosaicProperty.Values
+
+            bool hasAllowMosaic = false;
+            foreach(var am in allowMosaicProperty.Values)
+            {
+                var m = JsonConvert.DeserializeObject<UInt64DTO>(am.ToString());
+                var mId = new MosaicId(m.FromUInt8Array());
+
+                if(mId.Id.ToHex().Equals(allowedMosaic.HexId))
+                {
+                    hasAllowMosaic = true;
+                }
+
+            }
+            hasAllowMosaic.Should().Be(true);
+           /* var allowMosaic = allowMosaicProperty.Values
                 .Single(a =>
                 {
                     var m = JsonConvert.DeserializeObject<UInt64DTO>(a.ToString());
                     return (new MosaicId(m.ToUInt64())).HexId == allowedMosaic.HexId;
                 });
-            allowMosaic.Should().NotBeNull();
+            allowMosaic.Should().NotBeNull();*/
         }
 
         [Fact]
         public async Task Should_Add_Account_Filter_With_Allow_Entity_Type()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-            var company = Account.GenerateNewAccount(networkType);
+            var company = Account.GenerateNewAccount(Fixture.NetworkType);
 
             var allowedTransType = TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE;
 
@@ -186,27 +211,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 {
                     new AccountPropertyModification<TransactionType>(PropertyModificationType.ADD, allowedTransType)
                 },
-                networkType);
+                Fixture.NetworkType);
 
-            _output.WriteLine($"Going to filter the address {company.Address} ");
+            Log.WriteLine($"Going to filter the address {company.Address} ");
 
-            await _fixture.WebSocket.Listener.Open();
+            await Fixture.SiriusWebSocketClient.Listener.Open();
 
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(1000));
 
           
-            var signedTransaction = accountFilter.SignWith(company, _fixture.Environment.GenerationHash);
+            var signedTransaction = accountFilter.SignWith(company, Fixture.GenerationHash);
 
-            _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
 
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
-            _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            var accountProperties = await _fixture.Client.AccountHttp.GetAccountProperty(company.PublicAccount);
+            var accountProperties = await Fixture.SiriusClient.AccountHttp.GetAccountProperty(company.PublicAccount);
             accountProperties.Should().NotBeNull();
             var allowedTransactionProperty =
                 accountProperties.AccountProperties.Properties.Single(ap =>
@@ -221,14 +246,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         [Fact]
         public async Task Should_Link_Namespace_To_An_Account()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-            var company = Account.GenerateNewAccount(networkType);
+            var company = Account.GenerateNewAccount(Fixture.NetworkType);
 
-            await _fixture.WebSocket.Listener.Open();
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1);
+            await Fixture.SiriusWebSocketClient.Listener.Open();
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1);
 
             #region Create account and send some money to it
-            _output.WriteLine($"Alice Account {company.Address.Plain} \r\n Private Key: {company.PrivateKey} \r\n Public Key {company.PublicKey}");
+            Log.WriteLine($"Alice Account {company.Address.Plain} \r\n Private Key: {company.PrivateKey} \r\n Public Key {company.PublicKey}");
 
             const ulong amount = (ulong)150;
             var mosaicToTransfer = NetworkCurrencyMosaic.CreateRelative(amount);
@@ -241,19 +265,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     mosaicToTransfer
                 },
                 PlainMessage.Create("transferTest"),
-                networkType);
+                Fixture.NetworkType);
 
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction,_fixture.Environment.GenerationHash);
-            _output.WriteLine($"Going to send {amount} XPP to {company.Address.Pretty} with transaction {signedTransaction.Hash}");
+            var signedTransaction = Fixture.SeedAccount.Sign(transferTransaction,Fixture.GenerationHash);
+            Log.WriteLine($"Going to send {amount} XPP to {company.Address.Pretty} with transaction {signedTransaction.Hash}");
 
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
             var result = await tx;
 
-            _output.WriteLine($"Request confirmed with public key {result.Signer.PublicKey}");
+            Log.WriteLine($"Request confirmed with public key {result.Signer.PublicKey}");
 
-            var companyAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(company.Address);
+            var companyAccountInfo = await Fixture.SiriusClient.AccountHttp.GetAccountInfo(company.Address);
 
-            _output.WriteLine($"Account {companyAccountInfo.Address.Plain} with initial mosaic {companyAccountInfo.Mosaics[0]}");
+            Log.WriteLine($"Account {companyAccountInfo.Address.Plain} with initial mosaic {companyAccountInfo.Mosaics[0]}");
 
             companyAccountInfo.Mosaics[0]?.Amount.Should().BeGreaterThan(0);
             #endregion
@@ -264,34 +288,34 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 Deadline.Create(),
                 namespaceName,
                 100,
-                networkType
+                Fixture.NetworkType
             );
 
-            var registeredNsSignedTransaction = company.Sign(registerNamespaceTransaction, _fixture.Environment.GenerationHash);
+            var registeredNsSignedTransaction = company.Sign(registerNamespaceTransaction, Fixture.GenerationHash);
 
-            tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
+            tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            await _fixture.Client.TransactionHttp.Announce(registeredNsSignedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(registeredNsSignedTransaction);
 
-            _output.WriteLine(
+            Log.WriteLine(
                 $"Registered namespace {namespaceName} for account {company.Address.Plain} with transaction {registeredNsSignedTransaction.Hash}");
 
             result = await tx;
 
-            _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
             var expectedId = new NamespaceId(namespaceName);
 
-            var nsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(expectedId).Timeout(_fixture.DefaultTimeout);
+            var nsInfo = await Fixture.SiriusClient.NamespaceHttp.GetNamespace(expectedId);
 
-            _output.WriteLine(
+            Log.WriteLine(
                 $"Retrieved namespace {namespaceName} successfully. The namespace HexId {nsInfo.Id.HexId}");
             nsInfo.Should().NotBeNull();
 
-            companyAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(company.Address);
+            companyAccountInfo = await Fixture.SiriusClient.AccountHttp.GetAccountInfo(company.Address);
 
-            _output.WriteLine($"Account {companyAccountInfo.Address.Plain} with mosaic {companyAccountInfo.Mosaics[0]} after registered namespace");
+            Log.WriteLine($"Account {companyAccountInfo.Address.Plain} with mosaic {companyAccountInfo.Mosaics[0]} after registered namespace");
 
             #endregion
 
@@ -301,23 +325,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 nsInfo.Id,
                 AliasActionType.LINK,
                 Deadline.Create(),
-                networkType
+                Fixture.NetworkType
             );
 
-            tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(company.Address).Take(1);
+            tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(company.Address).Take(1);
 
-            var aliasSignedTransaction = company.Sign(addressAliasTransaction, _fixture.Environment.GenerationHash);
+            var aliasSignedTransaction = company.Sign(addressAliasTransaction, Fixture.GenerationHash);
 
-            WatchForFailure(aliasSignedTransaction);
+            Fixture.WatchForFailure(aliasSignedTransaction);
 
-            await _fixture.Client.TransactionHttp.Announce(aliasSignedTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(aliasSignedTransaction);
 
             result = await tx;
 
-            _output.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
 
 
-            nsInfo = await _fixture.Client.NamespaceHttp.GetNamespace(expectedId);
+            nsInfo = await Fixture.SiriusClient.NamespaceHttp.GetNamespace(expectedId);
 
             nsInfo.Should().NotBeNull();
             nsInfo.HasAlias.Should().BeTrue();
@@ -334,24 +358,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     NetworkCurrencyMosaic.CreateRelative(10)
                 },
                 PlainMessage.Create("Send to namespace"),
-                networkType);
+                Fixture.NetworkType);
 
-            tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(_fixture.SeedAccount.Address).Take(1)
+            tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(Fixture.SeedAccount.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
-            var nsSignedTransferTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
+            var nsSignedTransferTransaction = Fixture.SeedAccount.Sign(transferTransaction, Fixture.GenerationHash);
 
-            WatchForFailure(nsSignedTransferTransaction);
+            Fixture.WatchForFailure(nsSignedTransferTransaction);
 
-            await _fixture.Client.TransactionHttp.Announce(nsSignedTransferTransaction);
+            await Fixture.SiriusClient.TransactionHttp.Announce(nsSignedTransferTransaction);
 
             var result2 = await tx;
 
-            _output.WriteLine($"Request confirmed with transaction {result2.TransactionInfo.Hash}");
+            Log.WriteLine($"Request confirmed with transaction {result2.TransactionInfo.Hash}");
 
-            companyAccountInfo = await _fixture.Client.AccountHttp.GetAccountInfo(company.Address);
+            companyAccountInfo = await Fixture.SiriusClient.AccountHttp.GetAccountInfo(company.Address);
 
-            _output.WriteLine($"Account {companyAccountInfo.Address.Plain} with mosaic {companyAccountInfo.Mosaics[0]} after transfer to the alias");
+            Log.WriteLine($"Account {companyAccountInfo.Address.Plain} with mosaic {companyAccountInfo.Mosaics[0]} after transfer to the alias");
 
             var expectedMosaicAmount = Convert.ToUInt64(Math.Pow(10, 6)) * (150 - 100 + 10);
 
@@ -360,77 +384,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             #endregion
         }
 
-        internal void WatchForFailure(SignedTransaction transaction)
-        {
-            _fixture.WebSocket.Listener.TransactionStatus(Address.CreateFromPublicKey(transaction.Signer, _fixture.Client.NetworkHttp.GetNetworkType().Wait()))
-                 .Subscribe(
-                     e =>
-                     {
-                         _output.WriteLine($"Transaction status {e.Hash} - {e.Status}");
-                     },
-                     err =>
-                     {
-                         _output.WriteLine($"Transaction error - {err}");
-                     });
-        }
-
-
-        /*
-        [Fact(Timeout = 30000)]
-        public async Task Should_Convert_An_Account_To_MultiSig()
-        {
-            var networkType = await _networkHttp.GetNetworkType();
-            const string privateKey = "FFCA7367B4EE8E14041091F438B7BC6C3206ADE2D312670B218C7516395C7D7F";
-            var account = Account.CreateFromPrivateKey(privateKey, networkType);
-
-            const string cosignatory1PublicKey = "7D08373CFFE4154E129E04F0827E5F3D6907587E348757B0F87D2F839BF88246";
-            var cosignatory1 = PublicAccount.CreateFromPublicKey(cosignatory1PublicKey, networkType);
-            const string cosignatory2PublicKey = "F82527075248B043994F1CAFD965F3848324C9ABFEC506BC05FBCF5DD7307C9D";
-            var cosignatory2 = PublicAccount.CreateFromPublicKey(cosignatory2PublicKey, networkType);
-
-            var modifications = new List<MultisigCosignatoryModification>
-            {
-                new MultisigCosignatoryModification(MultisigCosignatoryModificationType.ADD,cosignatory1),
-                new MultisigCosignatoryModification(MultisigCosignatoryModificationType.ADD,cosignatory2)
-            };
-
-            var convertIntoMultisigTransaction = ModifyMultisigAccountTransaction.Create(
-                Deadline.Create(),
-                1,
-                1,
-                modifications,
-                networkType
-            );
-
-            var aggregateTransaction = AggregateTransaction.CreateBonded(
-                Deadline.Create(),
-                new List<Transaction>
-                {
-                    convertIntoMultisigTransaction.ToAggregate(account.PublicAccount)
-                }, 
-                networkType);
-
-            var signedTransaction = account.Sign(aggregateTransaction);
-            _output.WriteLine($"Signed Transaction Hash {signedTransaction.Hash}");
-
-            var hashLockTransaction = LockFundsTransaction.Create(
-                Deadline.Create(),
-                new Mosaic(
-                    (new MosaicId("0DC67FBE1CAD29E3")).Id, //Replace with your network currency mosaic id
-                    (ulong)10000000
-                ),
-                480L,
-                signedTransaction,
-                networkType);
-
-            var hashLockTransactionSigned = account.Sign(hashLockTransaction);
-
-            await _transactionHttp.Announce(hashLockTransactionSigned);
-
-            await Task.Delay(15000);
-
-            await _transactionHttp.AnnounceAggregateBonded(hashLockTransactionSigned);
-        }*/
-
+       
     }
 }

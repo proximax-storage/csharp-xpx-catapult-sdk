@@ -14,5 +14,7 @@
             int len = endIndex - beginIndex;
             return s.Substring(beginIndex, len);
         }
+
+       
     }
 }

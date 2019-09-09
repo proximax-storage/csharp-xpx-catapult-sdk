@@ -32,7 +32,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Buffers.Schema
                 new ScalarAttribute("size", Constants.Value.SIZEOF_INT),
                 new ArrayAttribute("signature", Constants.Value.SIZEOF_BYTE),
                 new ArrayAttribute("signer", Constants.Value.SIZEOF_BYTE),
-                new ScalarAttribute("version", Constants.Value.SIZEOF_SHORT),
+                new ScalarAttribute("version", Constants.Value.SIZEOF_INT),
                 new ScalarAttribute("type", Constants.Value.SIZEOF_SHORT),
                 new ArrayAttribute("maxFee", Constants.Value.SIZEOF_INT),
                 new ArrayAttribute("deadline", Constants.Value.SIZEOF_INT),

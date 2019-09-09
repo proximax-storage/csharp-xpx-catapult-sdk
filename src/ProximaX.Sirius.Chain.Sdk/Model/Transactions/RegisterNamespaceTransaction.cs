@@ -152,7 +152,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create vectors
             var signatureVector = RegisterNamespaceTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
             var signerVector = RegisterNamespaceTransactionBuffer.CreateSignerVector(builder, GetSigner());
-            var feeVector = TransferTransactionBuffer.CreateFeeVector(builder, MaxFee?.ToUInt8Array());
+            var feeVector = TransferTransactionBuffer.CreateMaxFeeVector(builder, MaxFee?.ToUInt8Array());
             var deadlineVector =
                 RegisterNamespaceTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var namespaceIdVector =
@@ -163,21 +163,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var durationParentIdVector =
                 RegisterNamespaceTransactionBuffer.CreateDurationParentIdVector(builder, durationParentId);
 
-            const int fixedSize = 138;
+        
 
-            var version = ushort.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);
+            // header, ns type, duration, ns id, name size, name
+            int fixedSize = HEADER_SIZE + 1 + 8 + 8 + 1 + NamespaceName.Length;
+           
+            // create version
+            var version = GetTxVersionSerialization();
 
             var name = builder.CreateString(NamespaceName);
 
             // ADD to buffer
             RegisterNamespaceTransactionBuffer.StartRegisterNamespaceTransactionBuffer(builder);
-            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint) (fixedSize + NamespaceName.Length));
+            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint) fixedSize);
             RegisterNamespaceTransactionBuffer.AddSignature(builder, signatureVector);
             RegisterNamespaceTransactionBuffer.AddSigner(builder, signerVector);
-            RegisterNamespaceTransactionBuffer.AddVersion(builder, version);
+            RegisterNamespaceTransactionBuffer.AddVersion(builder, (uint)version);
             RegisterNamespaceTransactionBuffer.AddType(builder, TransactionType.GetValue());
-            RegisterNamespaceTransactionBuffer.AddFee(builder, feeVector);
+            RegisterNamespaceTransactionBuffer.AddMaxFee(builder, feeVector);
             RegisterNamespaceTransactionBuffer.AddDeadline(builder, deadlineVector);
             RegisterNamespaceTransactionBuffer.AddNamespaceType(builder, NamespaceType.GetValueInByte());
             RegisterNamespaceTransactionBuffer.AddDurationParentId(builder, durationParentIdVector);

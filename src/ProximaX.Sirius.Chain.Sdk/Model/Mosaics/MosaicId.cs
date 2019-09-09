@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
@@ -21,7 +22,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
     ///     A mosaic describes an instance of a mosaic definition.
     ///     Mosaics can be transferred by means of a transfer transaction.
     /// </summary>
-    public class MosaicId
+    public class MosaicId: IUInt64Id
     {
         private MosaicId(MosaicNonce nonce, string publicKeyHex)
         {
@@ -65,6 +66,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// </summary>
         public string HexId => Id.ToHex();
 
+       /// <summary>
+       /// The mosaic name
+       /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Creates mosaicId from nonce
         /// </summary>
@@ -81,5 +87,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
             return
                 $"{nameof(Id)}: {Id}, {nameof(Nonce)}: {Nonce}, {nameof(OwnerPublicKeyHex)}: {OwnerPublicKeyHex}, {nameof(HexId)}: {HexId}";
         }
+
     }
 }

@@ -121,19 +121,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 account.Address,
                 new List<Mosaic>()
                 {
-                    mosaicToTransfer
+                   // mosaicToTransfer
                 },
                 PlainMessage.Create("transferTest"),
                 networkType);
 
             var signedTransaction = SeedAccount.Sign(transferTransaction, Environment.GenerationHash);
-
+            WatchForFailure(signedTransaction);
             try
             {
                 await WebSocket.Listener.Open();
 
                 var tx = WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1).Timeout(TimeSpan.FromSeconds(100));
 
+                
                 await Client.TransactionHttp.Announce(signedTransaction);
 
                 var result = await tx;
@@ -181,7 +182,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
     }
 
     [CollectionDefinition("E2ETestFixtureCollection")]
-    public class E2ETestFixtureCollection : ICollectionFixture<E2ETestFixture>
+    public class E2ETestFixtureCollection : ICollectionFixture<E2EBaseFixture>
     {
         // This class has no code, and is never created. Its purpose is simply
         // to be the place to apply [CollectionDefinition] and all the

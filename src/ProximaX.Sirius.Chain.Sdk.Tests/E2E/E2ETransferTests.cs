@@ -12,60 +12,91 @@ using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
-    [Collection("E2ETestFixtureCollection")]
-    public class E2ETransferTests: IDisposable
+    
+    public class E2ETransferTests : IClassFixture<E2EBaseFixture>
     {
-        private readonly E2ETestFixture _fixture;
+        readonly E2EBaseFixture Fixture;
+        readonly ITestOutputHelper Log;
 
-        private readonly ITestOutputHelper _output;
-
-        public E2ETransferTests(E2ETestFixture fixture, ITestOutputHelper output)
+        public E2ETransferTests(E2EBaseFixture fixture, ITestOutputHelper log)
         {
-            _fixture = fixture;
-            _output = output;
-            _fixture.WebSocket.Listener.Open().Wait();
+            Fixture = fixture;
+            Log = log;
         }
 
-        public void Dispose()
+
+
+
+
+        [Fact]
+        public async Task Should_Announce_Transfer_Transaction_With_NetworkCurrencyMosaic_PlainMessage()
         {
-           // _fixture.WebSocket.Listener.Close();
+            var account = Account.GenerateNewAccount(Fixture.NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateRelative(10);
+            var message = PlainMessage.Create("Test message");
+            var result = await Fixture.Transfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
+            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
+            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.PLAIN_MESSAGE.GetValueInByte());
         }
 
         [Fact]
-        public async Task Should_Announce_Transfer_Transaction()
+        public async Task Should_Announce_Aggregate_Transaction_Signed_Aggregate_Transaction()
         {
-            var networkType = _fixture.Client.NetworkHttp.GetNetworkType().Wait();
-
-            var account = Account.GenerateNewAccount(networkType);
-
-            const ulong money = (ulong)10;
-
-            var mosaicToTransfer = NetworkCurrencyMosaic.CreateRelative(money);
-
-            var transferTransaction = TransferTransaction.Create(
-                Deadline.Create(),
-                account.Address,
-                new List<Mosaic>()
-                {
-                    mosaicToTransfer
-                },
-                PlainMessage.Create("transferTest"),
-                networkType);
-
-            var signedTransaction = _fixture.SeedAccount.Sign(transferTransaction, _fixture.Environment.GenerationHash);
-            _output.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
-
-            var tx = _fixture.WebSocket.Listener.ConfirmedTransactionsGiven(account.Address).Take(1);
-
-            await _fixture.Client.TransactionHttp.Announce(signedTransaction);
-            
-            var result = await tx;
+            var account = Account.GenerateNewAccount(Fixture.NetworkType);
+            var mosaic = NetworkCurrencyMosaic.CreateAbsolute(1);
+            var message = PlainMessage.Create("c#__ SDK plain message test");
+            var result = await Fixture.AggregateTransfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
             result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
-            _output.WriteLine($"Request with transaction status {result.TransactionInfo.Hash}");
-
-      
-
+            result.TransactionType.Should().Be(TransactionType.AGGREGATE_COMPLETE);
+        
         }
 
+        [Fact]
+        public async Task Should_Announce_Transfer_Transaction_With_NetworkCurrencyMosaic_SecureMessage()
+        {
+            var account = Account.GenerateNewAccount(Fixture.NetworkType);
+            Log.WriteLine($"Reciever private key {account.KeyPair.PrivateKeyString}, reciever public key {account.PublicAccount.PublicKey}");
+            var mosaic = NetworkCurrencyMosaic.CreateRelative(10);
+            Log.WriteLine($"Sender private key {Fixture.SeedAccount.KeyPair.PrivateKeyString}, sender public key {Fixture.SeedAccount.PublicAccount.PublicKey}");
+            var message = SecureMessage.Create("Test secure message", Fixture.SeedAccount.KeyPair.PrivateKeyString, account.PublicAccount.PublicKey);
+            var result = await Fixture.Transfer(Fixture.SeedAccount, account.Address, mosaic, message, Fixture.GenerationHash);
+            Log.WriteLine($"Transaction confirmed {result.TransactionInfo.Hash}");
+            result.TransactionInfo.Hash.Should().NotBeNullOrWhiteSpace();
+            result.TransactionType.Should().Be(TransactionType.TRANSFER);
+            ((TransferTransaction)result).Message.GetMessageType().Should().Be(MessageType.SECURED_MESSAGE.GetValueInByte());
+        }
+
+        /*private async Task<Transaction> Transfer(Account from,Address to, Mosaic mosaic, IMessage message, string Fixture.GenerationHash)
+        {
+           
+            var transferTransaction = TransferTransaction.Create(
+                Deadline.Create(),
+                Recipient.From(to),
+                new List<Mosaic>()
+                {
+                 mosaic
+                },
+                message,
+                Fixture.NetworkType);
+
+            var signedTransaction = from.Sign(transferTransaction, Fixture.GenerationHash);
+
+            Fixture.WatchForFailure(signedTransaction);
+
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
+
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+
+            return result;
+        }*/
+
+        
     }
 }

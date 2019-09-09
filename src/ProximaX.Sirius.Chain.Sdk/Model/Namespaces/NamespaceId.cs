@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Namespaces
@@ -19,7 +20,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Namespaces
     /// <summary>
     ///     The namespace identifier
     /// </summary>
-    public class NamespaceId
+    public class NamespaceId: IUInt64Id
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="NamespaceId" /> class.
