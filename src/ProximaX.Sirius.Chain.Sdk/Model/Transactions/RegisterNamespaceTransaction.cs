@@ -141,6 +141,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 NamespaceType.SUB_NAMESPACE, null, parentId);
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     Generate Bytes
         /// </summary>

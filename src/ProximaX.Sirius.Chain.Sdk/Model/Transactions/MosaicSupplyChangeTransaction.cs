@@ -81,6 +81,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 deadline, 0, mosaicId, mosaicSupplyType, delta);
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            throw new System.NotImplementedException();
+        }
+
         internal override byte[] GenerateBytes()
         {
             var builder = new FlatBufferBuilder(1);

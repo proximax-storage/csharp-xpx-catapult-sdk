@@ -48,6 +48,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     GetValueBytesFromModification
         /// </summary>

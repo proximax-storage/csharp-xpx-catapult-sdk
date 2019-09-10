@@ -198,9 +198,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var transactionsVector = AggregateTransactionBuffer.CreateTransactionsVector(builder, transactionsBytes);
 
             // total size of transaction
-            var totalSize = HEADER_SIZE
+            /*var totalSize = HEADER_SIZE
                 + 4
-                + transactionsBytes.Length;
+                + transactionsBytes.Length;*/
+            var totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();
@@ -229,6 +230,25 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             return output;
 
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(InnerTransactions);
+        }
+
+        public static int CalculatePayloadSize(List<Transaction> innerTransactions)
+        {
+            // sum sizes of inner transactions, subtract 80 as toAggregateTransactionBytes leaves out 80 bytes of header
+            var transactionsBytes = new byte[0];
+
+            transactionsBytes = innerTransactions.Aggregate(transactionsBytes,
+                (current, innerTransaction) => current.Concat(innerTransaction.ToAggregate()).ToArray());
+
+            int innerSize = transactionsBytes.Length - 80;
+
+            // transactions size + transactions
+            return 4 + innerSize;
         }
     }
 }

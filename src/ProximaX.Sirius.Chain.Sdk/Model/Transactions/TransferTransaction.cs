@@ -113,6 +113,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 recipient, mosaics, message);
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Message, Mosaics.Count);
+        }
+
+        public static int CalculatePayloadSize(IMessage message, int mosaicCount)
+        {
+            return
+            // recipient is always 25 bytes
+            25 +
+                  // message size is short
+                  2 +
+                  // message type byte
+                  1 +
+                  // number of mosaics
+                  1 +
+                  // each mosaic has id and amount, both 8byte uint64
+                  ((8 + 8) * mosaicCount) +
+                  // number of message bytes
+                  message.GetPayload().Length;
+        }
+
         internal override byte[] GenerateBytes()
         {
             var builder = new FlatBufferBuilder(1);
@@ -151,13 +173,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaicBuffers);
 
             // total size of transaction
-            var totalSize = HEADER_SIZE
+            /*var totalSize = HEADER_SIZE
                 + 25 // recipient
                 + 2 // message size is short
                 + 1 // message type byte
                 + 1 // no of mosaics
                 + ((8 + 8) * Mosaics.Count) //each mosaic has id(8bytes) and amount(8bytes)
-                + bytePayload.Length; // number of message bytes
+                + bytePayload.Length; // number of message bytes*/
+
+            var totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();

@@ -69,6 +69,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 deadline, 0, nonce, mosaicId, properties);
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     Generates the bytes.
         /// </summary>

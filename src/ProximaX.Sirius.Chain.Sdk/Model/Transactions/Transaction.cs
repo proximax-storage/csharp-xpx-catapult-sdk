@@ -270,9 +270,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         protected int GetTxVersionSerialization()
         {
             return TransactionMappingUtils.SerializeVersion(Version, NetworkType.GetValue());
-           /* return int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);*/
+       
         }
+        protected int GetSerializedSize()
+        {
+            return HEADER_SIZE + GetPayloadSerializedSize();
+        }
+
+        protected abstract int GetPayloadSerializedSize();
 
         /// <summary>
         ///     Generates the bytes.

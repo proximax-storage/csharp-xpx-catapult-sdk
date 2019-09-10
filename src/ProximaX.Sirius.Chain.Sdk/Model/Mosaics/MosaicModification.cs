@@ -49,6 +49,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         {
         }
 
+        protected override int GetPayloadSerializedSize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///     GetValueBytesFromModification
         /// </summary>
