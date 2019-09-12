@@ -30,6 +30,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public PublicAccount RemoteAccount { get; set; }
         public AccountLinkAction Action { get; set; }
 
+      
+
         /// <summary>
         /// Create new instance of account link transaction
         /// </summary>
@@ -48,6 +50,31 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
              PublicAccount remoteAccount, AccountLinkAction action,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(NetworkType, version, transactionType, deadline, maxFee,
+            signature, signer, transactionInfo)
+        {
+            Guard.NotNull(remoteAccount, nameof(remoteAccount), "remoteAccount has to be specified");
+
+            RemoteAccount = remoteAccount;
+            Action = action;
+        }
+
+        /// <summary>
+        /// Create new instance of account link transaction
+        /// </summary>
+        /// <param name="NetworkType">The network type</param>
+        /// <param name="version">The transaction version</param>
+        /// <param name="deadline">The transaction deadline</param>
+        /// <param name="maxFee">The max fee</param>
+        /// <param name="remoteAccount">The remote account</param>
+        /// <param name="action">The action</param>
+        /// <param name="signature">The signature</param>
+        /// <param name="signer">The signer</param>
+        /// <param name="transactionInfo">The transaction info</param>
+        public AccountLinkTransaction(NetworkType NetworkType, int version, Deadline deadline,
+            ulong? maxFee, 
+             PublicAccount remoteAccount, AccountLinkAction action,
+            string signature = null, PublicAccount signer = null,
+            TransactionInfo transactionInfo = null) : base(NetworkType, version, EntityType.LINK_ACCOUNT, deadline, maxFee,
             signature, signer, transactionInfo)
         {
             Guard.NotNull(remoteAccount, nameof(remoteAccount), "remoteAccount has to be specified");
@@ -87,13 +114,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var deadlineVector = AccountLinkTransactionBuffer.CreateDeadlineVector(builder, Deadline.Ticks.ToUInt8Array());
             var remoteAccountVector = AccountLinkTransactionBuffer.CreateRemoteAccountKeyVector(builder, RemoteAccount.PublicKey.DecodeHexString());
 
-            var totalSize =
+            /*var totalSize =
             // header
             HEADER_SIZE +
             // remote account public key
             32 +
             // link action
-            1;
+            1;*/
+            var totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();
@@ -122,9 +150,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         }
 
+        public static int CalculatePayloadSize()
+        {
+            // remote account public key + link action
+            return 32 + 1;
+        }
+
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            return CalculatePayloadSize();
         }
     }
 }

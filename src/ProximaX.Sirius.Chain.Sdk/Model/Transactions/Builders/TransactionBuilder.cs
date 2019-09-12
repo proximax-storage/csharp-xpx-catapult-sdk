@@ -30,6 +30,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
             Version = version;
         }
 
+
         protected ulong GetMaxFeeCalculation(int transactionSize)
         {
             var fcs = new FeeCalculationStrategy(FeeCalculationStrategyType);

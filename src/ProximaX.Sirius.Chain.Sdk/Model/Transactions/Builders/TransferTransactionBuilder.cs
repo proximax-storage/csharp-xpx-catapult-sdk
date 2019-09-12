@@ -12,7 +12,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
         public List<Mosaic> Mosaics { get; private set; }
         public IMessage Message { get; private set; }
 
-        public TransferTransactionBuilder(EntityType entityType, int version) : base(entityType, version)
+        public TransferTransactionBuilder() : base(EntityType.TRANSFER, EntityVersion.TRANSFER.GetValue())
         {
             Message = EmptyMessage.Create();
             Mosaics = new List<Mosaic>();
