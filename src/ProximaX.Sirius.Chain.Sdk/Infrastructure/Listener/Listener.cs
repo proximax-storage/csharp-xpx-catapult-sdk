@@ -97,8 +97,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
                 if (ClientSocket.State != WebSocketState.Open)
                 {
                     var protocol = UseSsl ? "wss://" : "ws://";
-                    var protocolPath = UseSsl ? "/wss" : "/ws";
-
+                    //var protocolPath = UseSsl ? "/wss" : "/ws";
+                    var protocolPath = "/ws";
                     ClientSocket.ConnectAsync(new Uri(string.Concat(protocol, Domain, ":", Port, protocolPath)),
                             CancellationToken.None)
                         .GetAwaiter()
