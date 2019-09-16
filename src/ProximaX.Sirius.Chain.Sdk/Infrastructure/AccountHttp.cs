@@ -281,6 +281,42 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         }
 
         /// <summary>
+        ///     Get incoming transactions by address
+        /// </summary>
+        /// <param name="account">The public account</param>
+        /// <param name="query">The query parameters</param>
+        /// <returns>IObservable&lt;List&lt;Transaction&gt;&gt;</returns>
+        public IObservable<List<Transaction>> IncomingTransactions(Address address, QueryParams query = null)
+        {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+
+            var route = $"{BasePath}/account/{address.Plain}/transactions/incoming";
+
+            if (query != null)
+            {
+                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+
+                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+
+                switch (query.Order)
+                {
+                    case Order.ASC:
+                        route.SetQueryParam("ordering", "id");
+                        break;
+                    case Order.DESC:
+                        route.SetQueryParam("ordering", "-id");
+                        break;
+                    default:
+                        route.SetQueryParam("ordering", "-id");
+                        break;
+                }
+            }
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<List<JObject>>())
+                .Select(h => h.Select(t => new TransactionMapping().Apply(t)).ToList());
+        }
+
+        /// <summary>
         ///     Get outgoing transactions for which an account is the sender or receiver.
         /// </summary>
         /// <param name="account">The public account</param>
