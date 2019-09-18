@@ -68,7 +68,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
 
         public override AliasTransaction Build()
         {
-            var maxFee = MaxFee ?? GetMaxFeeCalculation(AliasTransaction.CalculatePayloadSize(Address));
+            var maxFee = MaxFee ?? GetMaxFeeCalculation(AliasTransaction.CalculatePayloadSize(Address!=null));
 
             return new AliasTransaction(NetworkType, Version, Deadline, maxFee, EntityType, NamespaceId, AliasActionType, MosaicId
                 , Address);
