@@ -74,6 +74,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 deadline, 0, EntityType.MOSAIC_ALIAS, namespaceId, actionType, mosaicId);
         }
 
+        public static int CalculatePayloadSize(bool isAddress)
+        {
+            // alias is either 25 bytes of address or 8 bytes of mosaic ID
+            int aliasIdSize = isAddress ? 25 : 8;
+            // alias ID + namespace ID + action
+            return aliasIdSize + 8 + 1;
+        }
+
         public static AliasTransaction CreateForAddress(Address address, NamespaceId namespaceId,
             AliasActionType actionType,
             Deadline deadline, NetworkType networkType)
@@ -110,14 +118,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 AliasTransactionBuffer.CreateNamespaceIdVector(builder, NamespaceId.Id.ToUInt8Array());
             var aliasIdVector = AliasTransactionBuffer.CreateAliasIdVector(builder, aliasIdBytes);
 
-            var fixedSize = HEADER_SIZE + aliasIdBytes.Length + 8 + 1;
+            //var fixedSize = HEADER_SIZE + aliasIdBytes.Length + 8 + 1;
+
+            // header, 2 uint64 and int
+            int totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();
 
 
             AliasTransactionBuffer.StartAliasTransactionBuffer(builder);
-            AliasTransactionBuffer.AddSize(builder, (uint) fixedSize);
+            AliasTransactionBuffer.AddSize(builder, (uint)totalSize);
             AliasTransactionBuffer.AddSignature(builder, signatureVector);
             AliasTransactionBuffer.AddSigner(builder, signerVector);
             AliasTransactionBuffer.AddVersion(builder, (uint)version);
@@ -137,7 +148,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+              return  CalculatePayloadSize(Address != null);
         }
     }
 }
