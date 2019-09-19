@@ -84,6 +84,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 case "BCTESTNET":
                     env = "BcTestNet";
                     break;
+                case "BCDEV":
+                    env = "BcDev";
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(Environment), environment, null);
             }

@@ -28,6 +28,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
            
         }
 
+        public static int CalculatePayloadSize()
+        {
+            // period offset + version
+            return 8 + 8;
+
+        }
+
         public ulong UpgradePeriod { get; }
         public BlockchainVersion NewVersion { get; }
      
@@ -47,7 +54,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            return CalculatePayloadSize();
         }
 
         internal override byte[] GenerateBytes()
@@ -66,12 +73,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         
             var upgradePeriodVector = CatapultUpgradeTransactionBuffer.CreateUpgradePeriodVector(builder,UpgradePeriod.ToUInt8Array());
             var newCatapultVersionVector = CatapultUpgradeTransactionBuffer.CreateNewCatapultVersionVector(builder, NewVersion.GetVersionValue().ToUInt8Array());
-         
+
             // header, 2 uint64
-            var fixedSize = HEADER_SIZE + 8 + 8;
+            var totalSize = GetPayloadSerializedSize();
 
             CatapultUpgradeTransactionBuffer.StartCatapultUpgradeTransactionBuffer(builder);
-            CatapultUpgradeTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            CatapultUpgradeTransactionBuffer.AddSize(builder, (uint)totalSize);
             CatapultUpgradeTransactionBuffer.AddSignature(builder, signatureVector);
             CatapultUpgradeTransactionBuffer.AddSigner(builder, signerVector);
             CatapultUpgradeTransactionBuffer.AddVersion(builder, (uint)version);
@@ -86,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             builder.Finish(codedTransfer.Value);
 
             var output = new BlockchainUpgradeTransactionSchema().Serialize(builder.SizedByteArray());
-            if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;
 

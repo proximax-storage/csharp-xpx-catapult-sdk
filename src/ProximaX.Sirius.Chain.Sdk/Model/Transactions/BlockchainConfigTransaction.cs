@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
@@ -30,6 +27,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         public ulong ApplyHeightDelta { get; }
         public string BlockchainConfig { get; }
+
+        public static int CalculatePayloadSize(int configBytesLength, int entityBytesLength)
+        {
+            // height offset + size of config + config + size of entities + entities
+            return 8 + 2 + configBytesLength + 2 + entityBytesLength;
+        }
+
         public string SupportedEntityVersions { get; }
 
         public static BlockchainConfigTransaction Create(Deadline deadline, ulong applyHeightDelta, string blockchainConfig, string supportedEntityVersions, NetworkType networkType)
@@ -47,7 +51,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            var configBytes = Encoding.UTF8.GetBytes(BlockchainConfig);
+            var entityBytes = Encoding.UTF8.GetBytes(SupportedEntityVersions);
+            return CalculatePayloadSize(configBytes.Length, entityBytes.Length);
         }
 
         internal override byte[] GenerateBytes()
@@ -70,10 +76,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var entityVector = CatapultConfigTransactionBuffer.CreateBlockChainConfigVector(builder, entityBytes);
 
             // header, 2 uint64 and int
-            var fixedSize = HEADER_SIZE + 8 + 2 + 2 + entityBytes.Length + configBytes.Length;
+            //var fixedSize = HEADER_SIZE + 8 + 2 + 2 + entityBytes.Length + configBytes.Length;
+            var totalSize = GetPayloadSerializedSize();
 
             CatapultConfigTransactionBuffer.StartCatapultConfigTransactionBuffer(builder);
-            CatapultConfigTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            CatapultConfigTransactionBuffer.AddSize(builder, (uint)totalSize);
             CatapultConfigTransactionBuffer.AddSignature(builder, signatureVector);
             CatapultConfigTransactionBuffer.AddSigner(builder, signerVector);
             CatapultConfigTransactionBuffer.AddVersion(builder,(uint)version);
@@ -91,7 +98,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             builder.Finish(codedTransfer.Value);
 
             var output = new BlockchainConfigTransactionSchema().Serialize(builder.SizedByteArray());
-            if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;
 

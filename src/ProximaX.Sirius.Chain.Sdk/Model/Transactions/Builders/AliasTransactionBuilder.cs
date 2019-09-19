@@ -1,10 +1,7 @@
-﻿using GuardNet;
-using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+﻿using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
 {

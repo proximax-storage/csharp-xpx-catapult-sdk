@@ -30,7 +30,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public PublicAccount RemoteAccount { get; set; }
         public AccountLinkAction Action { get; set; }
 
-      
+    
 
         /// <summary>
         /// Create new instance of account link transaction
