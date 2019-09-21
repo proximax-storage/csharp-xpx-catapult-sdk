@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -83,9 +85,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 duration, signedTransaction);
         }
 
+        public static int CalculatePayloadSize()
+        {
+            // mosaic id, amount, duration, hash
+            return 8 + 8 + 8 + 32;
+        }
+
         protected override int GetPayloadSerializedSize()
         {
-            throw new System.NotImplementedException();
+            return CalculatePayloadSize();
         }
 
         internal override byte[] GenerateBytes()
@@ -108,15 +116,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create version
             var version = GetTxVersionSerialization();
 
-            int fixedSize = HEADER_SIZE 
-                + 8 //mosaic id
-                + 8 //amount
-                + 8 //duration
-                + 32; //hash
+            int totalSize = GetSerializedSize();
                 
 
             LockFundsTransactionBuffer.StartLockFundsTransactionBuffer(builder);
-            LockFundsTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            LockFundsTransactionBuffer.AddSize(builder, (uint)totalSize);
             LockFundsTransactionBuffer.AddSignature(builder, signatureVector);
             LockFundsTransactionBuffer.AddSigner(builder, signerVector);
             LockFundsTransactionBuffer.AddVersion(builder, (uint)version);
@@ -132,7 +136,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransfer = LockFundsTransactionBuffer.EndLockFundsTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            return new LockFundsTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new LockFundsTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
+            
         }
     }
 }

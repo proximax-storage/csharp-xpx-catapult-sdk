@@ -93,6 +93,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var company = Account.GenerateNewAccount(Fixture.NetworkType);
             var blocked = Account.GenerateNewAccount(Fixture.NetworkType);
 
+            
+
             var addressFilter = ModifyAccountPropertyTransaction<Address>.CreateForAddress(
                 Deadline.Create(),
                 (ulong)0,
@@ -103,6 +105,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 },
                 Fixture.NetworkType);
 
+           
             Log.WriteLine($"Going to filter the address {company.Address} ");
 
             await Fixture.SiriusWebSocketClient.Listener.Open();

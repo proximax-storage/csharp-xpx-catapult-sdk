@@ -201,6 +201,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             /*var totalSize = HEADER_SIZE
                 + 4
                 + transactionsBytes.Length;*/
+
             var totalSize = GetSerializedSize();
 
             // create version
@@ -245,7 +246,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             transactionsBytes = innerTransactions.Aggregate(transactionsBytes,
                 (current, innerTransaction) => current.Concat(innerTransaction.ToAggregate()).ToArray());
 
-            int innerSize = transactionsBytes.Length - 80;
+            //int innerSize = transactionsBytes.Length - 80;
+            int innerSize = transactionsBytes.Length;
 
             // transactions size + transactions
             return 4 + innerSize;

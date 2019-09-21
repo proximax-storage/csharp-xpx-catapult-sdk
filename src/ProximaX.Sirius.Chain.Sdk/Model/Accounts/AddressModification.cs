@@ -26,6 +26,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
     /// </summary>
     public class AddressModification : ModifyAccountPropertyTransaction<Address>
     {
+        public static readonly int VALUE_BYTES_LENGTH = 8;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="AddressModification" /> class.
         /// </summary>
@@ -47,9 +49,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         {
         }
 
+        public static int CalculatePayloadSize(int modCount)
+        {
+            // property type, mod count, mods
+            return 1 + 1 + (1 + VALUE_BYTES_LENGTH) * modCount;
+        }
+
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            return CalculatePayloadSize(Modifications.Count);
         }
 
 
