@@ -28,6 +28,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
         {
             EntityType = entityType;
             Version = version;
+            FeeCalculationStrategyType = FeeCalculationStrategyType.LOW;
         }
 
 

@@ -7,6 +7,7 @@ using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
 using Xunit;
 using Xunit.Abstractions;
@@ -92,7 +93,101 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
            
         }
 
-      
+
+        [Fact]
+        public async Task Should_Create_Mosaic_With_Builder()
+        {
+
+            var account = Fixture.SeedAccount;
+            var nonce = MosaicNonce.CreateRandom();
+            var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
+            var builder = new MosaicDefinitionTransactionBuilder();
+            builder.SetNonce(nonce)
+                .SetMosaicId(mosaicId)
+                .SetMosaicProperties(MosaicProperties.Create(
+                    supplyMutable: true,
+                    transferable: true,
+                    levyMutable: false,
+                    divisibility: 0,
+                    duration: 1000
+                ))
+                .SetDeadline(Deadline.Create())
+                .SetNetworkType(Fixture.NetworkType);
+
+            /*
+            var mosaicDefinitionTransaction = MosaicDefinitionTransaction.Create(
+                nonce,
+                mosaicId,
+                Deadline.Create(),
+                MosaicProperties.Create(
+                    supplyMutable: true,
+                    transferable: true,
+                    levyMutable: false,
+                    divisibility: 0,
+                    duration: 1000
+                ),
+                Fixture.NetworkType);
+            */
+            var mosaicDefinitionTransaction = builder.Build();
+
+
+            Log.WriteLine($"Going to create mosaic {mosaicId}");
+
+            var supplyBuilder = new MosaicSupplyChangeTransactionBuilder();
+            supplyBuilder
+                .SetDeadline(Deadline.Create())
+                .SetNetworkType(Fixture.NetworkType)
+                .IncreaseSupplyFor(mosaicDefinitionTransaction.MosaicId)
+                .SetDelta(1000000);
+
+            var mosaicSupplyChangeTransaction = supplyBuilder.Build();
+            /*
+            var mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.Create(
+              Deadline.Create(),
+              mosaicDefinitionTransaction.MosaicId,
+              MosaicSupplyType.INCREASE,
+              1000000,
+              Fixture.NetworkType);
+              */
+
+            var aggregateTransaction = AggregateTransaction.CreateComplete(
+               Deadline.Create(),
+               new List<Transaction>
+               {
+                       mosaicDefinitionTransaction.ToAggregate(account.PublicAccount),
+                       mosaicSupplyChangeTransaction.ToAggregate(account.PublicAccount)
+               },
+               Fixture.NetworkType);
+
+            var signedTransaction = account.Sign(aggregateTransaction, Fixture.GenerationHash);
+
+            Fixture.WatchForFailure(signedTransaction);
+
+            Log.WriteLine($"Going to announce transaction {signedTransaction.Hash}");
+
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+                .Timeout(TimeSpan.FromSeconds(3000));
+
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            var result = await tx;
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+
+
+            var mosaicInfo = await Fixture.SiriusClient.MosaicHttp.GetMosaic(mosaicDefinitionTransaction.MosaicId);
+
+            Log.WriteLine($"Mosaic created {mosaicInfo}");
+
+            mosaicInfo.Should().NotBeNull();
+            mosaicInfo.Divisibility.Should().Be(0);
+            mosaicInfo.Duration.Should().Be(1000);
+            mosaicInfo.IsLevyMutable.Should().BeFalse();
+            mosaicInfo.IsSupplyMutable.Should().BeTrue();
+            mosaicInfo.IsTransferable.Should().BeTrue();
+            mosaicInfo.Supply.Should().Be(1000000);
+
+        }
+
         [Fact]
         public async Task Should_Decrease_Mosaic_Supply()
         {
