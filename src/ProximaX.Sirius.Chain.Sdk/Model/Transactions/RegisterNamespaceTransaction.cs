@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -141,9 +142,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 NamespaceType.SUB_NAMESPACE, null, parentId);
         }
 
+        public static int CalculatePayloadSize(int namespaceNameLength)
+        {
+            // ns type, duration, ns id, name size, name
+            return 1 + 8 + 8 + 1 + namespaceNameLength;
+        }
+
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            return CalculatePayloadSize(NamespaceName.Length);
         }
 
         /// <summary>
@@ -168,10 +175,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var durationParentIdVector =
                 RegisterNamespaceTransactionBuffer.CreateDurationParentIdVector(builder, durationParentId);
 
-        
+
 
             // header, ns type, duration, ns id, name size, name
-            int fixedSize = HEADER_SIZE + 1 + 8 + 8 + 1 + NamespaceName.Length;
+            int totalSize = GetSerializedSize();
            
             // create version
             var version = GetTxVersionSerialization();
@@ -180,7 +187,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             // ADD to buffer
             RegisterNamespaceTransactionBuffer.StartRegisterNamespaceTransactionBuffer(builder);
-            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint) fixedSize);
+            RegisterNamespaceTransactionBuffer.AddSize(builder, (uint)totalSize);
             RegisterNamespaceTransactionBuffer.AddSignature(builder, signatureVector);
             RegisterNamespaceTransactionBuffer.AddSigner(builder, signerVector);
             RegisterNamespaceTransactionBuffer.AddVersion(builder, (uint)version);
@@ -197,7 +204,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedNamespace = RegisterNamespaceTransactionBuffer.EndRegisterNamespaceTransactionBuffer(builder);
             builder.Finish(codedNamespace.Value);
 
-            return new RegisterNamespaceTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new RegisterNamespaceTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
         }
+
     }
 }

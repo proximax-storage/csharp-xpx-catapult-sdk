@@ -7,6 +7,7 @@ using FluentAssertions;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,7 +34,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             //var bobAccount = await _fixture.GenerateAccountAndSendSomeMoney(1000);
             var bobAccount = Fixture.SeedAccount;
 
-            var rootNamespaceInfo = await GenerateNamespace(bobAccount, namespaceName, null);
+            var rootNamespaceInfo = await GenerateNamespaceWithBuilder(bobAccount, namespaceName, null);
 
             rootNamespaceInfo.Should().NotBeNull();
             rootNamespaceInfo.ParentId.Should().BeNull();
@@ -47,7 +48,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var parentId = new NamespaceId(namespaceName);
             var bobAccount = await Fixture.GenerateAccountWithCurrency(500);
 
-            var rootNamespaceInfo = await GenerateNamespace(bobAccount, namespaceName, null);
+            var rootNamespaceInfo = await GenerateNamespaceWithBuilder(bobAccount, namespaceName, null);
             Log.WriteLine($"Generated namespace {rootNamespaceInfo}");
 
             var subNs = "subns" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6);
@@ -218,6 +219,52 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             return namespaceInfo;
         }
 
-       
+
+        private async Task<NamespaceInfo> GenerateNamespaceWithBuilder(Account account, string namespaceName, NamespaceId parentId)
+        {
+           
+            var builder = new RegisterNamespaceTransactionBuilder();
+            builder
+                .SetDeadline(Deadline.Create())
+                .SetDuration(100)
+                .SetNetworkType(Fixture.NetworkType);
+            
+            if (parentId == null)
+            {
+                builder.SetRootNamespace(namespaceName);
+
+            }
+            else
+            {
+                builder.SetSubNamespace(parentId, namespaceName);
+          
+            }
+
+            var registerNamespaceTransaction = builder.Build();
+
+            var signedTransaction = account.Sign(registerNamespaceTransaction, Fixture.GenerationHash);
+
+            var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
+                .Timeout(TimeSpan.FromSeconds(3000));
+
+            await Fixture.SiriusClient.TransactionHttp.Announce(signedTransaction);
+
+            Log.WriteLine(
+                $"Registered namespace {namespaceName} for account {account.Address.Plain} with transaction {signedTransaction.Hash}");
+
+            var result = await tx;
+
+            Log.WriteLine($"Request confirmed with transaction {result.TransactionInfo.Hash}");
+
+            var expectedId = parentId != null ? NamespaceId.CreateFromParent(namespaceName, parentId) : new NamespaceId(namespaceName);
+
+            var namespaceInfo = await Fixture.SiriusClient.NamespaceHttp.GetNamespace(expectedId);
+
+            Log.WriteLine(
+                $"Retrieved namespace {namespaceName} successfully. The namespace HexId {namespaceInfo.Id.HexId}");
+
+            return namespaceInfo;
+        }
+
     }
 }
