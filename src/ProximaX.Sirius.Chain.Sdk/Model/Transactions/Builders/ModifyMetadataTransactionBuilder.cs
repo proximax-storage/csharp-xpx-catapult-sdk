@@ -22,7 +22,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
 
         public override ModifyMetadataTransaction Build()
         {
-            var maxFee = MaxFee ?? GetMaxFeeCalculation(ModifyMetadataTransaction.CalculatePayloadSize(Address, Modifications));
+            var maxFee = MaxFee ?? GetMaxFeeCalculation(ModifyMetadataTransaction.CalculatePayloadSize(Address!=null, Modifications));
 
             return new ModifyMetadataTransaction(NetworkType, Version, EntityType, Deadline, maxFee, MetadataType, MetadataId.Id, Address, Modifications);
         }
