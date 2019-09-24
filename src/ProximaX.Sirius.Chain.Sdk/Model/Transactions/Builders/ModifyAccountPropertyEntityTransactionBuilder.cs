@@ -1,5 +1,4 @@
-﻿
-// Copyright 2019 ProximaX
+﻿// Copyright 2019 ProximaX
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,27 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
-
-
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
 {
-    public class ModifyAccountPropertyAddressTransactionBuilder : ModifyAccountPropertyTransactionBuilder<Address>
+    public class ModifyAccountPropertyEntityTransactionBuilder : ModifyAccountPropertyTransactionBuilder<EntityType>
     {
-        public ModifyAccountPropertyAddressTransactionBuilder() : 
-            base(EntityType.MODIFY_ACCOUNT_PROPERTY_ADDRESS, EntityVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS.GetValue())
+        public ModifyAccountPropertyEntityTransactionBuilder() : base(EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE,
+            EntityVersion.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE.GetValue())
         {
         }
 
-        public override ModifyAccountPropertyTransaction<Address> Build()
+        public override ModifyAccountPropertyTransaction<EntityType> Build()
         {
-            
             // use or calculate maxFee
-            var maxFee = MaxFee ?? GetMaxFeeCalculation(AddressModification.CalculatePayloadSize(Modifications.Count));
+            var maxFee = MaxFee ?? GetMaxFeeCalculation(EntityTypeModification.CalculatePayloadSize(Modifications.Count));
 
             // create transaction instance
-            return new AddressModification(NetworkType, Version, Deadline, PropertyType, Modifications, maxFee);
-         
+            return new EntityTypeModification(NetworkType, Version, Deadline, PropertyType, Modifications, maxFee);
         }
     }
 }

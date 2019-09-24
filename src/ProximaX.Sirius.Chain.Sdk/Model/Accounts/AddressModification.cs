@@ -26,7 +26,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
     /// </summary>
     public class AddressModification : ModifyAccountPropertyTransaction<Address>
     {
-        public static readonly int VALUE_BYTES_LENGTH = 8;
+        public static readonly int VALUE_BYTES_LENGTH = 25;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AddressModification" /> class.
@@ -68,13 +68,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns>byte[]</returns>
         protected override byte[] GetValueBytesFromModification(AccountPropertyModification<Address> mod)
         {
-            const int valueByteLength = 25;
+            
 
             var byteValues = mod.Value.Plain.FromBase32String();
 
-            Guard.NotEqualTo(byteValues.Length, valueByteLength,
+            Guard.NotEqualTo(byteValues.Length, VALUE_BYTES_LENGTH,
                 new ArgumentOutOfRangeException(
-                    $"Address should be serialized to {valueByteLength} bytes but was {byteValues.Length} from {mod.Value}"));
+                    $"Address should be serialized to {VALUE_BYTES_LENGTH} bytes but was {byteValues.Length} from {mod.Value}"));
 
             return byteValues;
         }

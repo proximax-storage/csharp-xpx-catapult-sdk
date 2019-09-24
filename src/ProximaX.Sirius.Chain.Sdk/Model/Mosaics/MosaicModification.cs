@@ -26,6 +26,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
     /// </summary>
     public class MosaicModification : ModifyAccountPropertyTransaction<IUInt64Id>
     {
+        public static readonly int VALUE_BYTES_LENGTH = 8;
+
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MosaicModification" /> class.
         /// </summary>
@@ -49,9 +52,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         {
         }
 
+        public static int CalculatePayloadSize(int modCount)
+        {
+            // property type, mod count, mods
+            return 1 + 1 + (1 + VALUE_BYTES_LENGTH) * modCount;
+        }
+
         protected override int GetPayloadSerializedSize()
         {
-            throw new NotImplementedException();
+            return CalculatePayloadSize(Modifications.Count);
         }
 
         /// <summary>
@@ -61,13 +70,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <returns>byte[]</returns>
         protected override byte[] GetValueBytesFromModification(AccountPropertyModification<IUInt64Id> mod)
         {
-            const int valueByteLength = 8;
-
+           
             var byteValues = BitConverter.GetBytes(mod.Value.Id);
 
-            Guard.NotEqualTo(byteValues.Length, valueByteLength,
+            Guard.NotEqualTo(byteValues.Length, VALUE_BYTES_LENGTH,
                 new ArgumentException(
-                    $"MosaicId should be serialized to {valueByteLength} bytes but was {byteValues.Length} from {mod.Value}"));
+                    $"MosaicId should be serialized to {VALUE_BYTES_LENGTH} bytes but was {byteValues.Length} from {mod.Value}"));
 
             return byteValues;
         }
