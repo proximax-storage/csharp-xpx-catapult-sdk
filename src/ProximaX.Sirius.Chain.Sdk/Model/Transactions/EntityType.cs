@@ -19,7 +19,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     /// <summary>
     ///     TransactionType
     /// </summary>
-    public enum TransactionType
+    public enum EntityType
     {
         /// <summary>
         ///     The transfer type
@@ -128,18 +128,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         BLOCKCHAIN_UPGRADE = 0x4158
     }
 
-    public static class TransactionTypeExtension
+    public static class EntityTypeExtension
     {
         /// <summary>
         ///     Get raw value extension
         /// </summary>
         /// <param name="value">The transaction type</param>
         /// <returns>TransactionType</returns>
-        public static TransactionType GetRawValue(int? value)
+        public static EntityType GetRawValue(int? value)
         {
             return value.HasValue
-                ? EnumExtensions.GetEnumValue<TransactionType>(value.Value)
-                : TransactionType.TRANSFER;
+                ? EnumExtensions.GetEnumValue<EntityType>(value.Value)
+                : EntityType.TRANSFER;
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="type">The transaction typ</param>
         /// <returns>int</returns>
-        public static ushort GetValue(this TransactionType type)
+        public static ushort GetValue(this EntityType type)
         {
             return (ushort) type;
         }

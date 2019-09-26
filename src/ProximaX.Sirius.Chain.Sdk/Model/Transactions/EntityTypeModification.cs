@@ -23,8 +23,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     /// <summary>
     ///     Class EntityTypeModification
     /// </summary>
-    public class EntityTypeModification : ModifyAccountPropertyTransaction<TransactionType>
+    public class EntityTypeModification : ModifyAccountPropertyTransaction<EntityType>
     {
+        public static readonly int VALUE_BYTES_LENGTH = 2;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="EntityTypeModification" /> class.
         /// </summary>
@@ -39,13 +41,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="transactionInfo"></param>
         public EntityTypeModification(NetworkType networkType, int version, Deadline deadline,
             PropertyType propertyType,
-            IList<AccountPropertyModification<TransactionType>> propertyModifications,
+            IList<AccountPropertyModification<EntityType>> propertyModifications,
             ulong? maxFee,
             string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) : base(networkType, version,
-            TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, deadline, propertyType,
+            EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, deadline, propertyType,
             propertyModifications, maxFee, signature, signer, transactionInfo)
         {
+        }
+
+        internal static int CalculatePayloadSize(int modCount)
+        {
+            // property type, mod count, mods
+            return 1 + 1 + (1 + VALUE_BYTES_LENGTH) * modCount;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Modifications.Count);
         }
 
         /// <summary>
@@ -53,15 +66,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="mod">The modification property</param>
         /// <returns>byte[]</returns>
-        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<TransactionType> mod)
+        protected override byte[] GetValueBytesFromModification(AccountPropertyModification<EntityType> mod)
         {
-            const int valueByteLength = 2;
-
+         
             var byteValues = BitConverter.GetBytes(mod.Value.GetValue());
 
-            Guard.NotEqualTo(byteValues.Length, valueByteLength,
+            Guard.NotEqualTo(byteValues.Length, VALUE_BYTES_LENGTH,
                 new ArgumentException(
-                    $"Entity Type should be serialized to {valueByteLength} bytes but was {byteValues.Length} from {mod.Value}"));
+                    $"Entity Type should be serialized to {VALUE_BYTES_LENGTH} bytes but was {byteValues.Length} from {mod.Value}"));
 
             return byteValues;
         }

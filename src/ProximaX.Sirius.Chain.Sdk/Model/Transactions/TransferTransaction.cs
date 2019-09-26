@@ -56,7 +56,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
           Recipient recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
           PublicAccount signer = null, TransactionInfo transactionInfo = null)
-          : base(networkType, version, TransactionType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
+          : base(networkType, version, EntityType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
         {
             Guard.NotNull(recipient, nameof(recipient), "Recipient must not be null");
             Guard.NotNull(recipient, nameof(message), "Message must not be null");
@@ -95,22 +95,44 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static TransferTransaction Create(Deadline deadline, Address recipient, List<Mosaic> mosaics,
             IMessage message, NetworkType networkType, ulong? maxFee = 0)
         {
-            return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
+            return new TransferTransaction(networkType, EntityVersion.TRANSFER.GetValue(), deadline, maxFee,
                 Recipient.From(recipient), mosaics, message);
         }
 
         public static TransferTransaction Create(Deadline deadline, NamespaceId recipient, List<Mosaic> mosaics,
             IMessage message, NetworkType networkType, ulong? maxFee = 0)
         {
-            return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
+            return new TransferTransaction(networkType, EntityVersion.TRANSFER.GetValue(), deadline, maxFee,
                 Recipient.From(recipient), mosaics, message);
         }
 
         public static TransferTransaction Create(Deadline deadline, Recipient recipient, List<Mosaic> mosaics,
        IMessage message, NetworkType networkType, ulong? maxFee = 0)
         {
-            return new TransferTransaction(networkType, TransactionVersion.TRANSFER.GetValue(), deadline, maxFee,
+            return new TransferTransaction(networkType, EntityVersion.TRANSFER.GetValue(), deadline, maxFee,
                 recipient, mosaics, message);
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Message, Mosaics.Count);
+        }
+
+        public static int CalculatePayloadSize(IMessage message, int mosaicCount)
+        {
+            return
+            // recipient is always 25 bytes
+            25 +
+                  // message size is short
+                  2 +
+                  // message type byte
+                  1 +
+                  // number of mosaics
+                  1 +
+                  // each mosaic has id and amount, both 8byte uint64
+                  ((8 + 8) * mosaicCount) +
+                  // number of message bytes
+                  message.GetPayload().Length;
         }
 
         internal override byte[] GenerateBytes()
@@ -151,13 +173,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var mosaicsVector = TransferTransactionBuffer.CreateMosaicsVector(builder, mosaicBuffers);
 
             // total size of transaction
-            var totalSize = HEADER_SIZE
+            /*var totalSize = HEADER_SIZE
                 + 25 // recipient
                 + 2 // message size is short
                 + 1 // message type byte
                 + 1 // no of mosaics
                 + ((8 + 8) * Mosaics.Count) //each mosaic has id(8bytes) and amount(8bytes)
-                + bytePayload.Length; // number of message bytes
+                + bytePayload.Length; // number of message bytes*/
+
+            var totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();
@@ -169,7 +193,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             TransferTransactionBuffer.AddSignature(builder, signatureVector);
             TransferTransactionBuffer.AddSigner(builder, signerVector);
             TransferTransactionBuffer.AddVersion(builder, (uint)version);
-            TransferTransactionBuffer.AddType(builder, TransactionType.TRANSFER.GetValue());
+            TransferTransactionBuffer.AddType(builder, EntityType.TRANSFER.GetValue());
             TransferTransactionBuffer.AddMaxFee(builder, feeVector);
             TransferTransactionBuffer.AddDeadline(builder, deadlineVector);
 

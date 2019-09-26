@@ -59,20 +59,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var signer = new PublicAccount(transaction["signer"].ToObject<string>(), network);
 
             var namespaceId = new NamespaceId(transaction["namespaceId"].ToObject<UInt64DTO>().ToUInt64());
-            var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
+            var type = EntityTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var actionType = TransactionMappingHelper.ExtractActionType(tx);
 
             AliasTransaction aliasTransaction = null;
 
             switch (type)
             {
-                case TransactionType.ADDRESS_ALIAS:
+                case EntityType.ADDRESS_ALIAS:
                     var addressHex = transaction["address"].ToObject<string>();
                     var address = Address.CreateFromHex(addressHex);
                     aliasTransaction = new AliasTransaction(network, txVersion, deadline, maxFee, type,
                         namespaceId, actionType, null, address, signature, signer, txInfo);
                     break;
-                case TransactionType.MOSAIC_ALIAS:
+                case EntityType.MOSAIC_ALIAS:
                     var mosaic = new MosaicId(transaction["mosaicId"].ToObject<UInt64DTO>().ToUInt64());
                     aliasTransaction = new AliasTransaction(network, txVersion, deadline, maxFee, type,
                         namespaceId, actionType, mosaic, null, signature, signer, txInfo);

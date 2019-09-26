@@ -19,7 +19,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     /// <summary>
     ///     TransactionVersion
     /// </summary>
-    public enum TransactionVersion
+    public enum EntityVersion
     {
         /// <summary>
         ///     Transfer Transaction transaction version.
@@ -118,18 +118,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         BLOCKCHAIN_UPGRADE = 1
     }
 
-    public static class TransactionVersionExtension
+    public static class EntityVersionExtension
     {
         /// <summary>
         ///     Get raw value extension
         /// </summary>
         /// <param name="value">The transaction version</param>
         /// <returns>TransactionVersion</returns>
-        public static TransactionVersion GetRawValue(int? value)
+        public static EntityVersion GetRawValue(int? value)
         {
             return value.HasValue
-                ? EnumExtensions.GetEnumValue<TransactionVersion>(value.Value)
-                : TransactionVersion.TRANSFER;
+                ? EnumExtensions.GetEnumValue<EntityVersion>(value.Value)
+                : EntityVersion.TRANSFER;
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="type">The transaction version</param>
         /// <returns>int</returns>
-        public static int GetValue(this TransactionVersion type)
+        public static int GetValue(this EntityVersion type)
         {
             return (int)type;
         }

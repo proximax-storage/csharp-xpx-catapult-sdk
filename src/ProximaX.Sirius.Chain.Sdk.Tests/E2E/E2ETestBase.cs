@@ -38,7 +38,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             SiriusClient = new SiriusClient(env.BaseUrl);
             GenerationHash = SiriusClient.BlockHttp.GetGenerationHash().Wait();
-            SiriusWebSocketClient = new SiriusWebSocketClient(env.Host, env.Port);
+            bool useSSL = false;
+            if(env.Protocol.Equals("https",StringComparison.InvariantCultureIgnoreCase))
+            {
+                useSSL = true;
+            }
+            SiriusWebSocketClient = new SiriusWebSocketClient(env.Host, env.Port, useSSL);
             SiriusWebSocketClient.Listener.Open().Wait();
 
             NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
@@ -78,6 +83,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     break;
                 case "BCTESTNET":
                     env = "BcTestNet";
+                    break;
+                case "BCDEV":
+                    env = "BcDev";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(Environment), environment, null);

@@ -53,7 +53,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
             var network = TransactionMappingUtils.ExtractNetworkType(versionValue);
 
-            var type = TransactionTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
+            var type = EntityTypeExtension.GetRawValue(transaction["type"].ToObject<int>());
             var deadline = new Deadline(transaction["deadline"].ToObject<UInt64DTO>().ToUInt64());
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var innerTransactions = MapInnerTransactions(tx);

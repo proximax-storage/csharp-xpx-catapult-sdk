@@ -36,53 +36,53 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
             if (transToken != null) transType = transToken["type"].ToObject<int>();
 
-            switch (TransactionTypeExtension.GetRawValue(transType))
+            switch (EntityTypeExtension.GetRawValue(transType))
             {
-                case TransactionType.TRANSFER:
+                case EntityType.TRANSFER:
                     return new TransferTransactionMapping().Apply(input);
 
-                case TransactionType.REGISTER_NAMESPACE:
+                case EntityType.REGISTER_NAMESPACE:
                     return new RegisterNamespaceTransactionMapping().Apply(input);
 
-                case TransactionType.MOSAIC_DEFINITION:
+                case EntityType.MOSAIC_DEFINITION:
                     return new MosaicDefinitionTransactionMapping().Apply(input);
 
-                case TransactionType.MOSAIC_SUPPLY_CHANGE:
+                case EntityType.MOSAIC_SUPPLY_CHANGE:
                     return new MosaicSupplyChangeTransactionMapping().Apply(input);
 
-                case TransactionType.AGGREGATE_COMPLETE:
-                case TransactionType.AGGREGATE_BONDED:
+                case EntityType.AGGREGATE_COMPLETE:
+                case EntityType.AGGREGATE_BONDED:
                     return new AggregateTransactionMapping().Apply(input);
 
-                case TransactionType.ADDRESS_ALIAS:
-                case TransactionType.MOSAIC_ALIAS:
+                case EntityType.ADDRESS_ALIAS:
+                case EntityType.MOSAIC_ALIAS:
                     return new AliasTransactionMapping().Apply(input);
 
-                case TransactionType.MODIFY_MULTISIG_ACCOUNT:
+                case EntityType.MODIFY_MULTISIG_ACCOUNT:
                     return new ModifyMultisigAccountTransactionMapping().Apply(input);
 
-                case TransactionType.LOCK:
+                case EntityType.LOCK:
                     return new LockFundsTransactionMapping().Apply(input);
 
-                case TransactionType.SECRET_LOCK:
+                case EntityType.SECRET_LOCK:
                     return new SecretLockTransactionMapping().Apply(input);
 
-                case TransactionType.SECRET_PROOF:
+                case EntityType.SECRET_PROOF:
                     return new SecretProofTransactionMapping().Apply(input);
 
-                case TransactionType.MODIFY_ADDRESS_METADATA:
-                case TransactionType.MODIFY_MOSAIC_METADATA:
-                case TransactionType.MODIFY_NAMESPACE_METADATA:
+                case EntityType.MODIFY_ADDRESS_METADATA:
+                case EntityType.MODIFY_MOSAIC_METADATA:
+                case EntityType.MODIFY_NAMESPACE_METADATA:
                     return new ModifyMetadataTransactionMapping().Apply(input);
 
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
+                case EntityType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
                     return new ModifyAccountPropertyTransactionAddressMapping().Apply(input);
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
+                case EntityType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
                     return new ModifyAccountPropertyTransactionMosaicMapping().Apply(input);
-                case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
+                case EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
                     return new ModifyAccountPropertyTransactionEntityTypeMapping().Apply(input);
 
-                case TransactionType.LINK_ACCOUNT:
+                case EntityType.LINK_ACCOUNT:
                     return new AccountLinkTransactionMapping().Apply(input);
 
                 default:

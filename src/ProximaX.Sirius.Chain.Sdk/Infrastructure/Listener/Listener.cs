@@ -97,8 +97,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
                 if (ClientSocket.State != WebSocketState.Open)
                 {
                     var protocol = UseSsl ? "wss://" : "ws://";
-                    var protocolPath =  "/ws";
-
+                    var protocolPath = "/ws";
                     ClientSocket.ConnectAsync(new Uri(string.Concat(protocol, Domain, ":", Port, protocolPath)),
                             CancellationToken.None)
                         .GetAwaiter()
@@ -373,7 +372,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Listener
         {
             var isReceptor = false;
 
-            if (transaction.TransactionType.GetValue() == TransactionType.TRANSFER.GetValue())
+            if (transaction.TransactionType.GetValue() == EntityType.TRANSFER.GetValue())
                 isReceptor = ((TransferTransaction)transaction).Recipient.Address.Plain == address.Plain;
 
             return Address.CreateFromPublicKey(transaction.Signer.PublicKey, address.NetworkType).Plain ==

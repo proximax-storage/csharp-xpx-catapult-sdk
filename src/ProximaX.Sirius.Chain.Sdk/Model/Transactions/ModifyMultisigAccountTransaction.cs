@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -41,9 +42,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
         public ModifyMultisigAccountTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-            int minApprovalDelta, int minRemovalDelta, List<MultisigCosignatoryModification> modifications,
+            int minApprovalDelta, int minRemovalDelta, IList<MultisigCosignatoryModification> modifications,
             string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MODIFY_MULTISIG_ACCOUNT, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MODIFY_MULTISIG_ACCOUNT, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             MinApprovalDelta = minApprovalDelta;
@@ -67,7 +68,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Modifications to be made.
         /// </summary>
         /// <value>The modifications.</value>
-        public List<MultisigCosignatoryModification> Modifications { get; }
+        public IList<MultisigCosignatoryModification> Modifications { get; }
 
         /// <summary>
         ///     Creates ModifyMultisigAccountTransaction
@@ -79,11 +80,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="networkType"></param>
         /// <returns></returns>
         public static ModifyMultisigAccountTransaction Create(Deadline deadline, int minApprovalDelta,
-            int minRemovalDelta, List<MultisigCosignatoryModification> modifications, NetworkType networkType)
+            int minRemovalDelta, IList<MultisigCosignatoryModification> modifications, NetworkType networkType)
         {
             return new ModifyMultisigAccountTransaction(networkType,
-                TransactionVersion.MODIFY_MULTISIG_ACCOUNT.GetValue(),
+                EntityVersion.MODIFY_MULTISIG_ACCOUNT.GetValue(),
                 deadline, 0L, minApprovalDelta, minRemovalDelta, modifications);
+        }
+
+        public static int CalculatePayloadSize(int modificationCount)
+        {
+            // min approval, min removal, mod count, mod (type, pub key) * count
+            return 1 + 1 + 1 + (1 + 32) * modificationCount;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Modifications.Count);
         }
 
         internal override byte[] GenerateBytes()
@@ -118,14 +130,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create version
             var version = GetTxVersionSerialization();
 
-            var fixedSize = HEADER_SIZE +
-                +1 // min approval
-                + 1 //  min removal
-                + 1 // mod count
-                + (1 + 32) * Modifications.Count; // (type, pub key) * count
+            var totalSize = GetSerializedSize();
 
             ModifyMultisigAccountTransactionBuffer.StartModifyMultisigAccountTransactionBuffer(builder);
-            ModifyMultisigAccountTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            ModifyMultisigAccountTransactionBuffer.AddSize(builder, (uint)totalSize);
             ModifyMultisigAccountTransactionBuffer.AddSignature(builder, signatureVector);
             ModifyMultisigAccountTransactionBuffer.AddSigner(builder, signerVector);
             ModifyMultisigAccountTransactionBuffer.AddVersion(builder,(uint) version);
@@ -142,7 +150,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 ModifyMultisigAccountTransactionBuffer.EndModifyMultisigAccountTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            return new ModifyMultisigAccountTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new ModifyMultisigAccountTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
         }
     }
 }

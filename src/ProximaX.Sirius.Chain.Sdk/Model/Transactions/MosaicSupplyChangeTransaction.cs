@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers.Schema;
@@ -40,7 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public MosaicSupplyChangeTransaction(NetworkType networkType, int version, Deadline deadline, ulong maxFee,
             MosaicId mosaicId, MosaicSupplyType mosaicSupplyType, ulong delta, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MOSAIC_SUPPLY_CHANGE, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MOSAIC_SUPPLY_CHANGE, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             MosaicId = mosaicId;
@@ -77,8 +79,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static MosaicSupplyChangeTransaction Create(Deadline deadline, MosaicId mosaicId,
             MosaicSupplyType mosaicSupplyType, ulong delta, NetworkType networkType)
         {
-            return new MosaicSupplyChangeTransaction(networkType, TransactionVersion.MOSAIC_SUPPLY_CHANGE.GetValue(),
+            return new MosaicSupplyChangeTransaction(networkType, EntityVersion.MOSAIC_SUPPLY_CHANGE.GetValue(),
                 deadline, 0, mosaicId, mosaicSupplyType, delta);
+        }
+
+        public static int CalculatePayloadSize()
+        {
+            // mosaic id, supply type, delta
+            return 8 + 1 + 8;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize();
         }
 
         internal override byte[] GenerateBytes()
@@ -96,13 +109,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             // create version
             var version = GetTxVersionSerialization();
 
-            int fixedSize = HEADER_SIZE
-                + 8 //mosaic id, 
-                + 1 //supply type
-                + 8; //delta
+            int totalSize = GetSerializedSize();
 
             MosaicSupplyChangeTransactionBuffer.StartMosaicSupplyChangeTransactionBuffer(builder);
-            MosaicSupplyChangeTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            MosaicSupplyChangeTransactionBuffer.AddSize(builder, (uint)totalSize);
             MosaicSupplyChangeTransactionBuffer.AddSignature(builder, signatureVector);
             MosaicSupplyChangeTransactionBuffer.AddSigner(builder, signerVector);
             MosaicSupplyChangeTransactionBuffer.AddVersion(builder, (uint)version);
@@ -116,7 +126,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransaction = MosaicSupplyChangeTransactionBuffer.EndMosaicSupplyChangeTransactionBuffer(builder);
             builder.Finish(codedTransaction.Value);
 
-            return new MosaicSupplyChangeTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new MosaicSupplyChangeTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
         }
     }
 }

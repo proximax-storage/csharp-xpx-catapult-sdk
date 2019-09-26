@@ -26,7 +26,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
     {
         public static readonly int HEADER_SIZE = 122;
 
-        protected Transaction(NetworkType networkType, int version, TransactionType transactionType, Deadline deadline,
+        protected Transaction(NetworkType networkType, int version, EntityType transactionType, Deadline deadline,
             ulong? maxFee, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
         {
             TransactionType = transactionType;
@@ -42,7 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     The transaction type
         /// </summary>
-        public TransactionType TransactionType { get; set; }
+        public EntityType TransactionType { get; set; }
 
         /// <summary>
         ///     The network type
@@ -270,9 +270,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         protected int GetTxVersionSerialization()
         {
             return TransactionMappingUtils.SerializeVersion(Version, NetworkType.GetValue());
-           /* return int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
-                NumberStyles.HexNumber);*/
+       
         }
+        protected int GetSerializedSize()
+        {
+            return HEADER_SIZE + GetPayloadSerializedSize();
+        }
+
+        protected abstract int GetPayloadSerializedSize();
 
         /// <summary>
         ///     Generates the bytes.

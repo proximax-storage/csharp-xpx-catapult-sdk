@@ -65,7 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             return new LockFundsTransaction(network, txVersion, deadline, maxFee,
                 new Mosaic(mosaic, amount), duration,
                 new SignedTransaction(string.Empty, hash, string.Empty,
-                    TransactionType.AGGREGATE_BONDED, network),
+                    EntityType.AGGREGATE_BONDED, network),
                 signature, signer, txInfo);
         }
     }

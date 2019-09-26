@@ -32,7 +32,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signer">The transaction signer</param>
         /// <param name="transactionType">The transaction type</param>
         /// <param name="networkType">The network type</param>
-        public SignedTransaction(string payload, string hash, string signer, TransactionType transactionType,
+        public SignedTransaction(string payload, string hash, string signer, EntityType transactionType,
             NetworkType networkType)
         {
             if (hash.Length != 64 || !Regex.IsMatch(hash, @"\A\b[0-9a-fA-F]+\b\Z"))
@@ -63,7 +63,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Transaction type
         /// </summary>
-        public TransactionType TransactionType { get; }
+        public EntityType TransactionType { get; }
 
         /// <summary>
         ///     Network type
@@ -79,7 +79,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="networkType"></param>
         /// <returns></returns>
         public static SignedTransaction Create(byte[] payload, byte[] hash, byte[] signer,
-            TransactionType transactionType, NetworkType networkType)
+            EntityType transactionType, NetworkType networkType)
         {
             if (payload == null) throw new ArgumentNullException(nameof(payload));
             if (hash == null) throw new ArgumentNullException(nameof(hash));

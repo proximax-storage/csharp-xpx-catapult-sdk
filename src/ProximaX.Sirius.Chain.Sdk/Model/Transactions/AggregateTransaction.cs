@@ -46,7 +46,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="fee">The fee.</param>
         /// <param name="innerTransactions">The inner transactions.</param>
         /// <param name="cosignatures">The cosignatures.</param>
-        public AggregateTransaction(NetworkType networkType, int version, TransactionType transactionType,
+        public AggregateTransaction(NetworkType networkType, int version, EntityType transactionType,
             Deadline deadline, ulong fee, List<Transaction> innerTransactions,
             List<AggregateTransactionCosignature> cosignatures)
             : this(networkType, version, transactionType, deadline, fee, innerTransactions, cosignatures, null, null,
@@ -67,7 +67,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signature">The signature.</param>
         /// <param name="signer">The signer.</param>
         /// <param name="transactionInfo">The transaction information.</param>
-        public AggregateTransaction(NetworkType networkType, int version, TransactionType transactionType,
+        public AggregateTransaction(NetworkType networkType, int version, EntityType transactionType,
             Deadline deadline, ulong? maxFee, List<Transaction> innerTransactions,
             List<AggregateTransactionCosignature> cosignatures, string signature, PublicAccount signer,
             TransactionInfo transactionInfo)
@@ -103,8 +103,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             NetworkType networkType)
         {
       
-            return new AggregateTransaction(networkType, TransactionVersion.AGGREGATE_COMPLETE.GetValue(),
-                TransactionType.AGGREGATE_COMPLETE, deadline, 0, innerTransactions,
+            return new AggregateTransaction(networkType, EntityVersion.AGGREGATE_COMPLETE.GetValue(),
+                EntityType.AGGREGATE_COMPLETE, deadline, 0, innerTransactions,
                 new List<AggregateTransactionCosignature>());
         }
 
@@ -121,8 +121,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             NetworkType networkType)
         {
         
-            return new AggregateTransaction(networkType, TransactionVersion.AGGREGATE_BONDED.GetValue(),
-                TransactionType.AGGREGATE_BONDED, deadline, 0, innerTransactions,
+            return new AggregateTransaction(networkType, EntityVersion.AGGREGATE_BONDED.GetValue(),
+                EntityType.AGGREGATE_BONDED, deadline, 0, innerTransactions,
                 new List<AggregateTransactionCosignature>());
         }
 
@@ -198,9 +198,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var transactionsVector = AggregateTransactionBuffer.CreateTransactionsVector(builder, transactionsBytes);
 
             // total size of transaction
-            var totalSize = HEADER_SIZE
+            /*var totalSize = HEADER_SIZE
                 + 4
-                + transactionsBytes.Length;
+                + transactionsBytes.Length;*/
+
+            var totalSize = GetSerializedSize();
 
             // create version
             var version = GetTxVersionSerialization();
@@ -229,6 +231,26 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             return output;
 
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(InnerTransactions);
+        }
+
+        public static int CalculatePayloadSize(List<Transaction> innerTransactions)
+        {
+            // sum sizes of inner transactions, subtract 80 as toAggregateTransactionBytes leaves out 80 bytes of header
+            var transactionsBytes = new byte[0];
+
+            transactionsBytes = innerTransactions.Aggregate(transactionsBytes,
+                (current, innerTransaction) => current.Concat(innerTransaction.ToAggregate()).ToArray());
+
+            //int innerSize = transactionsBytes.Length - 80;
+            int innerSize = transactionsBytes.Length;
+
+            // transactions size + transactions
+            return 4 + innerSize;
         }
     }
 }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
@@ -29,7 +30,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public SecretProofTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             HashType hashType,Recipient recipient, string secret, string proof, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.SECRET_PROOF, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.SECRET_PROOF, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Guard.NotNullOrEmpty(secret, "Secret must not be null");
@@ -79,8 +80,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static SecretProofTransaction Create(Deadline deadline, HashType hashType,Recipient recipient, string secret, string proof,
             NetworkType networkType)
         {
-            return new SecretProofTransaction(networkType, TransactionVersion.SECRET_PROOF.GetValue(),
+            return new SecretProofTransaction(networkType, EntityVersion.SECRET_PROOF.GetValue(),
                 deadline, 0, hashType, recipient, secret, proof);
+        }
+
+        public static int CalculatePayloadSize(Recipient recipient, string proof)
+        {
+            return +35 // recipient
+              + recipient.GetBytes().Length // proof length
+              + proof.DecodeHexString().Length;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Recipient, Proof);
         }
 
         internal override byte[] GenerateBytes()
@@ -100,15 +113,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 NumberStyles.HexNumber);
             var recipientVector = SecretProofTransactionBuffer.CreateRecipientVector(builder, Recipient.GetBytes());
 
-            int fixedSize = HEADER_SIZE 
-              + 35 // recipient
-              + Recipient.GetBytes().Length // proof length
-              + Proof.DecodeHexString().Length;
-
-          
+            int totalSize = GetSerializedSize();
+     
 
             SecretProofTransactionBuffer.StartSecretProofTransactionBuffer(builder);
-            SecretProofTransactionBuffer.AddSize(builder, (uint) fixedSize);
+            SecretProofTransactionBuffer.AddSize(builder, (uint)totalSize);
             SecretProofTransactionBuffer.AddSignature(builder, signatureVector);
             SecretProofTransactionBuffer.AddSigner(builder, signerVector);
             SecretProofTransactionBuffer.AddVersion(builder, (uint)version);
@@ -124,7 +133,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedSecretProof = SecretProofTransactionBuffer.EndSecretProofTransactionBuffer(builder);
             builder.Finish(codedSecretProof.Value);
 
-            return new SecretProofTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new SecretProofTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
+          
         }
     }
 }

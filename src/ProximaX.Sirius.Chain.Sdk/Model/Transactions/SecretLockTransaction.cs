@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using FlatBuffers;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Buffers;
@@ -46,7 +47,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public SecretLockTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
             Mosaic mosaic, ulong duration, HashType hashType, string secret, Address recipient,
             string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.SECRET_LOCK, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.SECRET_LOCK, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Guard.NotNull(mosaic, "Mosaic must not be null");
@@ -107,8 +108,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static SecretLockTransaction Create(Deadline deadline, Mosaic mosaic, ulong duration, HashType hashType,
             string secret, Address recipient, NetworkType networkType)
         {
-            return new SecretLockTransaction(networkType, TransactionVersion.SECRET_LOCK.GetValue(),
+            return new SecretLockTransaction(networkType, EntityVersion.SECRET_LOCK.GetValue(),
                 deadline, 0, mosaic, duration, hashType, secret, recipient);
+        }
+
+        public static int CalculatePayloadSize()
+        {
+            // mosaicID, amount, duration, hash algo, secret, recipient
+            return 8 + 8 + 8 + 1 + 32 + 25;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize();
         }
 
         internal override byte[] GenerateBytes()
@@ -133,11 +145,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var version = int.Parse(NetworkType.GetValueInByte().ToString("X") + "0" + Version.ToString("X"),
                 NumberStyles.HexNumber);
 
-            // header + mosaicID, amount, duration, hash algo, secret, recipient
-            int fixedSize = HEADER_SIZE + 8 + 8 + 8 + 1 + 32 + 25;
+            // mosaicID, amount, duration, hash algo, secret, recipient
+            var totalSize = GetSerializedSize();
 
             SecretLockTransactionBuffer.StartSecretLockTransactionBuffer(builder);
-            SecretLockTransactionBuffer.AddSize(builder, (uint)fixedSize);
+            SecretLockTransactionBuffer.AddSize(builder, (uint)totalSize);
             SecretLockTransactionBuffer.AddSignature(builder, signatureVector);
             SecretLockTransactionBuffer.AddSigner(builder, signerVector);
             SecretLockTransactionBuffer.AddVersion(builder,(uint)version);
@@ -155,7 +167,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var codedTransfer = SecretLockTransactionBuffer.EndSecretLockTransactionBuffer(builder);
             builder.Finish(codedTransfer.Value);
 
-            return new SecretLockTransactionSchema().Serialize(builder.SizedByteArray());
+            var output = new SecretLockTransactionSchema().Serialize(builder.SizedByteArray());
+
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
+
+            return output;
+
+            
         }
     }
 }

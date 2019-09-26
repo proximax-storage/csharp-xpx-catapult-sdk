@@ -33,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public MosaicDefinitionTransaction(NetworkType networkType, int version, Deadline deadline, ulong maxFee,
             MosaicNonce nonce, MosaicId mosaicId, MosaicProperties properties, string signature = null,
             PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, TransactionType.MOSAIC_DEFINITION, deadline, maxFee, signature, signer,
+            : base(networkType, version, EntityType.MOSAIC_DEFINITION, deadline, maxFee, signature, signer,
                 transactionInfo)
         {
             Properties = properties;
@@ -65,8 +65,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (mosaicId == null)
                 throw new ArgumentNullException(nameof(mosaicId));
 
-            return new MosaicDefinitionTransaction(networkType, TransactionVersion.MOSAIC_DEFINITION.GetValue(),
+            return new MosaicDefinitionTransaction(networkType, EntityVersion.MOSAIC_DEFINITION.GetValue(),
                 deadline, 0, nonce, mosaicId, properties);
+        }
+
+        public static int CalculatePayloadSize(int numOptionalProperties)
+        {
+            return 4 + 8 + 1 + 1 + 1 + (1 + 8) * numOptionalProperties;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Properties.Duration > 0 ? 1 : 0);
         }
 
         /// <summary>
@@ -85,13 +95,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             var builder = new FlatBufferBuilder(1);
 
-            
+
             IList<KeyValuePair<MosaicPropertyId, ulong>> propertyList = new List<KeyValuePair<MosaicPropertyId, ulong>>();
 
             var duration = Properties.Duration;
-            if(duration > 0)
+            if (duration > 0)
             {
-                propertyList.Add(new KeyValuePair<MosaicPropertyId, ulong>(MosaicPropertyId.DURATION,duration));
+                propertyList.Add(new KeyValuePair<MosaicPropertyId, ulong>(MosaicPropertyId.DURATION, duration));
             }
 
             var mosaicProperties = new Offset<MosaicProperty>[propertyList.Count];
@@ -105,7 +115,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 mosaicProperties[index] = MosaicProperty.EndMosaicProperty(builder);
             }
 
-          
+
 
             // create vectors
             var signatureVector = MosaicDefinitionTransactionBuffer.CreateSignatureVector(builder, new byte[64]);
@@ -122,7 +132,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var version = (uint)GetTxVersionSerialization();
 
             // header + nonce + id + numOptProp + flags + divisibility + (id + value)*numOptProp
-            var totalSize = HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * mosaicProperties.Length;
+            var totalSize = GetSerializedSize(); //HEADER_SIZE + 4 + 8 + 1 + 1 + 1 + (1 + 8) * mosaicProperties.Length;
 
             // add vectors to buffer
             MosaicDefinitionTransactionBuffer.StartMosaicDefinitionTransactionBuffer(builder);
@@ -138,11 +148,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MosaicDefinitionTransactionBuffer.AddMosaicId(builder, mosaicIdVector);
             MosaicDefinitionTransactionBuffer.AddNumOptionalProperties(builder, (byte)mosaicProperties.Length);
             MosaicDefinitionTransactionBuffer.AddFlags(builder, flags);
-            MosaicDefinitionTransactionBuffer.AddDivisibility(builder, (byte) Properties.Divisibility);
+            MosaicDefinitionTransactionBuffer.AddDivisibility(builder, (byte)Properties.Divisibility);
             MosaicDefinitionTransactionBuffer.AddOptionalProperties(builder, optionalPropertiesVector);
 
-            
-             // Calculate size
+
+            // Calculate size
             var codedMosaicDefinition = MosaicDefinitionTransactionBuffer.EndMosaicDefinitionTransactionBuffer(builder);
             builder.Finish(codedMosaicDefinition.Value);
 
@@ -153,7 +163,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             return output;
 
-          
+
         }
     }
 }

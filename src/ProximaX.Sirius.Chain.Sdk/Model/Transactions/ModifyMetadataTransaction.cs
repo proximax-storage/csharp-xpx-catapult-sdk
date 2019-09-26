@@ -49,7 +49,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        public ModifyMetadataTransaction(NetworkType networkType, int version, TransactionType transactionType,
+        public ModifyMetadataTransaction(NetworkType networkType, int version, EntityType transactionType,
             Deadline deadline, ulong? maxFee,
             MetadataType metadataType, ulong? metadataId, Address address = null,
             IList<MetadataModification> modifications = null,
@@ -94,8 +94,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_MOSAIC_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_MOSAIC_METADATA,
                 deadline,
                 0,
                 MetadataType.MOSAIC,
@@ -116,8 +116,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_NAMESPACE_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_NAMESPACE_METADATA,
                 deadline,
                 0,
                 MetadataType.NAMESPACE,
@@ -138,8 +138,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                TransactionVersion.MODIFY_METADATA.GetValue(),
-                TransactionType.MODIFY_ADDRESS_METADATA,
+                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityType.MODIFY_ADDRESS_METADATA,
                 deadline,
                 0,
                 MetadataType.ADDRESS,
@@ -153,7 +153,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var builder = new FlatBufferBuilder(1);
 
             // track the size of the whole metadata modification
-            var totalSize = 0;
+            //var totalSize = 0;
 
             // load modifications
             var modificationVectors = new Offset<MetadataModificationBuffer>[Modifications.Count];
@@ -182,7 +182,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 var modSize = 4 + 1 + 1 + 2 + keyBytes.Length + valueBytes.Length;
 
                 // increase total size
-                totalSize += modSize;
+                //totalSize += modSize;
 
                 // populate flat-buffer
                 MetadataModificationBuffer.StartMetadataModificationBuffer(builder);
@@ -222,10 +222,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 ModifyMetadataTransactionBuffer.CreateModificationsVector(builder, modificationVectors);
 
             // add size of stuff with constant size and size of metadata id
-            var fixedSize = HEADER_SIZE + 1 + metadataIdBytes.Length + totalSize;
+            // var fixedSize = HEADER_SIZE + 1 + metadataIdBytes.Length + totalSize;
+            var totalSize = GetSerializedSize();
 
             ModifyMetadataTransactionBuffer.StartModifyMetadataTransactionBuffer(builder);
-            ModifyMetadataTransactionBuffer.AddSize(builder, (uint) fixedSize);
+            ModifyMetadataTransactionBuffer.AddSize(builder, (uint)totalSize);
             ModifyMetadataTransactionBuffer.AddSignature(builder, signatureVector);
             ModifyMetadataTransactionBuffer.AddSigner(builder, signerVector);
             ModifyMetadataTransactionBuffer.AddVersion(builder, (uint)version);
@@ -241,9 +242,41 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             builder.Finish(codedTransfer.Value);
 
             var output = new ModifyMetadataTransactionSchema().Serialize(builder.SizedByteArray());
-            if (output.Length != fixedSize) throw new SerializationException("Serialized form has incorrect length");
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;
+        }
+
+        protected override int GetPayloadSerializedSize()
+        {
+            return CalculatePayloadSize(Address != null, Modifications);
+        }
+
+        public static int CalculatePayloadSize(bool isAddressMetadata, IList<MetadataModification> mods)
+        {
+            // 25 bytes for address 8 bytes for uint64
+            int metaIdSize = isAddressMetadata ? 25 : 8;
+
+            int modsSize = 0;
+            foreach(var m in mods)
+            {
+                modsSize += CalculateModSize(m);
+            }
+
+            // id + mod size + mods
+            return metaIdSize + 1 + modsSize;
+        }
+
+        private static int CalculateModSize(MetadataModification mod)
+        {
+
+            var keySize = Encoding.UTF8.GetBytes(mod.Field.Key).Length;
+            
+            // remove does not have value
+            var valueSize = mod.Type == MetadataModificationType.REMOVE ? 0: Encoding.UTF8.GetBytes(mod.Field.Value).Length;
+            
+            // compute number of bytes: size + modType + keySize + valueSize + key + value
+            return 4 + 1 + 1 + 2 + keySize + valueSize;
         }
     }
 }

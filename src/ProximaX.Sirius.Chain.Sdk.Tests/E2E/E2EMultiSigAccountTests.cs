@@ -9,6 +9,7 @@ using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 
 using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions.Messages;
 using Xunit;
 using Xunit.Abstractions;
@@ -59,6 +60,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             // Create a modify multisig account transaction to convert the shared account into a multisig account
             // 1 to 2 multisig
+            var multiSigBuilder = new ModifyMultisigAccountTransactionBuilder();
+            multiSigBuilder.SetDeadline(Deadline.Create())
+                .SetMinApprovalDelta(1)
+                .SetMinRemovalDelta(1)
+                .SetModifications(new List<MultisigCosignatoryModification>
+                {
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.ADD,
+                        Fixture.Cosignatory1.PublicAccount),
+                    new MultisigCosignatoryModification(MultisigCosignatoryModificationType.ADD,
+                        Fixture.Cosignatory2.PublicAccount),
+                })
+                .SetNetworkType(Fixture.NetworkType);
+            var convertIntoMultisigTransaction = multiSigBuilder.Build();
+            /*
             var convertIntoMultisigTransaction = ModifyMultisigAccountTransaction.Create(
                 Deadline.Create(),
                 1,
@@ -71,6 +86,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                         Fixture.Cosignatory2.PublicAccount),
                 },
                 Fixture.NetworkType);
+            */
 
             // Create an aggregate bonded transaction, wrapping the modify multisig account transaction
             var aggregateTransaction = AggregateTransaction.CreateBonded(
@@ -90,14 +106,23 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             // the future multisig account needs to lock at least 10 cat.currency.
             // This transaction is required to prevent network spamming and ensure that 
             // the inner transactions are cosigned
+            var builder = new LockFundsTransactionBuilder();
+            builder.SetDeadline(Deadline.Create())
+                .SetDuration((ulong)700)
+                .SetMosaic(NetworkCurrencyMosaic.CreateRelative(10))
+                .SetSignedTransaction(signedTransaction)
+                .SetNetworkType(Fixture.NetworkType);
+
+            var hashLockTransaction = builder.Build();
+            /*
             var hashLockTransaction = HashLockTransaction.Create(
                 Deadline.Create(),
                 NetworkCurrencyMosaic.CreateRelative(10),
                 (ulong)700,
                 signedTransaction,
                 Fixture.NetworkType);
-
-            var hashLockTransactionSigned = Fixture.MultiSigAccount.Sign(hashLockTransaction, Fixture.GenerationHash);
+            */
+            var hashLockTransactionSigned = Fixture.SeedAccount.Sign(hashLockTransaction, Fixture.GenerationHash);
 
             // register transaction with web socket
             try
@@ -105,7 +130,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 // awaitSiriusWebSocketClient.Listener.Open();
 
                 var hashLocktx = Fixture.SiriusWebSocketClient.Listener
-                    .ConfirmedTransactionsGiven(Fixture.MultiSigAccount.Address).Take(1)
+                    .ConfirmedTransactionsGiven(Fixture.SeedAccount.Address).Take(1)
                     .Timeout(TimeSpan.FromSeconds(500));
 
                 Fixture.WatchForFailure(hashLockTransactionSigned);
@@ -122,13 +147,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 // announce the aggregate transaction.
                 if (hashLockConfirmed.TransactionInfo.Hash == hashLockTransactionSigned.Hash)
                 {
-                    var aggBonded = Fixture.SiriusWebSocketClient.Listener
-                       .AggregateBondedAdded(Fixture.MultiSigAccount.Address).Take(1)
-                     .Timeout(TimeSpan.FromSeconds(2000));
+                    //var aggBonded = Fixture.SiriusWebSocketClient.Listener
+                    //   .AggregateBondedAdded(Fixture.SeedAccount.Address).Take(1)
+                    // .Timeout(TimeSpan.FromSeconds(2000));
 
-                    var aggBondedConfirmed = Fixture.SiriusWebSocketClient.Listener
-                      .ConfirmedTransactionsGiven(Fixture.MultiSigAccount.Address).Take(1)
-                      .Timeout(TimeSpan.FromSeconds(2000));
+                   // var aggBondedConfirmed = Fixture.SiriusWebSocketClient.Listener
+                   //   .ConfirmedTransactionsGiven(Fixture.MultiSigAccount.Address).Take(1)
+                  //    .Timeout(TimeSpan.FromSeconds(2000));
 
                     Fixture.WatchForFailure(signedTransaction);
 

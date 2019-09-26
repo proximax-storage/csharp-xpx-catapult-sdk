@@ -169,7 +169,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var transactions = await _accountHttp.Transactions(account.PublicAccount, new QueryParams(10, "", Order.DESC));
 
                 transactions.Should().HaveCount(1);
-                transactions.First().TransactionType.Should().BeEquivalentTo(TransactionType.TRANSFER);
+                transactions.First().TransactionType.Should().BeEquivalentTo(EntityType.TRANSFER);
                 transactions.First().TransactionInfo.Should().NotBeNull();
             }
         }
@@ -189,7 +189,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var transactions = await _accountHttp.UnconfirmedTransactions(account, new QueryParams(10, "", Order.DESC));
 
                 transactions.Should().HaveCount(1);
-                transactions.First().TransactionType.Should().BeEquivalentTo(TransactionType.TRANSFER);
+                transactions.First().TransactionType.Should().BeEquivalentTo(EntityType.TRANSFER);
                 transactions.First().TransactionInfo.Should().NotBeNull();
             }
         }

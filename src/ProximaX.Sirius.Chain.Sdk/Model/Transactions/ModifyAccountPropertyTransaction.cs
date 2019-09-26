@@ -56,7 +56,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
         public ModifyAccountPropertyTransaction(NetworkType networkType, int version,
-            TransactionType transactionType,
+            EntityType transactionType,
             Deadline deadline, PropertyType propertyType, IList<AccountPropertyModification<T>> propertyModifications,
             ulong? maxFee, string signature = null, PublicAccount signer = null,
             TransactionInfo transactionInfo = null) :
@@ -81,7 +81,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<AccountPropertyModification<Address>> propertyModifications, NetworkType networkType)
         {
             return new AddressModification(networkType,
-                TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS.GetValue(),
+                EntityVersion.MODIFY_ACCOUNT_PROPERTY_ADDRESS.GetValue(),
                 deadline, propertyType, propertyModifications, maxFee);
         }
 
@@ -99,7 +99,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<AccountPropertyModification<IUInt64Id>> propertyModifications, NetworkType networkType)
         {
             return new MosaicModification(networkType,
-                TransactionVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC.GetValue(),
+                EntityVersion.MODIFY_ACCOUNT_PROPERTY_MOSAIC.GetValue(),
                 deadline, propertyType, propertyModifications, maxFee);
         }
 
@@ -112,13 +112,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="propertyModifications"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static ModifyAccountPropertyTransaction<TransactionType> CreateForEntityType(Deadline deadline,
+        public static ModifyAccountPropertyTransaction<EntityType> CreateForEntityType(Deadline deadline,
             ulong? maxFee,
             PropertyType propertyType,
-            List<AccountPropertyModification<TransactionType>> propertyModifications, NetworkType networkType)
+            List<AccountPropertyModification<EntityType>> propertyModifications, NetworkType networkType)
         {
             return new EntityTypeModification(networkType,
-                TransactionVersion.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE.GetValue(),
+                EntityVersion.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE.GetValue(),
                 deadline, propertyType, propertyModifications, maxFee);
         }
 
