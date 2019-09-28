@@ -11,13 +11,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// 
   /// </summary>
   [DataContract]
-  public class AccountPropertiesInfoDTO {
+  public class NetworkConfigDTO {
     /// <summary>
-    /// Gets or Sets AccountProperties
+    /// Gets or Sets NetworkConfig
     /// </summary>
-    [DataMember(Name="accountProperties", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "accountProperties")]
-    public AccountPropertiesDTO AccountProperties { get; set; }
+    [DataMember(Name="networkConfig", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "networkConfig")]
+    public ConfigDTO NetworkConfig { get; set; }
 
 
     /// <summary>
@@ -26,8 +26,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class AccountPropertiesInfoDTO {\n");
-      sb.Append("  AccountProperties: ").Append(AccountProperties).Append("\n");
+      sb.Append("class NetworkConfigDTO {\n");
+      sb.Append("  NetworkConfig: ").Append(NetworkConfig).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

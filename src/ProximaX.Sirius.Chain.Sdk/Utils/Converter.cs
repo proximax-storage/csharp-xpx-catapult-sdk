@@ -36,7 +36,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
         public static ulong FromUInt8Array(this UInt64DTO input)
         {
-            return input.ToArray().FromUInt8Array();
+           return input.ToArray().FromUInt8Array();
+
         }
 
         public static ulong[] ToUInt64Array(this List<UInt64DTO> input)

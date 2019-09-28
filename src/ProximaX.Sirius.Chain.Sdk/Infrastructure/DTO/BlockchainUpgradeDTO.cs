@@ -11,13 +11,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// 
   /// </summary>
   [DataContract]
-  public class AccountPropertiesInfoDTO {
+  public class BlockchainUpgradeDTO {
     /// <summary>
-    /// Gets or Sets AccountProperties
+    /// Gets or Sets BlockchainUpgrade
     /// </summary>
-    [DataMember(Name="accountProperties", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "accountProperties")]
-    public AccountPropertiesDTO AccountProperties { get; set; }
+    [DataMember(Name="blockchainUpgrade", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "blockchainUpgrade")]
+    public UpgradeDTO BlockchainUpgrade { get; set; }
 
 
     /// <summary>
@@ -26,8 +26,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class AccountPropertiesInfoDTO {\n");
-      sb.Append("  AccountProperties: ").Append(AccountProperties).Append("\n");
+      sb.Append("class BlockchainUpgradeDTO {\n");
+      sb.Append("  BlockchainUpgrade: ").Append(BlockchainUpgrade).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

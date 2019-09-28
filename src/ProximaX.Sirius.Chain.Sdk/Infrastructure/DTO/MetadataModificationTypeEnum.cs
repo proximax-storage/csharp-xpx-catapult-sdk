@@ -8,17 +8,10 @@ using Newtonsoft.Json;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
 
   /// <summary>
-  /// 
+  /// The type of the metadata modification: * 0 - Add metadata. * 1 - Remove metadata. 
   /// </summary>
   [DataContract]
-  public class AccountPropertiesInfoDTO {
-    /// <summary>
-    /// Gets or Sets AccountProperties
-    /// </summary>
-    [DataMember(Name="accountProperties", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "accountProperties")]
-    public AccountPropertiesDTO AccountProperties { get; set; }
-
+  public class MetadataModificationTypeEnum {
 
     /// <summary>
     /// Get the string presentation of the object
@@ -26,8 +19,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class AccountPropertiesInfoDTO {\n");
-      sb.Append("  AccountProperties: ").Append(AccountProperties).Append("\n");
+      sb.Append("class MetadataModificationTypeEnum {\n");
       sb.Append("}\n");
       return sb.ToString();
     }

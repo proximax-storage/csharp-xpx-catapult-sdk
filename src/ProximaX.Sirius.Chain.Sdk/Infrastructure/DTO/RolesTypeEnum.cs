@@ -5,15 +5,32 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
-{
+namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
+
+  /// <summary>
+  /// The role of the node: * 1 - A peer node. * 2 - An api node. 
+  /// </summary>
+  [DataContract]
+  public class RolesTypeEnum {
 
     /// <summary>
-    /// The role of the node: * 1 - A peer node. * 2 - An api node. 
+    /// Get the string presentation of the object
     /// </summary>
-    [DataContract]
-    public enum RolesTypeEnum : int
-    {
-
+    /// <returns>String presentation of the object</returns>
+    public override string ToString()  {
+      var sb = new StringBuilder();
+      sb.Append("class RolesTypeEnum {\n");
+      sb.Append("}\n");
+      return sb.ToString();
     }
+
+    /// <summary>
+    /// Get the JSON string presentation of the object
+    /// </summary>
+    /// <returns>JSON string presentation of the object</returns>
+    public string ToJson() {
+      return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+
+}
 }

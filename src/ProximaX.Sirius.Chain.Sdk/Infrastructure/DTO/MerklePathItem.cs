@@ -1,14 +1,16 @@
+using System;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
-{
+namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
 
-    /// <summary>
-    /// 
-    /// </summary>
-    [DataContract]
+  /// <summary>
+  /// 
+  /// </summary>
+  [DataContract]
   public class MerklePathItem {
     /// <summary>
     /// Gets or Sets Position

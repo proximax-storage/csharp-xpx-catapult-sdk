@@ -11,24 +11,26 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// 
   /// </summary>
   [DataContract]
-  public class ConfigDTO {
+  public class NetworkConfigBodyDTO {
     /// <summary>
-    /// Gets or Sets Height
+    /// Gets or Sets ApplyHeightDelta
     /// </summary>
-    [DataMember(Name="height", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "height")]
-    public UInt64DTO Height { get; set; }
+    [DataMember(Name="applyHeightDelta", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "applyHeightDelta")]
+    public UInt64DTO ApplyHeightDelta { get; set; }
 
     /// <summary>
-    /// Gets or Sets NetworkConfig
+    /// Network config like a raw text.
     /// </summary>
+    /// <value>Network config like a raw text.</value>
     [DataMember(Name="networkConfig", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "networkConfig")]
     public string NetworkConfig { get; set; }
 
     /// <summary>
-    /// Gets or Sets SupportedEntityVersions
+    /// Allowed versions of transaction in json format.
     /// </summary>
+    /// <value>Allowed versions of transaction in json format.</value>
     [DataMember(Name="supportedEntityVersions", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "supportedEntityVersions")]
     public string SupportedEntityVersions { get; set; }
@@ -40,8 +42,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class ConfigDTO {\n");
-      sb.Append("  Height: ").Append(Height).Append("\n");
+      sb.Append("class NetworkConfigBodyDTO {\n");
+      sb.Append("  ApplyHeightDelta: ").Append(ApplyHeightDelta).Append("\n");
       sb.Append("  NetworkConfig: ").Append(NetworkConfig).Append("\n");
       sb.Append("  SupportedEntityVersions: ").Append(SupportedEntityVersions).Append("\n");
       sb.Append("}\n");

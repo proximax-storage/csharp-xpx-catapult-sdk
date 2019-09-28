@@ -11,7 +11,26 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// The alias action: * 0 -  Link alias. * 1 -  Unlink alias. 
   /// </summary>
   [DataContract]
-  public enum AliasActionEnum:int {
+  public class AliasActionEnum {
+
+    /// <summary>
+    /// Get the string presentation of the object
+    /// </summary>
+    /// <returns>String presentation of the object</returns>
+    public override string ToString()  {
+      var sb = new StringBuilder();
+      sb.Append("class AliasActionEnum {\n");
+      sb.Append("}\n");
+      return sb.ToString();
+    }
+
+    /// <summary>
+    /// Get the JSON string presentation of the object
+    /// </summary>
+    /// <returns>JSON string presentation of the object</returns>
+    public string ToJson() {
+      return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
 
 }
 }
