@@ -14,5 +14,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   public enum MessageTypeEnum:int {
 
 
+
 }
 }

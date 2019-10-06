@@ -11,8 +11,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// The supply modification direction: * 0  - Decrease. * 1  - Increase. 
   /// </summary>
   [DataContract]
-  public enum MosaicDirectionEnum:int {
+  public enum MosaicDirectionEnum : int{
 
-   
+    
+
 }
 }

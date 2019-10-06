@@ -14,9 +14,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         public ulong Height { get; }
         public BlockchainVersion Version { get; }
 
-        public static BlockchainUpgrade FromDto(UpgradeDTO dto)
+        public static BlockchainUpgrade FromDto(BlockchainUpgradeDTO dto)
         {
-            return new BlockchainUpgrade(dto.Height.ToUInt64(), BlockchainVersion.FromVersionValue(dto.CatapultVersion.ToUInt64()));
+            return new BlockchainUpgrade(dto.BlockchainUpgrade.Height.ToUInt64(), BlockchainVersion.FromVersionValue(dto.BlockchainUpgrade.BlockChainVersion.ToUInt64()));
         }
     }
 }

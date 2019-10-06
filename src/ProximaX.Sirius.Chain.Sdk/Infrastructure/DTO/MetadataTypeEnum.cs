@@ -8,12 +8,11 @@ using Newtonsoft.Json;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
 
   /// <summary>
-  /// The type of the modification: * 0 - Add cosignatory. * 1 - Remove cosignatory. 
+  /// The type of the metadata: * 1 - Address metadata. * 2 - Mosaic metadata. * 3 - Namespace metadata. 
   /// </summary>
   [DataContract]
-  public enum MultisigModificationTypeEnum :int {
+  public enum MetadataTypeEnum :int{
 
-    
-
+ 
 }
 }

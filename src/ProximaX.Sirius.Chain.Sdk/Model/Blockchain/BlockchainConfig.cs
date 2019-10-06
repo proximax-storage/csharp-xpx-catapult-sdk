@@ -16,9 +16,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Blockchain
         public string Config { get; }
         public string SupportedEntityVersions { get; }
 
-        public static BlockchainConfig FromDto(ConfigDTO dto)
+        public static BlockchainConfig FromDto(NetworkConfigDTO dto)
         {
-            return new BlockchainConfig(dto.Height.ToUInt64(), dto.BlockChainConfig, dto.SupportedEntityVersions);
+            return new BlockchainConfig(dto.NetworkConfig.Height.ToUInt64(), dto.NetworkConfig.NetworkConfig, dto.NetworkConfig.SupportedEntityVersions);
         }
     }
 }

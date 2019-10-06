@@ -21,11 +21,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     public string RemoteAccountKey { get; set; }
 
     /// <summary>
-    /// Gets or Sets LinkAction
+    /// Gets or Sets Action
     /// </summary>
-    [DataMember(Name="linkAction", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "linkAction")]
-    public LinkActionEnum LinkAction { get; set; }
+    [DataMember(Name="action", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "action")]
+    public LinkActionEnum Action { get; set; }
 
 
     /// <summary>
@@ -36,7 +36,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
       var sb = new StringBuilder();
       sb.Append("class EmbeddedAccountLinkTransactionDTO {\n");
       sb.Append("  RemoteAccountKey: ").Append(RemoteAccountKey).Append("\n");
-      sb.Append("  LinkAction: ").Append(LinkAction).Append("\n");
+      sb.Append("  Action: ").Append(Action).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

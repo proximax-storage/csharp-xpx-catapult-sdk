@@ -143,8 +143,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         {
             var route = $"{BasePath}/upgrade/{height}";
 
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<CatapultUpgradeDTO>())
-                .Select(i => BlockchainUpgrade.FromDto(i.CatapultConfig));
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<BlockchainUpgradeDTO>())
+                .Select(i => BlockchainUpgrade.FromDto(i));
 
         }
 

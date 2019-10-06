@@ -11,8 +11,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   /// The type of the action: * 0 - Link. * 1 - Unlink. 
   /// </summary>
   [DataContract]
-  public enum LinkActionEnum:int {
+  public enum LinkActionEnum :int{
 
-   
+
+
 }
 }

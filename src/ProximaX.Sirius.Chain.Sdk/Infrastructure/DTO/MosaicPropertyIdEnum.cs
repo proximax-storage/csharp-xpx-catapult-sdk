@@ -13,7 +13,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
   [DataContract]
   public enum MosaicPropertyIdEnum:int {
 
-    
+
 
 }
 }

@@ -8,24 +8,23 @@ using Newtonsoft.Json;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
 
   /// <summary>
-  /// 
+  /// Transaction that change version of blockchain.
   /// </summary>
   [DataContract]
-  public class AccountPropertiesModificationDTO {
+  public class BlockchainUpgradeTransactionDTO : TransactionDTO {
     /// <summary>
-    /// Gets or Sets Type
+    /// Gets or Sets UpgradePeriod
     /// </summary>
-    [DataMember(Name="type", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "type")]
-    public AccountPropertiesModificationTypeEnum Type { get; set; }
+    [DataMember(Name="upgradePeriod", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "upgradePeriod")]
+    public UInt64DTO UpgradePeriod { get; set; }
 
     /// <summary>
-    /// The address, transaction type or mosaic id to filter.
+    /// Gets or Sets NewBlockChainVersion
     /// </summary>
-    /// <value>The address, transaction type or mosaic id to filter.</value>
-    [DataMember(Name="values", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "values")]
-    public List<object> Values { get; set; }
+    [DataMember(Name="newBlockChainVersion", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "newBlockChainVersion")]
+    public UInt64DTO NewBlockChainVersion { get; set; }
 
 
     /// <summary>
@@ -34,9 +33,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class AccountPropertiesModificationDTO {\n");
-      sb.Append("  Type: ").Append(Type).Append("\n");
-      sb.Append("  Values: ").Append(Values).Append("\n");
+      sb.Append("class BlockchainUpgradeTransactionDTO {\n");
+      sb.Append("  UpgradePeriod: ").Append(UpgradePeriod).Append("\n");
+      sb.Append("  NewBlockChainVersion: ").Append(NewBlockChainVersion).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }
@@ -45,7 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// Get the JSON string presentation of the object
     /// </summary>
     /// <returns>JSON string presentation of the object</returns>
-    public string ToJson() {
+    public  new string ToJson() {
       return JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 

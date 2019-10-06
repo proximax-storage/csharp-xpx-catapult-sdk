@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 
-namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
+namespace IO.Swagger.Model {
 
   /// <summary>
   /// Transaction that revealed a proof.
