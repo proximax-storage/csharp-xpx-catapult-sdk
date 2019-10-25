@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+
 using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
@@ -85,6 +86,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>The signature.</returns>
         public static byte[] SignTransaction(KeyPair keyPair, byte[] payload)
         {
+            /*
             var sig = new byte[64];
             var sk = new byte[64];
 
@@ -96,7 +98,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             Ed25519.crypto_sign2(sig, payload, sk, 32);
             CryptoBytes.Wipe(sk);
 
+            return sig;*/
+            var sk = Ed25519.ExpandedPrivateKeyFromSeed(keyPair.PrivateKey);
+
+            var sig = Ed25519.Sign(payload, sk);
+
             return sig;
+            
         }
 
         /// <summary>

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using Chaos.NaCl;
+//using Chaos.NaCl;
 using GuardNet;
-//using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
+using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
@@ -106,8 +106,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             var sig = Ed25519.Sign(data, sk);
            
-            CryptoBytes.Wipe(sk);
-
             return sig;
         }
 

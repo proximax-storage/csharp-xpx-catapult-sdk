@@ -19,6 +19,7 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
+using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
@@ -177,7 +178,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
         {
             var shared = new byte[32];
 
-            Ed25519.key_derive(
+            Ed25519Operations.key_derive(
                 shared,
                 salt,
                 privateKey,
@@ -200,7 +201,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
             var payload = data.Take(48, data.Length - 48);
             var shared = new byte[32];
 
-            Ed25519.key_derive(
+            Ed25519Operations.key_derive(
                 shared,
                 salt,
                 privateKey,

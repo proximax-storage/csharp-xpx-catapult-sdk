@@ -1,5 +1,6 @@
-﻿using Chaos.NaCl;
+﻿
 using FluentAssertions;
+using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using System;
 using System.Collections.Generic;
@@ -18,15 +19,35 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             var keyPair = KeyPair.CreateFromPrivateKey(pk);
 
             keyPair.PublicKeyString.Should().Be(pubKey);
-            var puk = Ed25519.PublicKeyFromSeed(keyPair.PublicKey);
-            var sk = Ed25519.ExpandedPrivateKeyFromSeed(keyPair.PrivateKey);
+            var puk = Chaos.NaCl.Ed25519.PublicKeyFromSeed(keyPair.PublicKey);
+            var sk = Chaos.NaCl.Ed25519.ExpandedPrivateKeyFromSeed(keyPair.PrivateKey);
+            var skHex = sk.ToHexUpper();
 
             var message = "Test";
 
-            var messageArr = Encoding.ASCII.GetBytes(message);
+            var data = Encoding.ASCII.GetBytes(message);
 
-            var sig = Ed25519.Sign(messageArr, sk);
-            var isValid = Ed25519.Verify(sig, new byte[10], keyPair.PublicKey);
+            var sig = Chaos.NaCl.Ed25519.Sign(data, sk);
+            var hex1 = sig.ToHexUpper();
+         
+
+
+            var sig2 = new byte[64];
+            var sk2 = new byte[64];
+
+            Array.Copy(keyPair.PrivateKey, sk2, 32);
+
+            Array.Copy(keyPair.PublicKey, 0, sk2, 32, 32);
+
+            Ed25519.crypto_sign2(sig2, data, sk2, 32);
+
+            CryptoBytes.Wipe(sk2);
+
+            var hex = sig2.ToHexUpper();
+
+            var isValid = Chaos.NaCl.Ed25519.Verify(sig, data, keyPair.PublicKey);
+            var isValid2 = Chaos.NaCl.Ed25519.Verify(sig2, data, keyPair.PublicKey);
+            var t = "";
         }
 
     }
