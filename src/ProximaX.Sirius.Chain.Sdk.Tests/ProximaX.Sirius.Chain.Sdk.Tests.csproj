@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chaos.NaCl\Chaos.NaCl.csproj" />
     <ProjectReference Include="..\Proximax.Sirius.Chain.Sdk\ProximaX.Sirius.Chain.Sdk.csproj" />
   </ItemGroup>
 
