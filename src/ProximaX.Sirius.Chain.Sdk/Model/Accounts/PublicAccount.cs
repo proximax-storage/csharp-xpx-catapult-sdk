@@ -15,6 +15,7 @@
 using System;
 using System.Text.RegularExpressions;
 using GuardNet;
+using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
@@ -61,6 +62,30 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType)
         {
             return new PublicAccount(publicKey, networkType);
+        }
+
+        /// <summary>
+        /// Verify a signature
+        /// </summary>
+        /// <param name="data">The data to verify</param>
+        /// <param name="signature">The signature to verify</param>
+        /// <returns></returns>
+        public bool VerifySignature(byte[] data, byte[] signature)
+        {
+            var pk = CryptoBytes.FromHexString(PublicKey);
+            return Ed25519.Verify(signature, data, pk);
+        }
+
+        /// <summary>
+        /// Verify a signature
+        /// </summary>
+        /// <param name="data">The data to verify</param>
+        /// <param name="signature">The signature to verify</param>
+        /// <param name="privateKey">The signer public key</param>
+        /// <returns></returns>
+        public bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
+        {
+            return Ed25519.Verify(signature, data, publicKey);
         }
 
         public override string ToString()
