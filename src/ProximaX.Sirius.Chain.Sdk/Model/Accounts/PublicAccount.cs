@@ -83,7 +83,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="signature">The signature to verify</param>
         /// <param name="privateKey">The signer public key</param>
         /// <returns></returns>
-        public bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
+        public static bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
         {
             return Ed25519.Verify(signature, data, publicKey);
         }
