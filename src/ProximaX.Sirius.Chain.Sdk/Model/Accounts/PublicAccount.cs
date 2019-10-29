@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
@@ -75,6 +76,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             var pk = CryptoBytes.FromHexString(PublicKey);
             return Ed25519.Verify(signature, data, pk);
         }
+
 
         /// <summary>
         /// Verify a signature
