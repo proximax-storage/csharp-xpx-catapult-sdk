@@ -211,6 +211,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         }
 
         /// <summary>
+        /// Reapply the given deadline value
+        /// </summary>
+        /// <param name="deadline">The deadline value</param>
+        /// <returns>Transaction</returns>
+        public Transaction ReApplyGiven(Deadline deadline)
+        {
+            if(IsUnannounced())
+            {
+                Deadline = deadline;
+                return this;
+            }
+
+            throw new Exception("Unable to modify announced transaction");
+        }
+
+        /// <summary>
         ///     Takes a transaction and formats the bytes to be included in an aggregate transaction
         /// </summary>
         /// <returns>System.Byte[].</returns>

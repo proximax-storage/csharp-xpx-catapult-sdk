@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+//using Chaos.NaCl;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 
@@ -32,9 +33,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         {
             Guard.NotNullOrEmpty(publicKey,nameof(publicKey));
             Guard.NotEqualTo(publicKey.Length,64, new ArgumentOutOfRangeException(nameof(publicKey)));
-
-            PrivateKey = privateKey.FromHex();
-            PublicKey = publicKey.FromHex();
+            PrivateKeyString = privateKey;
+            PublicKeyString = publicKey;
+            //PrivateKey = privateKey.FromHex();
+            //PublicKey = publicKey.FromHex();
+            PrivateKey = CryptoBytes.FromHexString(privateKey);
+            PublicKey = CryptoBytes.FromHexString(publicKey);
         }
 
         /// <summary>
@@ -50,12 +54,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <summary>
         ///     Private Key in Hex
         /// </summary>
-        public string PrivateKeyString => PrivateKey.ToHexLower().ToUpper();
+        public string PrivateKeyString { get; }
 
         /// <summary>
         ///     Public Key in Hex
         /// </summary>
-        public string PublicKeyString => PublicKey.ToHexLower().ToUpper();
+        public string PublicKeyString { get; }
 
         /// <summary>
         ///     Create KeyPair from private key
@@ -67,9 +71,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             Guard.NotNullOrEmpty(privateKey, nameof(privateKey));
             Guard.NotEqualTo(privateKey.Length, 64, new ArgumentOutOfRangeException(nameof(privateKey)));
 
-            var privateKeyArray = privateKey.FromHex();
-
-            return new KeyPair(privateKey, Ed25519.PublicKeyFromSeed(privateKeyArray).ToHexLower());
+           // var privateKeyArray = privateKey.FromHex();
+           // var publicKey = Ed25519.PublicKeyFromSeed(privateKeyArray).ToHexUpper();
+            var privateKeyArray = CryptoBytes.FromHexString(privateKey);
+            var publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray));
+            return new KeyPair(privateKey, publicKey);
         }
 
         /// <summary>
@@ -80,6 +86,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <exception cref="ArgumentNullException">data</exception>
         public byte[] Sign(byte[] data)
         {
+           /*
             if (data == null) throw new ArgumentNullException(nameof(data));
             var sig = new byte[64];
             var sk = new byte[64];
@@ -92,6 +99,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             CryptoBytes.Wipe(sk);
 
+            return sig;
+           */
+
+            var sk = Ed25519.ExpandedPrivateKeyFromSeed(PrivateKey);
+
+            var sig = Ed25519.Sign(data, sk);
+           
             return sig;
         }
 
