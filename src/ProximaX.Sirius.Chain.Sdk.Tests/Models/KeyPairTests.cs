@@ -4,8 +4,6 @@ using ProximaX.Sirius.Chain.Sdk.Crypto.Core;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
-using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using Xunit;
