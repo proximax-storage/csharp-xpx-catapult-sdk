@@ -35,7 +35,14 @@ stages:
         command: build
         projects: '**/ProximaX.Sirius.Chain.Sdk.csproj'
         arguments: '--configuration $(buildConfiguration)'
-  
+   
+   # - task: DotNetCoreCLI@2
+   #   displayName: 'Run Tests'
+   #   inputs:
+   #     command: test
+   #     projects: '**/*[Tt]ests/*.csproj'
+   #     arguments: '--configuration $(buildConfiguration) --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="$(Build.SourcesDirectory)/TestResults/Coverage"'
+        
     - task: DotNetCoreCLI@2
       displayName: 'Create NuGet Package - Release Version'
       inputs:
