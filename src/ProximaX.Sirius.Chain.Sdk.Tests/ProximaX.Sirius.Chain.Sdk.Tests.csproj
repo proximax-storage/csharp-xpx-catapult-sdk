@@ -98,6 +98,9 @@
     <None Update="TestData\Mosaic\GetMosaicNames.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\Node\GetNetwork.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\Node\GetNodeInfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
