@@ -15,7 +15,6 @@ using System;
 using System.Text;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
@@ -28,7 +27,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         /// <summary>
         /// Gets or Sets CatapultConfig
         /// </summary>
-        [Required]
         [DataMember(Name="catapultConfig")]
         public ConfigDTO CatapultConfig { get; set; }
 
