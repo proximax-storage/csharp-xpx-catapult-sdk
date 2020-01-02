@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
-    public class ExchangeOfferAddTransaction : Transaction
+    public class ExchangeOfferTransaction : Transaction
     {
         public List<AddExchangeOffer> Offers { get; private set; }
 
-        public ExchangeOfferAddTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee, List<AddExchangeOffer> offers, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null) :
+        public ExchangeOfferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee, List<AddExchangeOffer> offers, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null) :
             base(networkType, version, EntityType.EXCHANGE_OFFER_ADD, deadline, maxFee, signature, signer, transactionInfo)
         {
 
@@ -87,7 +87,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             AddExchangeOfferTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AddExchangeOfferTransactionBuffer.AddMaxFee(builder, feeVector);
             AddExchangeOfferTransactionBuffer.AddDeadline(builder, deadlineVector);
-            AddExchangeOfferTransactionBuffer.AddOffersCount(builder, (byte)offerOffsets.L);
+            AddExchangeOfferTransactionBuffer.AddOffersCount(builder, (byte)offerOffsets.Length);
             AddExchangeOfferTransactionBuffer.AddOffers(builder, offersVector);
 
             // Calculate size

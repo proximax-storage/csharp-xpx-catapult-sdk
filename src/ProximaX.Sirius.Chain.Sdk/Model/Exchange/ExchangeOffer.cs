@@ -29,7 +29,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
         public ExchangeOfferType Type { get; private set; }
         public PublicAccount Owner { get; private set; }
 
-        public AddExchangeOffer(IUInt64Id mosaicId, ulong mosaicAmount, ulong cost, ExchangeOfferType type,
+        public ExchangeOffer(IUInt64Id mosaicId, ulong mosaicAmount, ulong cost, ExchangeOfferType type,
              PublicAccount owner)
         {
             MosaicId = mosaicId;
@@ -39,7 +39,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
             Owner = owner;
         }
 
-        public AddExchangeOffer(Mosaic mosaic, ulong cost, ExchangeOfferType type,  PublicAccount owner)
+        public ExchangeOffer(Mosaic mosaic, ulong cost, ExchangeOfferType type,  PublicAccount owner)
         {
             MosaicId = mosaic.Id;
             MosaicAmount = mosaic.Amount;
