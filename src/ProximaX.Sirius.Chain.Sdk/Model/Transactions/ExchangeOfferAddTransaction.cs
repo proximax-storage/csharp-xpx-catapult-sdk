@@ -87,7 +87,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             AddExchangeOfferTransactionBuffer.AddType(builder, TransactionType.GetValue());
             AddExchangeOfferTransactionBuffer.AddMaxFee(builder, feeVector);
             AddExchangeOfferTransactionBuffer.AddDeadline(builder, deadlineVector);
-            AddExchangeOfferTransactionBuffer.AddOffersCount(builder, (byte)offerOffsets.L);
+            AddExchangeOfferTransactionBuffer.AddOffersCount(builder, (byte)offerOffsets.Length);
             AddExchangeOfferTransactionBuffer.AddOffers(builder, offersVector);
 
             // Calculate size

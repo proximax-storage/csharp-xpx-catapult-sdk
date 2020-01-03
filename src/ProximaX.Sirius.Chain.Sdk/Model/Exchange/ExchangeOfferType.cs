@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using System;
+
 namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
 {
     public enum ExchangeOfferType
@@ -24,6 +26,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
         public static byte GetValueInByte(this ExchangeOfferType type)
         {
             return (byte)type;
+        }
+
+        public static ExchangeOfferType GetRawValue(int type)
+        {
+            switch (type)
+            {
+                case 0:
+                    return ExchangeOfferType.SELL;
+                case 1:
+                    return ExchangeOfferType.BUY;
+                default:
+                    throw new ArgumentOutOfRangeException("Not support ExchangeOfferType");
+            }
         }
 
     }
