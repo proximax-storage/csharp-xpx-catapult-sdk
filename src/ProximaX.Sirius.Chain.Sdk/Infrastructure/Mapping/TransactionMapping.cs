@@ -84,6 +84,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
                 case EntityType.LINK_ACCOUNT:
                     return new AccountLinkTransactionMapping().Apply(input);
+                case EntityType.EXCHANGE_OFFER_ADD:
+                    return new ExchangeOfferAddTransactionMapping().Apply(input);
+                case EntityType.EXCHANGE_OFFER_REMOVE:
+                    return new ExchangeOfferRemoveTransactionMapping().Apply(input);
+                case EntityType.EXCHANGE_OFFER:
+                    return new ExchangeOfferTransactionMapping().Apply(input);
 
                 default:
                     throw new Exception("Unsupported transaction");

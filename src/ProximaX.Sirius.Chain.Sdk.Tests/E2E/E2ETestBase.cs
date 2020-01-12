@@ -61,8 +61,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         private async Task InitializeAccounts()
         {
-            MultiSigAccount = await GenerateAccountWithCurrency(1000);
-            Cosignatory1 = await GenerateAccountWithCurrency(1000);
+            MultiSigAccount = await GenerateAccountWithCurrency(100);
+            Cosignatory1 = await GenerateAccountWithCurrency(100);
             Cosignatory2 = Account.GenerateNewAccount(NetworkType);
             Cosignatory3 = Account.GenerateNewAccount(NetworkType);
             Cosignatory4 = Account.GenerateNewAccount(NetworkType);

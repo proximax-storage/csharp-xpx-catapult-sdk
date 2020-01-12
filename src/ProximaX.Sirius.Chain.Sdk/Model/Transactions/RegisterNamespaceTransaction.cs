@@ -14,7 +14,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Runtime.Serialization;
 using FlatBuffers;
 using ProximaX.Sirius.Chain.Sdk.Buffers;

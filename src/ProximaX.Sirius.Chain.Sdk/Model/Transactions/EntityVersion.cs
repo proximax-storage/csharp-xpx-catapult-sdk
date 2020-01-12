@@ -115,7 +115,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Blockchain version update transaction
         /// </summary>
-        BLOCKCHAIN_UPGRADE = 1
+        BLOCKCHAIN_UPGRADE = 1,
+
+        /// <summary>
+        ///     Add exchange offer
+        /// </summary>
+        EXCHANGE_OFFER_ADD = 1,
+
+        /// <summary>
+        ///     Exchange offer
+        /// </summary>
+        EXCHANGE_OFFER = 1,
+
+        /// <summary>
+        ///     Remove exchange offer
+        /// </summary>
+        EXCHANGE_OFFER_REMOVE = 1,
     }
 
     public static class EntityVersionExtension

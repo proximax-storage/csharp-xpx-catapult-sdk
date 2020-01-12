@@ -16,21 +16,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
         public NetworkHttpTests() : base()
         {
-            _networkHttp = new NetworkHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
+            _networkHttp = new NetworkHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
         }
 
         [Fact]
         public async Task Should_Return_NetworkType()
         {
-          
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                  TestHelper.LoadJsonFileToObject(@"Testdata\\Node\\GetNetwork.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
                 // Arrange
                 var networkType = await _networkHttp.GetNetworkType();
 
                 // Actual
-                var actual = NetworkTypeExtension.GetRawValue("MIJINTEST");
+                var actual = NetworkTypeExtension.GetRawValue("PUBLICTest");
 
                 // Test
                 networkType.Should().BeEquivalentTo(actual);
+            }
            
         }
     }
