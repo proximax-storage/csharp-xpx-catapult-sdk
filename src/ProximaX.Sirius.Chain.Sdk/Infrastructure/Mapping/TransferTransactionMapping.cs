@@ -47,7 +47,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             try
             {
                 versionValue = (int)((uint)version);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 versionValue = (int)version;
             }
@@ -56,7 +57,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var deadline = transaction["deadline"].ToObject<UInt64DTO>().ToUInt64();
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var recipient = transaction["recipient"]?.ToObject<string>();
-            var mosaics = transaction["mosaics"].ToObject<List<MosaicDTO>>();
+            var mosaics = transaction["mosaics"]?.ToObject<List<MosaicDTO>>();
             var message = transaction["message"].ToObject<JObject>();
             var signature = transaction["signature"].ToObject<string>();
             var signer = transaction["signer"].ToObject<string>();
@@ -65,7 +66,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 new Deadline(deadline),
                 maxFee,
                 Recipient.From(Address.CreateFromHex(recipient)),
-                mosaics.Select(m => new Mosaic(new MosaicId(m.Id.ToUInt64()), m.Amount.ToUInt64())).ToList(),
+                mosaics != null ? mosaics.Select(m => new Mosaic(new MosaicId(m.Id.ToUInt64()), m.Amount.ToUInt64())).ToList() : new List<Mosaic> { },
                 GetMessage(message),
                 signature,
                 new PublicAccount(signer, network),
