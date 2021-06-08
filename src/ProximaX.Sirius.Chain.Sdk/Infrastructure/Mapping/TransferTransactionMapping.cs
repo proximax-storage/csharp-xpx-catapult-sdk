@@ -82,6 +82,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             switch (MessageTypeExtension.GetRawValue(msgType))
             {
                 case MessageType.PLAIN_MESSAGE:
+                    if(payload.Length <=0) {
+                        return EmptyMessage.Create();
+                    }
                     return PlainMessage.Create(Encoding.UTF8.GetString(payload));
                 case MessageType.SECURED_MESSAGE:
                     return SecureMessage.CreateFromEncodedPayload(payload);
