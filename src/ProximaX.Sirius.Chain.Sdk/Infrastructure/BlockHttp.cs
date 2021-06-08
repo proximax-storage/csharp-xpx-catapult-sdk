@@ -160,20 +160,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             if (query != null)
             {
-                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
 
-                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
 
                 switch (query.Order)
                 {
                     case Order.ASC:
-                        route.SetQueryParam("ordering", "id");
+                        route = route.SetQueryParam("ordering", "id");
                         break;
                     case Order.DESC:
-                        route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("ordering", "-id");
                         break;
                     default:
-                        route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("ordering", "-id");
                         break;
                 }
             }

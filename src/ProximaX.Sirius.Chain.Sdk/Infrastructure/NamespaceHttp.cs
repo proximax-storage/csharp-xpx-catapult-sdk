@@ -101,9 +101,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             if (query != null)
             {
-                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
 
-                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
             }
 
             var networkType = GetNetworkTypeObservable().Take(1);
@@ -150,9 +150,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             if (query != null)
             {
-                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
 
-                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
             }
 
             var networkType = GetNetworkTypeObservable().Take(1);
@@ -195,9 +195,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             if (query != null)
             {
-                if (query.PageSize > 0) route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
 
-                if (!string.IsNullOrEmpty(query.Id)) route.SetQueryParam("id", query.Id);
+                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
             }
 
             var networkType = GetNetworkTypeObservable().Take(1);
