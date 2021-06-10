@@ -54,7 +54,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
      }
      */
         public TransferTransaction(NetworkType networkType, int version, Deadline deadline, ulong? maxFee,
-          Recipient recipient, List<Mosaic> mosaics, IMessage message, string signature = null,
+          Recipient recipient, IList<Mosaic> mosaics, IMessage message, string signature = null,
           PublicAccount signer = null, TransactionInfo transactionInfo = null)
           : base(networkType, version, EntityType.TRANSFER, deadline, maxFee, signature, signer, transactionInfo)
         {
@@ -89,7 +89,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Gets the mosaics.
         /// </summary>
         /// <value>The mosaics.</value>
-        public List<Mosaic> Mosaics { get; }
+        public IList<Mosaic> Mosaics { get; }
 
 
         public static TransferTransaction Create(Deadline deadline, Address recipient, List<Mosaic> mosaics,
