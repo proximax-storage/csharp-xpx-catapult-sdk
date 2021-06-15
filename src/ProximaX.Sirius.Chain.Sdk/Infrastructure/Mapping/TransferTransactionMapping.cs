@@ -57,8 +57,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var deadline = transaction["deadline"].ToObject<UInt64DTO>().ToUInt64();
             var maxFee = transaction["maxFee"]?.ToObject<UInt64DTO>().ToUInt64();
             var recipient = transaction["recipient"]?.ToObject<string>();
-            var mosaics = transaction["mosaics"]?.ToObject<List<MosaicDTO>>();
-            var message = transaction["message"].ToObject<JObject>();
+            var mosaics = transaction["mosaics"]?.ToObject<IList<MosaicDTO>>();
+            var message = new JObject();
+            if (transaction["message"] != null)
+            {
+                message = transaction["message"].ToObject<JObject>();
+            }
+
             var signature = transaction["signature"].ToObject<string>();
             var signer = transaction["signer"].ToObject<string>();
             return new TransferTransaction(network,
@@ -76,18 +81,31 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
         private static IMessage GetMessage(JObject msg)
         {
-            var msgType = msg["type"].ToObject<int>();
-            var payload = msg["payload"].ToObject<string>().FromHex();
 
-            switch (MessageTypeExtension.GetRawValue(msgType))
+            try
             {
-                case MessageType.PLAIN_MESSAGE:
-                    return PlainMessage.Create(Encoding.UTF8.GetString(payload));
-                case MessageType.SECURED_MESSAGE:
-                    return SecureMessage.CreateFromEncodedPayload(payload);
-                default:
-                    return EmptyMessage.Create();
+                var msgType = msg["type"].ToObject<int>();
+                var payload = msg["payload"].ToObject<string>().FromHex();
+
+                switch (MessageTypeExtension.GetRawValue(msgType))
+                {
+                    case MessageType.PLAIN_MESSAGE:
+                        if (payload.Length <= 0)
+                        {
+                            return EmptyMessage.Create();
+                        }
+                        return PlainMessage.Create(Encoding.UTF8.GetString(payload));
+                    case MessageType.SECURED_MESSAGE:
+                        return SecureMessage.CreateFromEncodedPayload(payload);
+                    default:
+                        return EmptyMessage.Create();
+                }
             }
+            catch (Exception)
+            {
+                return EmptyMessage.Create();
+            }
+
         }
     }
 }
