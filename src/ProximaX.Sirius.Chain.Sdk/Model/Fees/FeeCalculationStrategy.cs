@@ -26,7 +26,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Fees
 
         public FeeCalculationStrategyType FeeCalculationStrategyType { get; }
   
-        public readonly int MAX_FEE = 5000000;
+        public readonly int MAX_FEE = 75000000;
 
         public ulong CalculateFee(int transactionSize)
         {
