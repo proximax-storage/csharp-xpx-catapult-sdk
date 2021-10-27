@@ -74,7 +74,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <value>The fee multiplier applied to transactions contained in block.</value>
     [DataMember(Name="feeMultiplier", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "feeMultiplier")]
-    public int? FeeMultiplier { get; set; }
+    public int FeeMultiplier { get; set; }
 
     /// <summary>
     /// The hash of the previous block.
@@ -122,7 +122,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <value>The part of the transaction fee harvester is willing to get. From 0 up to FeeInterestDenominator. The customer gets (FeeInterest / FeeInterestDenominator)'th part of the maximum transaction fee.</value>
     [DataMember(Name="feeInterest", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "feeInterest")]
-    public int? FeeInterest { get; set; }
+    public int FeeInterest { get; set; }
 
     /// <summary>
     /// Denominator of the transaction fee.
@@ -130,7 +130,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <value>Denominator of the transaction fee.</value>
     [DataMember(Name="feeInterestDenominator", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "feeInterestDenominator")]
-    public int? FeeInterestDenominator { get; set; }
+    public int FeeInterestDenominator { get; set; }
 
 
     /// <summary>
