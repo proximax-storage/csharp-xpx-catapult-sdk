@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <VersionPrefix>0.6.1</VersionPrefix>
     <Authors>Proximax IO</Authors>
     <Description>ProximaX Sirius Blockchain .Net SDK</Description>
-    <Copyright>Copyright (c) 2019 ProximaX Limited</Copyright>
+    <Copyright>Copyright (c) 2021 ProximaX Limited</Copyright>
     <PackageProjectUrl>https://github.com/proximax-storage/csharp-xpx-catapult-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/proximax-storage/csharp-xpx-catapult-sdk</RepositoryUrl>
     <RepositoryType />
@@ -39,6 +39,11 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="schemas\Catapult\Buffers\" />
+    <Folder Include="schemas\transactions\" />
   </ItemGroup>
 
 </Project>
