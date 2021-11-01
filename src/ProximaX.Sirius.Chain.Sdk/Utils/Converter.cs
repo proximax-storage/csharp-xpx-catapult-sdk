@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
@@ -36,8 +37,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
         public static ulong FromUInt8Array(this UInt64DTO input)
         {
-           return input.ToArray().FromUInt8Array();
-
+            return input.ToArray().FromUInt8Array();
         }
 
         public static ulong[] ToUInt64Array(this List<UInt64DTO> input)
@@ -48,15 +48,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
         public static string ToHex(this ulong input)
         {
-            
             var hexLength = input.ToString("X").Length;
 
             return hexLength % 2 == 0 ? input.ToString("X") : input.ToString("X" + (hexLength + 1));
-           
 
-           /* var uintArr = input.ToUInt8Array();
-            return GetPaddedHex(uintArr[1])  + GetPaddedHex(uintArr[0]);*/
-
+            /* var uintArr = input.ToUInt8Array();
+             return GetPaddedHex(uintArr[1])  + GetPaddedHex(uintArr[0]);*/
         }
 
         public static string GetPaddedHex(uint value)
@@ -70,7 +67,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
             return hexLength % 2 == 0 ? input.ToString("X") : input.ToString("X" + (hexLength + 1));
         }
-
 
         public static byte[] AliasToRecipient(this NamespaceId id)
         {
@@ -89,5 +85,49 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
             throw new ArgumentOutOfRangeException($"Unable to convert to namespace alias");
         }
 
+        public static byte[] CompareValues(byte[] newV, byte[] oldV)
+        {
+            var valueSizeBytesCount = Math.Max(newV.Length, oldV.Length);
+
+            var MinValueSizeBytesCount = Math.Min(newV.Length, oldV.Length);
+
+            byte[] NewV = new byte[valueSizeBytesCount];
+            byte[] OldV = new byte[valueSizeBytesCount];
+            byte[] valueDifferenceBytes = new byte[valueSizeBytesCount];
+
+            var lengthdifferent = valueSizeBytesCount - MinValueSizeBytesCount;
+            byte[] valuedifferent = new byte[lengthdifferent];//right shift
+            if (lengthdifferent != 0)
+            {
+                var temp = Enumerable.Repeat(0, lengthdifferent - 1).ToArray();
+                for (var i = 0; i < lengthdifferent - 1; i++)
+                {
+                    temp[i] = valuedifferent[i];
+                }
+
+                if (oldV.Length < valueSizeBytesCount)
+                {
+                    NewV = newV;
+                    OldV = valuedifferent.Concat(oldV).ToArray();
+                }
+                else if (newV.Length < valueSizeBytesCount)
+                {
+                    NewV = valuedifferent.Concat(newV).ToArray();
+                    OldV = oldV;
+                }
+            }
+            else
+            {
+                NewV = newV;
+                OldV = oldV;
+            }
+
+            for (var index = 0; index < valueSizeBytesCount; index++)
+            {
+                valueDifferenceBytes[index] = (byte)(NewV[index] ^ OldV[index]);
+            }
+
+            return valueDifferenceBytes;
+        }
     }
 }
