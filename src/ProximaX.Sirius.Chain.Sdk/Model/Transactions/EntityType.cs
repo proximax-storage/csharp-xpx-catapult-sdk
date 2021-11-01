@@ -104,17 +104,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Adress related metadata transaction type
         /// </summary>
-        ACCOUNT_METADATA = 0x413F,
+        ACCOUNT_METADATA_V2 = 0x413F,
 
         /// <summary>
         ///     Mosaic related metadata transaction type
         /// </summary>
-        MOSAIC_METADATA = 0x423F,
+        MOSAIC_METADATA_V2 = 0x423F,
 
         /// <summary>
         ///    Namespace related metadata transaction type
         /// </summary>
-        NAMESPACE_METADATA = 0x433F,
+        NAMESPACE_METADATA_V2 = 0x433F,
 
         /// <summary>
         ///    Modify Mosaic Levy

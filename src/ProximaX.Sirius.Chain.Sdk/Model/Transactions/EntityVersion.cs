@@ -112,9 +112,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         LINK_ACCOUNT = 2,
 
         /// <summary>
-        ///     Modify metadata address version
+        ///     Modify metadata account version
         /// </summary>
-        METADATA_ADDRESS = 1,
+        METADATA_ACCOUNT = 1,
 
         /// <summary>
         ///     Modify metadata mosaic version
