@@ -10,20 +10,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 {
     public class AccountTests
     {
-
         [Fact]
         public void Create_New_Address_Returns_Plain()
         {
-            var address = new Address(Constants.RAW_ADDRESS, NetworkType.MIJIN);
+            var address = new Address(Constants.RAW_ADDRESS, NetworkType.TEST_NET);
 
             address.Plain.Should().BeEquivalentTo(Constants.PLAIN_ADDRESS);
-
         }
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_Plain()
         {
-
             var address = Address.CreateFromRawAddress(Constants.RAW_ADDRESS);
 
             address.Plain.Should().BeEquivalentTo(Constants.PLAIN_ADDRESS);
@@ -40,29 +37,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_MIJIN()
         {
-
             var address = Address.CreateFromRawAddress(Constants.MIJIN_PLAIN_ADDRESS);
 
             address.NetworkType.Should().BeEquivalentTo(NetworkType.MIJIN);
-
         }
-
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_MIJIN_TEST()
         {
-
             var address = Address.CreateFromRawAddress(Constants.MIJIN_TEST_PLAIN_ADDRESS);
 
-
             address.NetworkType.Should().BeEquivalentTo(NetworkType.MIJIN_TEST);
-
         }
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_PUBLIC()
         {
-
             var address = Address.CreateFromRawAddress(Constants.PUBLIC_PLAIN_ADDRESS);
             address.NetworkType.Should().BeEquivalentTo(NetworkType.MAIN_NET);
         }
@@ -70,55 +60,42 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_PUBLIC_TEST()
         {
-
             var address = Address.CreateFromRawAddress(Constants.PUBLIC_TEST_PLAIN_ADDRESS);
 
             address.NetworkType.Should().BeEquivalentTo(NetworkType.TEST_NET);
-
         }
-
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_PRIVATE()
         {
-
             var address = Address.CreateFromRawAddress(Constants.PRIVATE_PLAIN_ADDRESS);
 
             address.NetworkType.Should().BeEquivalentTo(NetworkType.PRIVATE);
-
         }
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_PRIVATE_TEST()
         {
-
             var address = Address.CreateFromRawAddress(Constants.PRIVATE_TEST_PLAIN_ADDRESS);
             address.NetworkType.Should().BeEquivalentTo(NetworkType.PRIVATE_TEST);
-
         }
 
         [Fact]
         public void Create_New_Address_From_Raw_Address_Returns_NetworkType_NOT_SUPPORT()
         {
-
-          
             Action act = () =>
             {
-               Address.CreateFromRawAddress(Constants.NOT_SUPPORT_RAW_ADDRESS);
+                Address.CreateFromRawAddress(Constants.NOT_SUPPORT_RAW_ADDRESS);
             };
             act.Should().Throw<TypeNotSupportException>();
-          
-
         }
 
         [Fact]
         public void Create_New_Address_From_Public_Key_NetworkType_MIJIN_TEST()
         {
-         
-            var address = Address.CreateFromPublicKey(Constants.MIJIN_TEST_PUBLIC_KEY, NetworkType.MIJIN_TEST);
+            var address = Address.CreateFromPublicKey(Constants.PUBLIC_TEST_PUBLIC_KEY, NetworkType.TEST_NET);
 
-            address.NetworkType.Should().BeEquivalentTo(NetworkType.MIJIN_TEST);
- 
+            address.NetworkType.Should().BeEquivalentTo(NetworkType.TEST_NET);
         }
 
         [Fact]
@@ -135,7 +112,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_New_Account_Using_Address_KeyPair()
         {
-            var address = Address.CreateFromPublicKey(Constants.MIJIN_TEST_PUBLIC_KEY, NetworkType.MIJIN_TEST);
+            var address = Address.CreateFromPublicKey(Constants.MIJIN_TEST_PUBLIC_KEY, NetworkType.TEST_NET);
             var keyPair = KeyPair.CreateFromPrivateKey(Constants.PRIVATE_KEY);
             var account = new Account(address, keyPair);
 
@@ -148,7 +125,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_New_Account_Using_Private_Key()
         {
-
             var account = Account.CreateFromPrivateKey(Constants.PRIVATE_KEY, NetworkType.MIJIN_TEST);
 
             account.Address.Plain.Should().NotBeEmpty();
