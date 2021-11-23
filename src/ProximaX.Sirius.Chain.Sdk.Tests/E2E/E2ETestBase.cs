@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 {
-    public class E2EBaseFixture: IDisposable
+    public class E2EBaseFixture : IDisposable
     {
         public readonly SiriusClient SiriusClient;
 
@@ -29,17 +29,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         public Account Cosignatory4;
         public readonly string GenerationHash;
 
-   
-
         public E2EBaseFixture()
         {
-          
             var env = GetEnvironment();
 
             SiriusClient = new SiriusClient(env.BaseUrl);
             GenerationHash = SiriusClient.BlockHttp.GetGenerationHash().Wait();
             bool useSSL = false;
-            if(env.Protocol.Equals("https",StringComparison.InvariantCultureIgnoreCase))
+            if (env.Protocol.Equals("https", StringComparison.InvariantCultureIgnoreCase))
             {
                 useSSL = true;
             }
@@ -51,7 +48,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             SeedAccount = Account.CreateFromPrivateKey(env.SeedAccountPK, NetworkType);
 
             Task.Run(() => InitializeAccounts()).Wait();
-
         }
 
         public void Dispose()
@@ -78,15 +74,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                 case "DEV":
                     env = "Dev";
                     break;
+
                 case "BCSTAGE":
                     env = "BcStage";
                     break;
+
                 case "BCTESTNET":
                     env = "BcTestNet";
                     break;
+
                 case "BCDEV":
                     env = "BcDev";
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(Environment), environment, null);
             }
@@ -95,9 +95,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
             var host = TestHelper.GetConfig()[$"Environments:{env}:Host"];
             var port = TestHelper.GetConfig()[$"Environments:{env}:Port"];
             var generationHash = TestHelper.GetConfig()[$"Environments:{env}:Hash"];
-            var seedAccountPK = TestHelper.GetConfig()[$"Environments:{env}:SeedAccountPrivateKey"]; 
-            return new TestEnvironment(host, protocol, Convert.ToInt32(port), generationHash,seedAccountPK);
-
+            var seedAccountPK = TestHelper.GetConfig()[$"Environments:{env}:SeedAccountPrivateKey"];
+            return new TestEnvironment(host, protocol, Convert.ToInt32(port), generationHash, seedAccountPK);
         }
 
         public async Task<Account> GenerateAccountWithCurrency(ulong amount)
@@ -112,7 +111,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public async Task<Transaction> Transfer(Account from, Address to, Mosaic mosaic, IMessage message, string generationHash)
         {
-
             var transferTransaction = TransferTransaction.Create(
                 Deadline.Create(),
                 Recipient.From(to),
@@ -140,7 +138,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
         public async Task<Transaction> AggregateTransfer(Account from, Address to, Mosaic mosaic, IMessage message, string GenerationHash)
         {
-
             var transferTransaction = TransferTransaction.Create(
                 Deadline.Create(),
                 Recipient.From(to),
@@ -162,10 +159,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             WatchForFailure(signedTransaction);
 
-         
             var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(from.Address).Take(1);
 
-            await  SiriusClient.TransactionHttp.Announce(signedTransaction);
+            await SiriusClient.TransactionHttp.Announce(signedTransaction);
 
             var result = await tx;
 
@@ -176,7 +172,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         {
             var nonce = MosaicNonce.CreateRandom();
             var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
-               
+
             var mosaicDefinitionTransaction = MosaicDefinitionTransaction.Create(
                 nonce,
                 mosaicId,
@@ -189,7 +185,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     duration: 1000
                 ),
                 NetworkType);
-        
+
             var mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.Create(
               Deadline.Create(),
               mosaicDefinitionTransaction.MosaicId,
@@ -210,8 +206,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             WatchForFailure(signedTransaction);
 
-      
-
             var tx = SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(account.Address).Take(1)
                 .Timeout(TimeSpan.FromSeconds(3000));
 
@@ -219,10 +213,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var result = await tx;
 
-
             return mosaicId;
         }
-
 
         public void WatchForFailure(SignedTransaction transaction)
         {
@@ -231,7 +223,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     e =>
                     {
                         Console.WriteLine(e.Status);
-
                     });
         }
 
