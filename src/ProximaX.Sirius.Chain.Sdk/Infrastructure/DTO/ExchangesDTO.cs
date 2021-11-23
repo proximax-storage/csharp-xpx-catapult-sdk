@@ -1,11 +1,11 @@
-// Copyright 2019 ProximaX
-// 
+// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,9 +18,8 @@ using Newtonsoft.Json;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
-
     /// <summary>
-    /// 
+    /// Class of ExchangesDTO
     /// </summary>
     [DataContract]
     public class ExchangesDTO
@@ -30,42 +29,42 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         /// </summary>
         [DataMember(Name = "mosaicId", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "mosaicId")]
-        public List<UInt64DTO> MosaicId { get; set; }
+        public UInt64DTO MosaicId { get; set; }
 
         /// <summary>
         /// Gets or Sets amount
         /// </summary>
         [DataMember(Name = "amount", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "amount")]
-        public List<UInt64DTO> Amount { get; set; }
+        public UInt64DTO Amount { get; set; }
 
         /// <summary>
         /// Gets or Sets initialAmount
         /// </summary>
         [DataMember(Name = "initialAmount", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "initialAmount")]
-        public List<UInt64DTO> InitialAmount { get; set; }
+        public UInt64DTO InitialAmount { get; set; }
 
         /// <summary>
         /// Gets or Sets initialCost
         /// </summary>
         [DataMember(Name = "initialCost", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "initialCost")]
-        public List<UInt64DTO> InitialCost { get; set; }
+        public UInt64DTO InitialCost { get; set; }
 
         /// <summary>
         /// Gets or Sets deadline
         /// </summary>
         [DataMember(Name = "deadline", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "deadline")]
-        public List<UInt64DTO> Deadline { get; set; }
+        public UInt64DTO Deadline { get; set; }
 
         /// <summary>
         /// Gets or Sets price
         /// </summary>
         [DataMember(Name = "price", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "price")]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Gets or Sets owner
@@ -73,6 +72,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         [DataMember(Name = "owner", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "owner")]
         public string Owner { get; set; }
+
         /// <summary>
         /// Gets or Sets type
         /// </summary>
@@ -108,6 +108,5 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-
     }
 }

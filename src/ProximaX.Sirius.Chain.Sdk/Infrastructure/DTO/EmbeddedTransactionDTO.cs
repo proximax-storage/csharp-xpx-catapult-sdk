@@ -28,8 +28,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO {
     /// <summary>
     /// Gets or Sets MaxFee
     /// </summary>
-    [DataMember(Name="max_fee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "max_fee")]
+    [DataMember(Name="maxFee", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "maxFee")]
     public UInt64DTO MaxFee { get; set; }
 
     /// <summary>

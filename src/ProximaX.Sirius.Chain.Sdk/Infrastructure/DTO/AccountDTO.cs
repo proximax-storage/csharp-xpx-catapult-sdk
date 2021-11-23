@@ -1,4 +1,4 @@
-// Copyright 2019 ProximaX
+// Copyright 2021 ProximaX
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ using System.Text;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
     /// <summary>
-    ///
+    /// Class of AccountDTO
     /// </summary>
     [DataContract]
     public class AccountDTO
