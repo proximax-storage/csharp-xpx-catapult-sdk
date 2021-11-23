@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,19 +77,39 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
                 case EntityType.MODIFY_ACCOUNT_PROPERTY_ADDRESS:
                     return new ModifyAccountPropertyTransactionAddressMapping().Apply(input);
+
                 case EntityType.MODIFY_ACCOUNT_PROPERTY_MOSAIC:
                     return new ModifyAccountPropertyTransactionMosaicMapping().Apply(input);
+
                 case EntityType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE:
                     return new ModifyAccountPropertyTransactionEntityTypeMapping().Apply(input);
 
                 case EntityType.LINK_ACCOUNT:
                     return new AccountLinkTransactionMapping().Apply(input);
+
                 case EntityType.EXCHANGE_OFFER_ADD:
                     return new ExchangeOfferAddTransactionMapping().Apply(input);
+
                 case EntityType.EXCHANGE_OFFER_REMOVE:
                     return new ExchangeOfferRemoveTransactionMapping().Apply(input);
+
                 case EntityType.EXCHANGE_OFFER:
                     return new ExchangeOfferTransactionMapping().Apply(input);
+
+                case EntityType.MODIFY_MOSAIC_LEVY:
+                    return new ModifyMosaicLevyTransactionMapping().Apply(input);
+
+                case EntityType.REMOVE_MOSAIC_LEVY:
+                    return new RemoveMosaicLevyTransactionMapping().Apply(input);
+
+                case EntityType.MOSAIC_METADATA_V2:
+                    return new MosaicMetadataV2TransactionMapping().Apply(input);
+
+                case EntityType.NAMESPACE_METADATA_V2:
+                    return new NamespaceMetadataV2TransactionMapping().Apply(input);
+
+                case EntityType.ACCOUNT_METADATA_V2:
+                    return new AccountMetadataV2TransactionMapping().Apply(input);
 
                 default:
                     throw new Exception("Unsupported transaction");
