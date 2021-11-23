@@ -2,35 +2,39 @@
   "meta": {
     "active": true,
     "index": 0,
-    "id": "5D4C00785CEA4B000171CCE3"
+    "id": "611B3B86D63CDB2CFF4A65DE"
   },
   "namespace": {
     "type": 1,
     "depth": 2,
     "level0": [
-      2303244434,
-      2541207494
+      2339353534,
+      2976741373
     ],
     "level1": [
-      2137966676,
-      2626085875
+      2130983242,
+      2996211542
     ],
     "alias": {
-      "type": 0
+      "type": 1,
+      "mosaicId": [
+        171655680,
+        233174058
+      ]
     },
     "parentId": [
-      2303244434,
-      2541207494
+      2339353534,
+      2976741373
     ],
-    "owner": "D948DC886D3E6D6DE66269492D4AC8790021EFE49ACA67E5E1BB5BD1A98A1D01",
-    "ownerAddress": "90E680F9C6E97145BF54428C99EB3E4F17371476ED142EF341",
+    "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+    "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
     "startHeight": [
-      1153,
+      1,
       0
     ],
     "endHeight": [
-      1253,
-      0
+      4294967295,
+      4294967295
     ]
   }
 }

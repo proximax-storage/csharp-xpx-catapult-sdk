@@ -1,0 +1,62 @@
+[
+  {
+    "metadataEntry": {
+      "version": 1,
+      "compositeHash": "169C532681A239D83A0577E3A4320A96C4A4E441B69C0F5C5493A96D254FAB67",
+      "sourceAddress": "A8F459E424CB8E2323266962B8E48B855578E49E54E22CD9A9",
+      "targetKey": "42B85DF37E6349B20E48F82ADA20F53E0EED60FA190CDAC792A8E1C02EFEFB85",
+      "scopedMetadataKey": [
+        2252819631,
+        4213673930
+      ],
+      "targetId": [
+        2214378276,
+        2198809236
+      ],
+      "metadataType": 2,
+      "valueSize": 3,
+      "value": "E4BDA0"
+    },
+    "id": "618E34426527B01EE425C0AA"
+  },
+  {
+    "metadataEntry": {
+      "version": 1,
+      "compositeHash": "0505D822394D025A67A30967A1DA7ABA59053EFEB63D08A0AF8C8ECDB07FA64E",
+      "sourceAddress": "A8F459E424CB8E2323266962B8E48B855578E49E54E22CD9A9",
+      "targetKey": "42B85DF37E6349B20E48F82ADA20F53E0EED60FA190CDAC792A8E1C02EFEFB85",
+      "scopedMetadataKey": [
+        3752038389,
+        4111729026
+      ],
+      "targetId": [
+        0,
+        0
+      ],
+      "metadataType": 0,
+      "valueSize": 1,
+      "value": "31"
+    },
+    "id": "618E30586527B01EE425BA52"
+  },
+  {
+    "metadataEntry": {
+      "version": 1,
+      "compositeHash": "C24948F9448CDA7F1F0DB671A0BC74402FF424E5F8B310ECA564A6C69D2087E8",
+      "sourceAddress": "A8F459E424CB8E2323266962B8E48B855578E49E54E22CD9A9",
+      "targetKey": "42B85DF37E6349B20E48F82ADA20F53E0EED60FA190CDAC792A8E1C02EFEFB85",
+      "scopedMetadataKey": [
+        3797598341,
+        3894490972
+      ],
+      "targetId": [
+        272568739,
+        1721397088
+      ],
+      "metadataType": 1,
+      "valueSize": 4,
+      "value": "74657374"
+    },
+    "id": "618E2F0C6527B01EE425B7FF"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "mosaicId": [ 86679421, 58481398 ],
+    "amount": [ 3567585588, 232 ],
+    "initialAmount": [ 3567587328, 232 ],
+    "initialCost": [ 10000000, 0 ],
+    "deadline": [ 10010303, 0 ],
+    "price": 0.00001,
+    "owner": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
+    "type": 0
+  }
+]

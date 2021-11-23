@@ -1,0 +1,594 @@
+﻿[
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "6130D54D8F006337FC32D9F1"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        1624439656,
+        4007182223
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        95104,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "6130AF488F006337FC32CE31"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        3531921798,
+        2714842544
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        94451,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "612F77CB8F006337FC329DEE"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        2630972746,
+        3955299488
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        89100,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "612D05A7585A7B4C6D48D5E3"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        2259202670,
+        3561482128
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        78330,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "612CBA25585A7B4C6D48C22A"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        2218170733,
+        3318803128
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        77034,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611F79EB585A7B4C6D46F1A1"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        1159998344,
+        2594065125
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        18645,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611E8C85585A7B4C6D46CCA9"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        1670126517,
+        3804033132
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        14579,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611E5815585A7B4C6D46BC56"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        3796076009,
+        2504690017
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        13677,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611E3C03585A7B4C6D46B401"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        1663122804,
+        2175572998
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        13190,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65DE"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "level1": [
+        2130983242,
+        2996211542
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          171655680,
+          233174058
+        ]
+      },
+      "parentId": [
+        2339353534,
+        2976741373
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65DD"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "level1": [
+        2985095487,
+        2893753992
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          3393681119,
+          1465181207
+        ]
+      },
+      "parentId": [
+        2339353534,
+        2976741373
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65DC"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        4097352607,
+        2597798960
+      ],
+      "level1": [
+        822195501,
+        3034142905
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          2570941451,
+          1231700016
+        ]
+      },
+      "parentId": [
+        4097352607,
+        2597798960
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65DB"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        4097352607,
+        2597798960
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65DA"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "level1": [
+        3380831380,
+        2891033981
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          3503219699,
+          884214666
+        ]
+      },
+      "parentId": [
+        2339353534,
+        2976741373
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65D9"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "level1": [
+        2434186742,
+        3220914849
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          1173232007,
+          1792145974
+        ]
+      },
+      "parentId": [
+        2339353534,
+        2976741373
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65D8"
+    },
+    "namespace": {
+      "type": 1,
+      "depth": 2,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "level1": [
+        125807365,
+        2205889147
+      ],
+      "alias": {
+        "type": 1,
+        "mosaicId": [
+          86679421,
+          58481398
+        ]
+      },
+      "parentId": [
+        2339353534,
+        2976741373
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  },
+  {
+    "meta": {
+      "active": true,
+      "index": 0,
+      "id": "611B3B86D63CDB2CFF4A65D7"
+    },
+    "namespace": {
+      "type": 0,
+      "depth": 1,
+      "level0": [
+        2339353534,
+        2976741373
+      ],
+      "alias": {
+        "type": 0
+      },
+      "parentId": [
+        0,
+        0
+      ],
+      "owner": "0D22E9D42F124072E14C4F804E4FC7F5431C831EAF03BEFD55D521B9A9D0B89D",
+      "ownerAddress": "A8DF0978A1C0DBB90F504BCF4B471669E5274350DF6A8FCC6F",
+      "startHeight": [
+        1,
+        0
+      ],
+      "endHeight": [
+        4294967295,
+        4294967295
+      ]
+    }
+  }
+]

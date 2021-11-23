@@ -2,7 +2,7 @@
   "transactionStatements": [
     {
       "height": [
-        2830,
+        2,
         0
       ],
       "source": {
@@ -13,10 +13,10 @@
         {
           "version": 1,
           "type": 8515,
-          "account": "346E56F77F07B19D48B3AEF969EDB01F68A5AC9FAF8E5E007577D71BA66385FB",
+          "account": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
           "mosaicId": [
-            481110499,
-            231112638
+            1173232007,
+            1792145974
           ],
           "amount": [
             100,
@@ -27,8 +27,8 @@
           "version": 1,
           "type": 20803,
           "mosaicId": [
-            481110499,
-            231112638
+            1173232007,
+            1792145974
           ],
           "amount": [
             100,
@@ -39,28 +39,5 @@
     }
   ],
   "addressResolutionStatements": [],
-  "mosaicResolutionStatements": [
-    {
-      "height": [
-        2830,
-        0
-      ],
-      "unresolved": [
-        2855265186,
-        2553603033
-      ],
-      "resolutionEntries": [
-        {
-          "source": {
-            "primaryId": 1,
-            "secondaryId": 0
-          },
-          "resolved": [
-            3796365617,
-            55345548
-          ]
-        }
-      ]
-    }
-  ]
+  "mosaicResolutionStatements": []
 }
