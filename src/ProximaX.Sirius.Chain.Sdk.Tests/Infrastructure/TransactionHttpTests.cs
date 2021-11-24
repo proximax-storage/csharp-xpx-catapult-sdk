@@ -235,21 +235,5 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 transaction.Should().NotBeNull();
             }
         }
-
-        /*   [Fact]
-           public async Task Get_transaction_by_group()
-           {
-               var transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
-
-               using (var httpTest = new HttpTest())
-               {
-                   var fakeJson = TestHelper.LoadJsonFileToObject(@"Testdata\\Transactions\\GetTransactionByGroup.json");
-
-                   httpTest.RespondWithJson(fakeJson);
-
-                   var transaction = await _transactionHttp.(TransactionGroupType.confirmed, "04BEBF85816911E0DFEAA673B6A4141B28B8BC783A994BE074C7E65C9F98DECA");
-                   transaction.Should().NotBeNull();
-               }
-           }*/
     }
 }

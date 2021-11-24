@@ -78,8 +78,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var accountInfo = await _exchangeHttp.GetExchangeMosaic();
-                accountInfo.Should().NotBeNull();
+                var exchange_mosaic = await _exchangeHttp.GetExchangeMosaic();
+                exchange_mosaic.Select(i => i.Mosaicid).Should().NotBeNull();
             }
         }
 
@@ -93,8 +93,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var accountInfo = await _exchangeHttp.getExchangeOffers("sell", "037c5af6052a9f7d");
-                accountInfo.Should().NotBeNull();
+                var exchange_offer = await _exchangeHttp.getExchangeOffers("sell", "037c5af6052a9f7d");
+                exchange_offer.Should().NotBeNull();
             }
         }
     }

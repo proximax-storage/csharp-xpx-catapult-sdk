@@ -182,7 +182,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     HashType.SHA3_256,
                     Recipient.From(bob.Address),
                     secret,
-                    proof,
+                    secret,
                     Fixture.NetworkType
                 );
             var secretProofsignedTransaction = bob.Sign(secretProofTransaction, Fixture.GenerationHash);
