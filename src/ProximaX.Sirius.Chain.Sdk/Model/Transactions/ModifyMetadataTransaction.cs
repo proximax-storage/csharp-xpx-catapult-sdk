@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -94,7 +94,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityVersion.METADATA_MOSAIC.GetValue(),
                 EntityType.MODIFY_MOSAIC_METADATA,
                 deadline,
                 0,
@@ -116,7 +116,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityVersion.METADATA_NAMESPACE.GetValue(),
                 EntityType.MODIFY_NAMESPACE_METADATA,
                 deadline,
                 0,
@@ -138,7 +138,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             List<MetadataModification> modifications, NetworkType networkType)
         {
             return new ModifyMetadataTransaction(networkType,
-                EntityVersion.MODIFY_METADATA.GetValue(),
+                EntityVersion.METADATA_ACCOUNT.GetValue(),
                 EntityType.MODIFY_ADDRESS_METADATA,
                 deadline,
                 0,
@@ -171,7 +171,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                     : Encoding.UTF8.GetBytes(modField.Value);
 
                 // 2 bytes
-                var valueSizeBytes = BitConverter.GetBytes((short) valueBytes.Length);
+                var valueSizeBytes = BitConverter.GetBytes((short)valueBytes.Length);
 
                 // prepare vectors for collections
                 var keyVector = MetadataModificationBuffer.CreateKeyVector(builder, keyBytes);
@@ -186,8 +186,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
                 // populate flat-buffer
                 MetadataModificationBuffer.StartMetadataModificationBuffer(builder);
-                MetadataModificationBuffer.AddSize(builder, (uint) modSize);
-                MetadataModificationBuffer.AddKeySize(builder, (byte) keyBytes.Length);
+                MetadataModificationBuffer.AddSize(builder, (uint)modSize);
+                MetadataModificationBuffer.AddKeySize(builder, (byte)keyBytes.Length);
                 MetadataModificationBuffer.AddKey(builder, keyVector);
                 MetadataModificationBuffer.AddValueSize(builder, valueSizeVector);
                 MetadataModificationBuffer.AddValue(builder, valueVector);
@@ -210,12 +210,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 case MetadataType.ADDRESS:
                     metadataIdBytes = Address.Plain.FromBase32String();
                     break;
+
                 case MetadataType.MOSAIC:
                 case MetadataType.NAMESPACE:
                     metadataIdBytes = MetadataId.HasValue ? BitConverter.GetBytes(MetadataId.Value) : new byte[0];
                     break;
             }
-
 
             var metadataIdVector = ModifyMetadataTransactionBuffer.CreateMetadataIdVector(builder, metadataIdBytes);
             var modificationsVector =
@@ -258,7 +258,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             int metaIdSize = isAddressMetadata ? 25 : 8;
 
             int modsSize = 0;
-            foreach(var m in mods)
+            foreach (var m in mods)
             {
                 modsSize += CalculateModSize(m);
             }
@@ -269,12 +269,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
         private static int CalculateModSize(MetadataModification mod)
         {
-
             var keySize = Encoding.UTF8.GetBytes(mod.Field.Key).Length;
-            
+
             // remove does not have value
-            var valueSize = mod.Type == MetadataModificationType.REMOVE ? 0: Encoding.UTF8.GetBytes(mod.Field.Value).Length;
-            
+            var valueSize = mod.Type == MetadataModificationType.REMOVE ? 0 : Encoding.UTF8.GetBytes(mod.Field.Value).Length;
+
             // compute number of bytes: size + modType + keySize + valueSize + key + value
             return 4 + 1 + 1 + 2 + keySize + valueSize;
         }

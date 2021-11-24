@@ -1,4 +1,4 @@
-﻿// Copyright 2019 ProximaX
+﻿// Copyright 2021 ProximaX
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -102,6 +102,46 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         LINK_ACCOUNT = 0x414C,
 
         /// <summary>
+        ///     Address related metadata transaction type
+        /// </summary>
+        MODIFY_ADDRESS_METADATA = 0x413D,
+
+        /// <summary>
+        ///     Mosaic related metadata transaction type
+        /// </summary>
+        MODIFY_MOSAIC_METADATA = 0x423D,
+
+        /// <summary>
+        ///     Namespace related metadata transaction type
+        /// </summary>
+        MODIFY_NAMESPACE_METADATA = 0x433D,
+
+        /// <summary>
+        ///    Blockchain version update transaction
+        /// </summary>
+        BLOCKCHAIN_UPGRADE = 0x4158,
+
+        /// <summary>
+        ///    Blockchain configuration change transaction
+        /// </summary>
+        BLOCKCHAIN_CONFIG = 0x4159,
+
+        /// <summary>
+        ///     Add exchange offer
+        /// </summary>
+        EXCHANGE_OFFER_ADD = 0x415D,
+
+        /// <summary>
+        ///     Exchange offer
+        /// </summary>
+        EXCHANGE_OFFER = 0x425D,
+
+        /// <summary>
+        ///     Remove exchange offer
+        /// </summary>
+        EXCHANGE_OFFER_REMOVE = 0x435D,
+
+        /// <summary>
         ///     Adress related metadata transaction type
         /// </summary>
         ACCOUNT_METADATA_V2 = 0x413F,
@@ -125,31 +165,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///    Remove Mosaic Levy
         /// </summary>
         REMOVE_MOSAIC_LEVY = 0x444D,
-
-        /// <summary>
-        ///    Blockchain configuration change transaction
-        /// </summary>
-        BLOCKCHAIN_CONFIG = 0x4159,
-
-        /// <summary>
-        ///    Blockchain version update transaction
-        /// </summary>
-        BLOCKCHAIN_UPGRADE = 0x4158,
-
-        /// <summary>
-        ///     Add exchange offer
-        /// </summary>
-        EXCHANGE_OFFER_ADD = 0x415D,
-
-        /// <summary>
-        ///     Exchange offer
-        /// </summary>
-        EXCHANGE_OFFER = 0x425D,
-
-        /// <summary>
-        ///     Remove exchange offer
-        /// </summary>
-        EXCHANGE_OFFER_REMOVE = 0x435D,
     }
 
     public static class EntityTypeExtension

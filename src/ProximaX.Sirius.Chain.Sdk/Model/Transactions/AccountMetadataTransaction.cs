@@ -1,4 +1,4 @@
-﻿// Copyright 2019 ProximaX
+﻿// Copyright 2021 ProximaX
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ using ProximaX.Sirius.Chain.Sdk.Utils;
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     /// <summary>
-    ///     Class ModifyMetadataTransaction
+    ///     Class AccountMetadataTransaction
     /// </summary>
     public class AccountMetadataTransaction : Transaction
     {
@@ -44,17 +44,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="transactionType"></param>
         /// <param name="deadline"></param>
         /// <param name="maxFee"></param>
-        /// <param name="metadataType"></param>
-        /// <param name="metadataId"></param>
-        /// <param name="address"></param>
-        /// <param name="modifications"></param>
+        /// <param name="scopedKey"></param>
+        /// <param name="targetPublicKey"></param>
+        /// <param name="newValue"></param>
+        /// <param name="valueSizeDelta"></param>
+        /// <param name="valueSize"></param>
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        public AccountMetadataTransaction(NetworkType networkType, int version, EntityType transactionType, Deadline deadline, ulong? maxFee, ulong scopedKey, PublicAccount targetPublicKey,
-           string newValue, short valueSizeDelta, ushort valueSize,
-           string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
+        public AccountMetadataTransaction(NetworkType networkType, int version, EntityType transactionType, Deadline deadline, ulong? maxFee, ulong scopedKey, PublicAccount targetPublicKey, string newValue, short valueSizeDelta, ushort valueSize,
+           string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null) : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
         {
             ScopedKey = scopedKey;
             TargetPublicKey = targetPublicKey;
@@ -64,27 +63,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         }
 
         /// <summary>
-        ///     The Scoped Key
+        ///     Get Scoped Key
         /// </summary>
         public ulong ScopedKey { get; }
 
         /// <summary>
-        ///     The Target Public Key
+        ///     Get Target Public Key
         /// </summary>
         public PublicAccount TargetPublicKey { get; }
 
         /// <summary>
-        ///     The new value
+        ///     Get new value
         /// </summary>
         public string Value { get; }
 
         /// <summary>
-        ///     The Value Size Delta
+        ///     Get Value Size Delta
         /// </summary>
         public short ValueSizeDelta { get; }
 
         /// <summary>
-        ///     The value size
+        ///     Get value size
         /// </summary>
         public ushort ValueSize { get; }
 
@@ -99,7 +98,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="newValue"></param>
         /// <param name="oldValue"></param>
         /// <param name="networkType"></param>
-        /// <returns></returns>
+        /// <param name="maxFee"></param>
+        /// <returns>AccountMetadataTransaction</returns>
         public static AccountMetadataTransaction Create(Deadline deadline, PublicAccount account, string scopedKey, string newValue, string oldValue, NetworkType networkType, ulong? maxFee = 0)
         {
             byte[] newV = Encoding.UTF8.GetBytes(newValue);
@@ -137,6 +137,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 byte_Adjust = ValueSize;
             }
             return CalculatePayloadSize(byte_Adjust);
+
+            /* return CalculatePayloadSize(valueDifference_Bytes);*/
         }
 
         public static int CalculatePayloadSize(int value_size_different)

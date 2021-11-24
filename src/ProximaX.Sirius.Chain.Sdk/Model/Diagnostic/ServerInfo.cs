@@ -12,26 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ProximaX.Sirius.Chain.Sdk.Model.Diagnostic
 {
     /// <summary>
-    ///     Class of AccountPropertiesInfo
+    ///     Class of ServerInfo
     /// </summary>
-    public class AccountPropertiesInfo
+    public class ServerInfo
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AccountPropertiesInfo" /> class.
+        ///     Initializes a new instance of the <see cref="ServerInfo" /> class.
         /// </summary>
-        /// <param name="accountProperties">The account properties</param>
-        public AccountPropertiesInfo(AccountProperties accountProperties)
+        /// <param name="restVersion">The server rest version</param>
+        /// <param name="sdkVersion">The server SDK version</param>
+
+        public ServerInfo(string restVersion, string sdkVersion)
         {
-            AccountProperties = accountProperties;
+            RestVersion = restVersion;
+            SdkVersion = sdkVersion;
         }
 
         /// <summary>
-        /// The account properties
+        /// The server rest version
         /// </summary>
-        public AccountProperties AccountProperties { get; }
+        public string RestVersion { get; }
+
+        /// <summary>
+        /// The server SDK Version
+        /// </summary>
+        public string SdkVersion { get; }
 
         /// <summary>
         ///     ToString
@@ -39,7 +53,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{nameof(AccountProperties)}: {AccountProperties}";
+            return $"{nameof(RestVersion)}: {RestVersion}, {nameof(SdkVersion)}: {SdkVersion}";
         }
     }
 }

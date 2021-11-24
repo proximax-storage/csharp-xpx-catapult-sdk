@@ -180,7 +180,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MetadataTransactionBuffer.AddSignature(builder, signatureVector);
             MetadataTransactionBuffer.AddSigner(builder, signerVector);
             MetadataTransactionBuffer.AddVersion(builder, (uint)version);
-            MetadataTransactionBuffer.AddType(builder, EntityType.NAMESPACE_METADATA.GetValue());
+            MetadataTransactionBuffer.AddType(builder, EntityType.NAMESPACE_METADATA_V2.GetValue());
             MetadataTransactionBuffer.AddMaxFee(builder, feeVector);
             MetadataTransactionBuffer.AddDeadline(builder, deadlineVector);
 
@@ -196,7 +196,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             builder.Finish(codedTransfer.Value);
 
             var output = new MetadataTransactionSchema().Serialize(builder.SizedByteArray());
-            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length" + output.Length + totalSize + ValueSize);
+            if (output.Length != totalSize) throw new SerializationException("Serialized form has incorrect length");
 
             return output;
         }

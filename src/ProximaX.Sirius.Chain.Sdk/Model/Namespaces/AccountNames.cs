@@ -11,27 +11,40 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
+namespace ProximaX.Sirius.Chain.Sdk.Model.Namespaces
 {
     /// <summary>
-    ///     Class of AccountPropertiesInfo
+    ///     Class of AccountNames
     /// </summary>
-    public class AccountPropertiesInfo
+    public class AccountNames
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AccountPropertiesInfo" /> class.
+        ///     Initializes a new instance of the <see cref="AccountNames" /> class.
         /// </summary>
-        /// <param name="accountProperties">The account properties</param>
-        public AccountPropertiesInfo(AccountProperties accountProperties)
+        /// <param name="address"></param>
+        /// <param name="names"></param>
+        public AccountNames(string address, List<string> names)
         {
-            AccountProperties = accountProperties;
+            Address = address;
+            Names = names;
         }
 
         /// <summary>
-        /// The account properties
+        ///     The address
         /// </summary>
-        public AccountProperties AccountProperties { get; }
+        public string Address { get; }
+
+        /// <summary>
+        ///     The names
+        /// </summary>
+        public List<string> Names { get; }
 
         /// <summary>
         ///     ToString
@@ -39,7 +52,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{nameof(AccountProperties)}: {AccountProperties}";
+            return $"{nameof(Address)}: {Address}, {nameof(Names)}: {Names}";
         }
     }
 }

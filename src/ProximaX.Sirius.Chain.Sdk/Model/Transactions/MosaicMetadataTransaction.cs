@@ -1,4 +1,4 @@
-﻿// Copyright 2019 ProximaX
+﻿// Copyright 2021 ProximaX
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ using ProximaX.Sirius.Chain.Sdk.Utils;
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     /// <summary>
-    ///     Class ModifyMetadataTransaction
+    ///     Class MosaicMetadataTransaction
     /// </summary>
     public class MosaicMetadataTransaction : Transaction
     {
@@ -44,15 +44,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="transactionType"></param>
         /// <param name="deadline"></param>
         /// <param name="maxFee"></param>
-        /// <param name="metadataType"></param>
-        /// <param name="metadataId"></param>
-        /// <param name="address"></param>
-        /// <param name="modifications"></param>
+        /// <param name="scopedKey"></param>
+        /// <param name="targetPublicKey"></param>
+        /// <param name="targetId"></param>
+        /// <param name="newValue"></param>
+        /// <param name="valueSizeDelta"></param>
+        /// <param name="valueSize"></param>
         /// <param name="signature"></param>
         /// <param name="signer"></param>
         /// <param name="transactionInfo"></param>
-        public MosaicMetadataTransaction(NetworkType networkType, int version, EntityType transactionType, Deadline deadline, ulong? maxFee, ulong scopedKey, PublicAccount targetPublicKey, MosaicId targetId, string newValue, short valueSizeDelta, ushort valueSize, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null)
-            : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
+        public MosaicMetadataTransaction(NetworkType networkType, int version, EntityType transactionType, Deadline deadline, ulong? maxFee, ulong scopedKey, PublicAccount targetPublicKey, MosaicId targetId, string newValue, short valueSizeDelta, ushort valueSize, string signature = null, PublicAccount signer = null, TransactionInfo transactionInfo = null) : base(networkType, version, transactionType, deadline, maxFee, signature, signer, transactionInfo)
         {
             ScopedKey = scopedKey;
             TargetPublicKey = targetPublicKey;
@@ -60,7 +61,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             Value = newValue;
             ValueSizeDelta = valueSizeDelta;
             ValueSize = valueSize;
-            // oldValue = oldValue;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         private static byte[] valueDifference_Bytes;
 
         /// <summary>
-        ///     Account Metadata
+        ///     Mosaic Metadata
         /// </summary>
         /// <param name="deadline"></param>
         /// <param name="account"></param>
@@ -120,7 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             return new MosaicMetadataTransaction(
                  networkType,
                  EntityVersion.METADATA_MOSAIC.GetValue(),
-                 EntityType.MOSAIC_METADATA,
+                 EntityType.MOSAIC_METADATA_V2,
                  deadline,
                  maxFee,
                  scopekey,

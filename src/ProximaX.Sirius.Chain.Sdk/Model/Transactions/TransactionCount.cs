@@ -11,35 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
+namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     /// <summary>
-    ///     Class of AccountPropertiesInfo
+    ///     Class of TransactionCount
     /// </summary>
-    public class AccountPropertiesInfo
+    public class TransactionCount
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="AccountPropertiesInfo" /> class.
+        ///     Constructor
         /// </summary>
-        /// <param name="accountProperties">The account properties</param>
-        public AccountPropertiesInfo(AccountProperties accountProperties)
+        /// <param name="count"></param>
+        /// <param name="type"></param>
+        public TransactionCount(int count, int type)
+
         {
-            AccountProperties = accountProperties;
+            Count = count;
+            _Type = type;
         }
 
         /// <summary>
-        /// The account properties
+        ///     The transaction count
         /// </summary>
-        public AccountProperties AccountProperties { get; }
+        public int Count { get; }
 
         /// <summary>
-        ///     ToString
+        ///     The transaction type
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"{nameof(AccountProperties)}: {AccountProperties}";
-        }
+        public int _Type { get; }
     }
 }
