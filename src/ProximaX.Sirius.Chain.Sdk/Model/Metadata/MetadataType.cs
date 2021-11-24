@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,24 +23,24 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Metadata
     public enum MetadataType
     {
         /// <summary>
-        ///     NONE
-        /// </summary>
-        NONE = 0,
-
-        /// <summary>
         ///     Address metadata type
         /// </summary>
-        ADDRESS = 1,
+        ACCOUNT = 0,
 
         /// <summary>
         ///     Mosaic metadata type
         /// </summary>
-        MOSAIC = 2,
+        MOSAIC = 1,
 
         /// <summary>
         ///     Namespace metadata type
         /// </summary>
-        NAMESPACE = 3
+        NAMESPACE = 2,
+
+        /// <summary>
+        ///    None
+        /// </summary>
+        NONE = -1
     }
 
     public static class MetadataTypeExtension
@@ -64,7 +64,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Metadata
         /// <returns>byte</returns>
         public static byte GetValueInByte(this MetadataType type)
         {
-            return (byte) type;
+            return (byte)type;
         }
     }
 }

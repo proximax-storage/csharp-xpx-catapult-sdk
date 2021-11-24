@@ -142,7 +142,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
                 EntityType.MODIFY_ADDRESS_METADATA,
                 deadline,
                 0,
-                MetadataType.ADDRESS,
+                MetadataType.ACCOUNT,
                 null,
                 address,
                 modifications);
@@ -207,7 +207,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             var metadataIdBytes = new byte[0];
             switch (MetadataType)
             {
-                case MetadataType.ADDRESS:
+                case MetadataType.ACCOUNT:
                     metadataIdBytes = Address.Plain.FromBase32String();
                     break;
 
