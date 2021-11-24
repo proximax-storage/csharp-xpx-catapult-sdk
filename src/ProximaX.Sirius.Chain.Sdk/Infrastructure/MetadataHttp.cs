@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,15 +16,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using Flurl;
 using Flurl.Http;
 using GuardNet;
 using Newtonsoft.Json.Linq;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO;
 using ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping;
+using ProximaX.Sirius.Chain.Sdk.Model;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Metadata;
-using ProximaX.Sirius.Chain.Sdk.Model.Mosaics;
-using ProximaX.Sirius.Chain.Sdk.Model.Namespaces;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
@@ -34,96 +35,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
     /// </summary>
     public class MetadataHttp : BaseHttp
     {
-        /// <summary>
-        ///     GetMetadataFromAddress
-        /// </summary>
-        /// <param name="address">The account address</param>
-        /// <returns>IObservable&lt;AddressMetadata&gt;</returns>
-        public IObservable<AddressMetadata> GetMetadataFromAddress(Address address)
-        {
-            Guard.NotNull(address, nameof(address), "Account address should not be null");
-
-            var route = $"{BasePath}/account/{address.Plain}/metadata";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<AddressMetadataInfoDTO>())
-                .Select(info => new AddressMetadata(
-                    info.Metadata.Fields.Select(f => new Field(f.Key, f.Value)).ToList(),
-                    Address.CreateFromHex(info.Metadata.MetadataId)
-                ));
-        }
-
-        /// <summary>
-        ///     GetMetadataFromMosaic
-        /// </summary>
-        /// <param name="mosaicId">The mosaic Id</param>
-        /// <returns> IObservable&lt;MosaicMetadata&gt;</returns>
-        public IObservable<MosaicMetadata> GetMetadataFromMosaic(MosaicId mosaicId)
-        {
-            Guard.NotNull(mosaicId, nameof(mosaicId), "Mosaic id should not be null");
-
-            var route = $"{BasePath}/mosaic/{mosaicId.HexId}/metadata";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<MosaicMetadataInfoDTO>())
-                .Select(info => new MosaicMetadata(
-                    info.Metadata.Fields.Select(f => new Field(f.Key, f.Value)).ToList(),
-                    new MosaicId(info.Metadata.MetadataId.ToUInt64())
-                ));
-        }
-
-        /// <summary>
-        ///     GetMetadataFromNamespace
-        /// </summary>
-        /// <param name="namespaceId">The namespace Id</param>
-        /// <returns> IObservable&lt;MosaicMetadata&gt;</returns>
-        public IObservable<NamespaceMetadata> GetMetadataFromNamespace(NamespaceId namespaceId)
-        {
-            Guard.NotNull(namespaceId, nameof(namespaceId), "Namespace id should not be null");
-
-            var route = $"{BasePath}/namespace/{namespaceId.HexId}/metadata";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<NamespaceMetadataInfoDTO>())
-                .Select(info => new NamespaceMetadata(
-                    info.Metadata.Fields.Select(f => new Field(f.Key, f.Value)).ToList(),
-                    new NamespaceId(info.Metadata.MetadataId.ToUInt64())
-                ));
-        }
-
-        /// <summary>
-        ///     GetMetadata
-        /// </summary>
-        /// <param name="metadataId">the metadata id</param>
-        /// <returns>IObservable&lt;Metadata&gt;</returns>
-        public IObservable<Metadata> GetMetadata(string metadataId)
-        {
-            Guard.NotNullOrEmpty(metadataId, nameof(metadataId), "Metadata id should not be null");
-
-            var route = $"{BasePath}/metadata/{metadataId}";
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<JObject>())
-                .Select(m => new MetadataMapping().Apply(m));
-        }
-
-        /// <summary>
-        ///     Gets metadata list given an array of metadata ids
-        /// </summary>
-        /// <param name="metadataIds">The array of metadata ids</param>
-        /// <returns>IObservable&lt;IList&lt;Metadata&gt;&gt;</returns>
-        public IObservable<IList<Metadata>> GetMetadata(List<string> metadataIds)
-        {
-            Guard.NotLessThanOrEqualTo(metadataIds.Count, 0, "Metadata list should not be empty");
-
-            var route = $"{BasePath}/metadata";
-
-            var metadataList = new MetadataIds
-            {
-                _MetadataIds = metadataIds
-            };
-
-            return Observable
-                .FromAsync(async ar => await route.PostJsonAsync(metadataList).ReceiveJson<List<JObject>>())
-                .Select(l => l.Select(m => new MetadataMapping().Apply(m)).ToList());
-        }
-
         #region Constructors
 
         /// <summary>
@@ -143,6 +54,131 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         {
         }
 
-        #endregion
+        #endregion Constructors
+
+        #region GetMetadata
+
+        /// <summary>
+        ///    Get metadatas(namespace/mosaic/account) by list of compositeHashes
+        /// </summary>
+        /// <param name="compositeHash">The array of composite Hash</param>
+        /// <returns>IObservable&lt;IList&lt;MetadataEntry&gt;&gt;</returns>
+        public IObservable<List<MetadataEntry>> GetMetadata(List<string> compositeHash)
+        {
+            if (compositeHash.Count < 0) throw new ArgumentNullException(nameof(compositeHash));
+
+            var compositeHashes = new CompositeHashes
+            {
+                _CompositeHash = compositeHash
+            };
+
+            var route = $"{BasePath}/metadata_v2";
+
+            return Observable
+                .FromAsync(async ar => await route.PostJsonAsync(compositeHashes).ReceiveJson<List<MetadataV2InfoDTO>>())
+                .Select(h => h.Select(metadataEntry => new MetadataEntry(
+                    metadataEntry.MetadataEntry.Version,
+                    metadataEntry.MetadataEntry.CompositeHash,
+                    Address.CreateFromHex(metadataEntry.MetadataEntry.SourceAddress),
+                    metadataEntry.MetadataEntry.TargetKey,
+                    metadataEntry.MetadataEntry.ScopedMetadataKey.ToUInt64(),
+                    metadataEntry.MetadataEntry.TargetId.ToUInt64(),
+                    metadataEntry.MetadataEntry.MetadataType,
+                    metadataEntry.MetadataEntry.ValueSize,
+                    metadataEntry.MetadataEntry.Value,
+                    metadataEntry.Id)).ToList());
+        }
+
+        /// <summary>
+        ///     Gets metadatas(namespace/mosaic/account) by composite hash
+        /// </summary>
+        /// <param name="compositeHash">The composite hash</param>
+        /// <returns>IObservable&lt;MetadataEntry&gt;&gt;</returns>
+        public IObservable<MetadataEntry> GetMetadata(string compositeHash)
+        {
+            var route = $"{BasePath}/metadata_v2/{compositeHash}";
+
+            return Observable
+                .FromAsync(async ar => await route.GetJsonAsync<MetadataV2InfoDTO>())
+                .Select(metadataEntry => new MetadataEntry(
+                    metadataEntry.MetadataEntry.Version,
+                    metadataEntry.MetadataEntry.CompositeHash,
+                    Address.CreateFromHex(metadataEntry.MetadataEntry.SourceAddress),
+                    metadataEntry.MetadataEntry.TargetKey,
+                    metadataEntry.MetadataEntry.ScopedMetadataKey.ToUInt64(),
+                    metadataEntry.MetadataEntry.TargetId.ToUInt64(),
+                    metadataEntry.MetadataEntry.MetadataType,
+                    metadataEntry.MetadataEntry.ValueSize,
+                    metadataEntry.MetadataEntry.Value,
+                    metadataEntry.Id));
+        }
+
+        #endregion GetMetadata
+
+        /// <summary>
+        ///     Search metadata
+        /// </summary>
+        /// <param name="query">The query parameters</param>
+        /// <returns>IObservable&lt;MetadataTransactionSearch&gt;&gt;</returns>
+        public IObservable<MetadataTransactionSearch> SearchMetadata(MetadataQueryParams query = null)
+        {
+            var route = $"{BasePath}/metadata_v2";
+            if (query != null)
+            {
+                if (query.PageSize > 0)
+                {
+                    if (query.PageSize < 10)
+                    {
+                        route = route.SetQueryParam("pageSize", 10);
+                    }
+                    else if (query.PageSize > 100)
+                    {
+                        route = route.SetQueryParam("pageSize", 100);
+                    }
+                }
+
+                if (query.PageNumber <= 0)
+                {
+                    route = route.SetQueryParam("pageNumber", 1);
+                }
+                if (query.SourceAddress != null) route = route.SetQueryParam("sourceAddress", query.SourceAddress.Plain);
+
+                if (query.TargetKey != null) route = route.SetQueryParam("targetKey", query.TargetKey);
+                if (!string.IsNullOrEmpty(query.ScopedMetadataKey)) route = route.SetQueryParam("scopeMetadataKey", query.ScopedMetadataKey);
+                if (!string.IsNullOrEmpty(query.TargetId)) route = route.SetQueryParam("targetId", query.TargetId);
+                /*  switch (query.Order)
+                  {
+                      case Order.ASC:
+                          route = route.SetQueryParam("ordering", "id");
+                          break;
+
+                      case Order.DESC:
+                          route = route.SetQueryParam("ordering", "-id");
+                          break;
+
+                      default:
+                          route = route.SetQueryParam("ordering", "-id");
+                          break;
+                  }*/
+
+                /* switch (query.SortField)
+                 {
+                     case MetadataSortingField.VALUE:
+                         route = route.SetQueryParam("ordering", "metadataEntry.value");
+                         break;
+
+                     case MetadataSortingField.VALUE_SIZE:
+                         route = route.SetQueryParam("ordering", "metadataEntry.valueSize");
+                         break;
+
+                     default:
+                         route = route.SetQueryParam("ordering", "metadataEntry.value");
+                         break;
+                 }*/
+            }
+            return Observable
+                .FromAsync(async ar => await route.GetJsonAsync<JObject>())
+                .Select(t => MetadataSearchMapping.Apply(t));
+        }
     }
 }

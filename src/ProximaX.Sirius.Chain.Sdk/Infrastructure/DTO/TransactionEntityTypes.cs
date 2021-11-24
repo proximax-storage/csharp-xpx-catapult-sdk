@@ -17,6 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
@@ -32,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         /// <value>The array of transaction entity type.</value>
         [DataMember(Name = "entity type", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "entity type")]
-        public List<string> _EntityType { get; set; }
+        public List<EntityType> _EntityType { get; set; }
 
         /// <summary>
         /// Get the string presentation of the object
