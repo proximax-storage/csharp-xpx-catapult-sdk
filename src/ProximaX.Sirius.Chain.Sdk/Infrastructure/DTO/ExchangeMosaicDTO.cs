@@ -1,4 +1,4 @@
-// Copyright 2019 ProximaX
+// Copyright 2021 ProximaX
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,24 +21,17 @@ using Newtonsoft.Json;
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
 {
     /// <summary>
-    /// MosaicDTO
+    /// Class of ExchangeMosaicDTO
     /// </summary>
     [DataContract]
-    public class MosaicDTO
+    public class ExchangeMosaicDTO
     {
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "id")]
-        public UInt64DTO Id { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Amount
-        /// </summary>
-        [DataMember(Name = "amount", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "amount")]
-        public UInt64DTO Amount { get; set; }
+        [DataMember(Name = "mosaicId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "mosaicId")]
+        public string mosaicId { get; set; }
 
         /// <summary>
         /// Get the string presentation of the object
@@ -47,9 +40,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class MosaicDTO {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Amount: ").Append(Amount).Append("\n");
+            sb.Append("class ExchangeMosaicDTO {\n");
+            sb.Append("  Mosaic Id: ").Append(mosaicId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
