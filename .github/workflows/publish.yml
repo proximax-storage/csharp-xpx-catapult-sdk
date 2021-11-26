@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+
+env:
+  DOTNET_VERSION: '5.0.x' # The .NET SDK version to use
+
+jobs:
+  build:
+
+    name: build-${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        dotnet-version: ['5.0']
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+     
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.0.5
+      
+    - name: Restore Nuget
+      run: nuget restore ProximaX.Sirius.Chain.Sdk.sln
+      
+    - name: Build
+      run: msbuild ProximaX.Sirius.Chain.Sdk.sln
