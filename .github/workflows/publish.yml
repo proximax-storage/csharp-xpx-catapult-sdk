@@ -3,7 +3,7 @@ name: build
 on:
   push:
   pull_request:
-    branches: [ master ]
+    branches: [ v.0.7.0 ]
 
 env:
   DOTNET_VERSION: '5.0.x' # The .NET SDK version to use
@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        dotnet-version: ['5.0']
+        dotnet-version: [env.DOTNET_VERSION]
     steps:
     - uses: actions/checkout@v2
     
