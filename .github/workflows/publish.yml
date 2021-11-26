@@ -25,7 +25,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Install dependencies
-      run: dotnet restore ./csharp-xpx-chain-sdk/ProximaX.Sirius.Chain.Sdk.sln 
+      run: dotnet restore ./ProximaX.Sirius.Chain.Sdk.sln 
       
     - name: Build
-      run: dotnet build ./sharp-xpx-chain-sdk/src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj --configuration Release --no-restore
+      run: dotnet build ./src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj --configuration Release --no-restore
