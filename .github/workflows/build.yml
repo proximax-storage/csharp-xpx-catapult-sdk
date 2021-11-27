@@ -1,39 +1,38 @@
 name: build
 
 on:
-  release:
-    types: [published]
+  push:
+  pull_request:
+    branches: [ master ]
 
 env:
   DOTNET_VERSION: '5.0.x' # The .NET SDK version to use
 
 jobs:
   build:
-
     name: build-${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        dotnet-version: ['5.0']
+        os: [ubuntu-latest, windows-latest]
     steps:
     - uses: actions/checkout@v2
     
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version:  ${{ env.DOTNET_VERSION }}
-        source-url: https://nuget.pkg.github.com/proximax-storage/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
      
     - name: Setup NuGet.exe for use with actions
       uses: NuGet/setup-nuget@v1.0.5
-      
+
     - name: Restore Nuget
       run: nuget restore ProximaX.Sirius.Chain.Sdk.sln
       
     - name: Build
-      run: dotnet build src/ProximaX.Sirius.Chain.Sdk -c Release
-
-    - name: Push generated package to GitHub registry
-      run: dotnet nuget push ./src/ProximaX.Sirius.Chain.Sdk/bin/Release/*.nupkg --skip-duplicate
+      run: dotnet build src/ProximaX.Sirius.Chain.Sdk
+      
+    - name: Test
+      run: |
+        dotnet build src/ProximaX.Sirius.Chain.Sdk.Tests
+        dotnet test src/ProximaX.Sirius.Chain.Sdk.Tests
+          
