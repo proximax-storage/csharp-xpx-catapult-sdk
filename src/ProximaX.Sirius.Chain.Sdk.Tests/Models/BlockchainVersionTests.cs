@@ -12,14 +12,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_BlockchainVersion()
         {
-            BlockchainVersion ver = new BlockchainVersion(1, 2, 3, 4);
+            BlockchainVersion ver = new BlockchainVersion(6, 7, 0, 0);
 
-            ver.Major.Should().Be(1);
-            ver.Minor.Should().Be(2);
-            ver.Revision.Should().Be(3);
-            ver.Build.Should().Be(4);
+             ver.Major.Should().Be(6);
+             ver.Minor.Should().Be(7);
+             ver.Revision.Should().Be(0);
+             ver.Build.Should().Be(0);
 
-            var expectedValue = 281483566841860UL;
+            var expectedValue = 1688879925035008UL;
             var version = ver.GetVersionValue();
             version.Should().Be(expectedValue);
         }
@@ -53,5 +53,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             var version = ver.GetVersionValue();
             version.Should().Be(expectedValue);
         }
+
+       
     }
 }

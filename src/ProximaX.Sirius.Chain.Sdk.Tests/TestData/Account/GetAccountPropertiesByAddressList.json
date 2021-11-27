@@ -1,0 +1,44 @@
+[
+  {
+    "accountProperties": {
+      "address": "A80C2FD1EABB4E80604EBD19BA4527F9FF52C0936614B6D4DC",
+      "properties": [
+        {
+          "propertyType": 129,
+          "values": []
+        },
+        {
+          "propertyType": 130,
+          "values": []
+        },
+        {
+          "propertyType": 4,
+          "values": [
+            17232
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "accountProperties": {
+      "address": "A8D9C8B3D22B99C7F0F8B06402BD59495C2EA58202E2F19620",
+      "properties": [
+        {
+          "propertyType": 129,
+          "values": [
+            "A8DE118FEE2EA3EC52C03E37CD5F5764E3CDA9819D497692D5"
+          ]
+        },
+        {
+          "propertyType": 130,
+          "values": []
+        },
+        {
+          "propertyType": 132,
+          "values": []
+        }
+      ]
+    }
+  }
+]

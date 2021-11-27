@@ -15,7 +15,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_MosaicId_UInt64DTO()
         {
-
             var id = new UInt64DTO { 3294802500, 2243684972 };
 
             var mosaicId = new MosaicId(id.ToUInt64());
@@ -23,19 +22,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             const string expectedHex = "85BBEA6CC462B244";
 
             mosaicId.HexId.ToUpper().Should().BeEquivalentTo(expectedHex);
-
         }
 
         [Fact]
         public void Should_Create_MosaicId_FromHex()
         {
-
             var id = new UInt64DTO { 3294802500, 2243684972 };
             var expectedId = id.ToUInt64();
 
             var mosaicId = new MosaicId("85BBEA6CC462B244");
             mosaicId.Id.Should().Be(expectedId);
-
         }
 
         [Fact]

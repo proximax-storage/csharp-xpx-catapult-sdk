@@ -1,0 +1,14 @@
+﻿{
+  "metadataEntry": {
+    "version": 1,
+    "compositeHash": "5DB111FAFD1CD1AB10747B1BDDF895D6469965A1D11D73E8B74F0D44A16BBE8E",
+    "sourceAddress": "A8648F7FAB7537B959D532E521416052F5089920E832E2D3CD",
+    "targetKey": "359BAB30BF217A592372FADBE1F39C36C7717AC58A592324826A8E50B6829C69",
+    "scopedMetadataKey": [ 1, 0 ],
+    "targetId": [ 1388551086, 3524401330 ],
+    "metadataType": 2,
+    "valueSize": 4,
+    "value": "74657374"
+  },
+  "id": "61756DA16527B01EE40B6091"
+}

@@ -1,65 +1,70 @@
 ﻿{
   "meta": {
-    "height": [ 1520, 0 ],
-    "hash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
-    "merkleComponentHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
+    "height": [ 2789, 0 ],
+    "hash": "66CBBEBFF918798BBEEA604AC5573155467AA0740A2042BC2E2E504AB5841F63",
+    "merkleComponentHash": "66CBBEBFF918798BBEEA604AC5573155467AA0740A2042BC2E2E504AB5841F63",
     "index": 0,
-    "id": "5D71023B36C956000139FE38"
+    "id": "611BDD2A585A7B4C6D465A26"
   },
   "transaction": {
-    "signature": "1E6C6F24A78DC64298C5D78F1A74871076889C879C57E9FD86AC1EDFDB349945834B7AAAFB8E9DE90C882C770BAB4F8B81FD108DFDFD4D9613F0BB298C59840D",
-    "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
-    "version": -1879048190,
+    "signature": "5AF0385491128563A7355F641197BB93C7146FB95041D7DE5C0F16E1DB89687BB5FB6CC23DB66672C6CD06897DB8F9473DD03F607DE8E4BD2E43AB9A716FE907",
+    "signer": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
+    "version": 2818572291,
     "type": 16705,
     "maxFee": [ 0, 0 ],
-    "deadline": [ 847822775, 25 ],
+    "deadline": [ 2247108620, 39 ],
     "cosignatures": [],
     "transactions": [
       {
         "meta": {
-          "height": [ 1520, 0 ],
-          "aggregateHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
-          "aggregateId": "5D71023B36C956000139FE38",
+          "height": [ 2789, 0 ],
+          "aggregateHash": "66CBBEBFF918798BBEEA604AC5573155467AA0740A2042BC2E2E504AB5841F63",
+          "uniqueAggregateHash": "121D9FEC8056F0FFF10743BD78E45E490F3FD3046AD69E27A36A8F8F992E4364",
+          "aggregateId": "611BDD2A585A7B4C6D465A26",
           "index": 0,
-          "id": "5D71023B36C956000139FE39"
+          "id": "611BDD2A585A7B4C6D465A27"
         },
         "transaction": {
-          "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
-          "version": -1879048189,
-          "type": 16717,
-          "mosaicNonce": 216775253,
-          "mosaicId": [ 3545691576, 1549121704 ],
-          "properties": [
+          "signer": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
+          "version": 2818572291,
+          "type": 16724,
+          "recipient": "A8EDA1C3CE36EE211EF2CF3AA95F1928C6CD3B743DCA9198FB",
+          "message": {
+            "type": 0,
+            "payload": "54657374"
+          },
+          "mosaics": [
             {
-              "id": 0,
-              "value": [ 3, 0 ]
-            },
-            {
-              "id": 1,
-              "value": [ 0, 0 ]
-            },
-            {
-              "id": 2,
-              "value": [ 1000, 0 ]
+              "id": [ 2434186742, 3220914849 ],
+              "amount": [ 1, 0 ]
             }
           ]
         }
       },
       {
         "meta": {
-          "height": [ 1520, 0 ],
-          "aggregateHash": "60CBC50B2084F5ED5556A4D8F24CE63C4EEAEFF164CF3415A98C7569C5999A5D",
-          "aggregateId": "5D71023B36C956000139FE38",
+          "height": [ 2789, 0 ],
+          "aggregateHash": "66CBBEBFF918798BBEEA604AC5573155467AA0740A2042BC2E2E504AB5841F63",
+          "uniqueAggregateHash": "121D9FEC8056F0FFF10743BD78E45E490F3FD3046AD69E27A36A8F8F992E4364",
+          "aggregateId": "611BDD2A585A7B4C6D465A26",
           "index": 1,
-          "id": "5D71023B36C956000139FE3A"
+          "id": "611BDD2A585A7B4C6D465A28"
         },
         "transaction": {
-          "signer": "D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B",
-          "version": -1879048190,
-          "type": 16973,
-          "mosaicId": [ 3545691576, 1549121704 ],
-          "direction": 1,
-          "delta": [ 1000000, 0 ]
+          "signer": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
+          "version": 2818572291,
+          "type": 16724,
+          "recipient": "A8EDA1C3CE36EE211EF2CF3AA95F1928C6CD3B743DCA9198FB",
+          "message": {
+            "type": 0,
+            "payload": "54657374"
+          },
+          "mosaics": [
+            {
+              "id": [ 2434186742, 3220914849 ],
+              "amount": [ 1, 0 ]
+            }
+          ]
         }
       }
     ]

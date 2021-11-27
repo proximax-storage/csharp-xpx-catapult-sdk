@@ -14,18 +14,20 @@ using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Tests.Utils;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 {
     public class AccountHttpTests : BaseTest
     {
         private readonly AccountHttp _accountHttp;
+        private readonly ITestOutputHelper Log;
 
-        public AccountHttpTests()
+        public AccountHttpTests(ITestOutputHelper log)
         {
-            _accountHttp = new AccountHttp(BaseUrl) { NetworkType = NetworkType.MIJIN_TEST };
+            _accountHttp = new AccountHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            Log = log;
         }
-
 
         [Fact]
         public async Task Get_AccountInfo_By_Address()
@@ -37,12 +39,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string rawAddress = "SDR2YLGNPGFLSDRG2CGFBEXCJUHVC2ZWBODHRLJN";
+                const string rawAddress = "VDPQS6FBYDN3SD2QJPHUWRYWNHSSOQ2Q35VI7TDP";
                 var address = Address.CreateFromRawAddress(rawAddress);
                 var accountInfo = await _accountHttp.GetAccountInfo(address);
                 accountInfo.Should().NotBeNull();
                 accountInfo.Address.Plain.Should().BeEquivalentTo(rawAddress);
-
             }
         }
 
@@ -56,16 +57,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string rawAddress = "SBIGZPKNMZHB7ZUJOMD5IYNVUIIM5KUQG53BYTRZ";
+                const string rawAddress = "VCQ6KSND4ISJPVTVT4F25KMA3S7NZTZDFTTDRFF6";
                 var address = Address.CreateFromRawAddress(rawAddress);
                 var accountInfo = await _accountHttp.GetAccountInfo(address);
                 accountInfo.Should().NotBeNull();
                 accountInfo.Address.Plain.Should().BeEquivalentTo(rawAddress);
-                accountInfo.LinkedAccountKey.Should().BeEquivalentTo("29646721A55041C411BDF5A8428B94CEB47C7B6295F9559C3F3ACD70963321AA");
+                accountInfo.LinkedAccountKey.Should().BeEquivalentTo("E212EFD035396EEF6C9661A546145623E1AEF53129EDA5D7720F1CD79A25AE9C");
             }
         }
 
-        
         [Fact]
         public async Task Get_MultiSignAccountInfo_By_Address()
         {
@@ -83,7 +83,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 accountInfo.MinApproval.Should().Be(1);
                 accountInfo.MinRemoval.Should().Be(1);
                 accountInfo.Cosignatories.Should().HaveCount(2);
-
             }
         }
 
@@ -102,7 +101,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var graphInfo = await _accountHttp.GetMultisigAccountGraphInfo(address);
                 graphInfo.GetLevelsNumber().Should().NotBeNull();
                 graphInfo.MultisigAccounts.Should().HaveCountGreaterThan(0);
-
             }
         }
 
@@ -116,14 +114,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                const string publicKey = "20D57BED1C5DA5C224D83B22BEFF1CCC7D5D94054C9B75E83E08EF3ED5F992CD";
-                var account = PublicAccount.CreateFromPublicKey(publicKey, NetworkType.MIJIN_TEST);
+                const string publicKey = "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC";
+                var account = PublicAccount.CreateFromPublicKey(publicKey, NetworkType.TEST_NET);
                 var accountInfo = await _accountHttp.GetAccountInfo(account.Address);
                 accountInfo.Should().NotBeNull();
                 accountInfo.PublicAccount.PublicKey.Should().BeEquivalentTo(publicKey);
             }
         }
-
 
         [Fact]
         public async Task Get_AccountInfo_List_By_Addresses_Should_Return_Account_Info_List()
@@ -137,21 +134,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 var addresses = new List<Address>()
                 {
-                    Address.CreateFromRawAddress("SDEACLIEMSZUQCVZGFOAPCMZ6WYQCCAMMHOOYFLE"),
-                    Address.CreateFromRawAddress("SBSSBYV57ISAZ2ATDAMMVXCQHJOP736NJDCRSUZV")
+                    Address.CreateFromRawAddress("VDM4RM6SFOM4P4HYWBSAFPKZJFOC5JMCALRPDFRA"),
+                    Address.CreateFromRawAddress("VDPQS6FBYDN3SD2QJPHUWRYWNHSSOQ2Q35VI7TDP")
                 };
 
                 var accountsInfo = await _accountHttp.GetAccountsInfo(addresses);
 
                 accountsInfo.Should().HaveCount(2);
-                accountsInfo.Select(a => a.Address.Plain == "SDEACLIEMSZUQCVZGFOAPCMZ6WYQCCAMMHOOYFLE").Should()
-                    .NotBeNull();
-                accountsInfo.Select(a => a.Address.Plain == "SBSSBYV57ISAZ2ATDAMMVXCQHJOP736NJDCRSUZV").Should()
-                    .NotBeNull();
-                accountsInfo.Single(a => a.Address.Plain == "SBSSBYV57ISAZ2ATDAMMVXCQHJOP736NJDCRSUZV").Mosaics.Should()
-                    .HaveCount(1);
+                accountsInfo.Select(a => a.Address.Plain == "VDM4RM6SFOM4P4HYWBSAFPKZJFOC5JMCALRPDFRA").Should().Equals(true);
+                accountsInfo.Select(a => a.Address.Plain == "VDPQS6FBYDN3SD2QJPHUWRYWNHSSOQ2Q35VI7TDP").Should().Equals(true);
+                accountsInfo.Single(a => a.Address.Plain == "VDPQS6FBYDN3SD2QJPHUWRYWNHSSOQ2Q35VI7TDP").Mosaics.Should().HaveCount(4);
             }
-
         }
 
         [Fact]
@@ -160,81 +153,39 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
             using (var httpTest = new HttpTest())
             {
                 var fakeJson =
-                    TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetConfirmedTxFromAccount.json");
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Account\\GetConfirmedTxFromAccount.json");
 
                 httpTest.RespondWithJson(fakeJson);
+                var account = PublicAccount.CreateFromPublicKey("6482AC2A82AC884B87B10D54120B28DB94AF56C596EA04AE54E77A4CE8A196F0", NetworkType.TEST_NET);
 
-                var account = Account.CreateFromPrivateKey("3E1AB96DDB060152BCE84E5CB857140BAF95F61777BBF6E33B4BE7158189CC0A", NetworkType.MIJIN_TEST);
-
-                var transactions = await _accountHttp.Transactions(account.PublicAccount, new QueryParams(10, "", Order.DESC));
-
-                transactions.Should().HaveCount(1);
-                transactions.First().TransactionType.Should().BeEquivalentTo(EntityType.TRANSFER);
-                transactions.First().TransactionInfo.Should().NotBeNull();
+                var transactions = await _accountHttp.Transactions(account);
+                transactions.Transactions.Should().HaveCount(1);
+                transactions.Should().NotBeNull();
             }
         }
 
         [Fact]
-        public async Task Get_UnConfirmed_Transaction_From_Account()
+        public async Task Get_Account_Properties_By_Address_List()
         {
             using (var httpTest = new HttpTest())
             {
-                var fakeJson =
-                    TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetUnConfirmedTxFromAccount.json");
+                var fakeJson = TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetAccountPropertiesByAddressList.json");
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var account = PublicAccount.CreateFromPublicKey("B00D4317CC4FEB2976DF3EBEEF6A788B769F6F37B61883F24282ACA034C15DDF", NetworkType.MIJIN_TEST);
+                var addresses = new List<Address>()
+                {
+                    Address.CreateFromRawAddress("VDM4RM6SFOM4P4HYWBSAFPKZJFOC5JMCALRPDFRA"),
+                    Address.CreateFromRawAddress("VAGC7UPKXNHIAYCOXUM3URJH7H7VFQETMYKLNVG4")
+                };
 
-                var transactions = await _accountHttp.UnconfirmedTransactions(account, new QueryParams(10, "", Order.DESC));
-
-                transactions.Should().HaveCount(1);
-                transactions.First().TransactionType.Should().BeEquivalentTo(EntityType.TRANSFER);
-                transactions.First().TransactionInfo.Should().NotBeNull();
+                var accountFilter = await _accountHttp.GetAccountProperties(addresses);
+                accountFilter.Select(info => info.AccountProperties.Address.Plain).Should().BeEquivalentTo("VDM4RM6SFOM4P4HYWBSAFPKZJFOC5JMCALRPDFRA", "VAGC7UPKXNHIAYCOXUM3URJH7H7VFQETMYKLNVG4");
             }
         }
 
         [Fact]
-        public async Task Get_OutGoing_Transaction_From_Account()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var fakeJson =
-                    TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetOutgoingTxFromAccount.json");
-
-                httpTest.RespondWithJson(fakeJson);
-
-                var account = PublicAccount.CreateFromPublicKey("D03918E35573C66578B5A0EED723FE2A46208783E13498751D9315115CA06D4B", NetworkType.MIJIN_TEST);
-
-                var transactions = await _accountHttp.OutgoingTransactions(account, new QueryParams(10, "", Order.DESC));
-
-                transactions.Should().HaveCountGreaterOrEqualTo(1);
-
-            }
-        }
-
-
-        [Fact]
-        public async Task Get_Incoming_Transaction_From_Account()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var fakeJson =
-                    TestHelper.LoadJsonFileToArray(@"Testdata\\Account\\GetIncomingTxFromAccount.json");
-
-                httpTest.RespondWithJson(fakeJson);
-
-                var account = PublicAccount.CreateFromPublicKey("D70ECC83DC6BDE5F8E1070A98ECB9B65B473F72E675E1366137AF56A55ECC902", NetworkType.MIJIN_TEST);
-
-                var transactions = await _accountHttp.IncomingTransactions(account, new QueryParams(10, "", Order.DESC));
-
-                transactions.Should().HaveCountGreaterOrEqualTo(1);
-
-            }
-        }
-
-        [Fact]
-        public async Task Get_Account_Filter_By_Address()
+        public async Task Get_Account_Property_By_PublicKey()
         {
             using (var httpTest = new HttpTest())
             {
@@ -243,8 +194,40 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var address = Address.CreateFromHex("90E1FC47EADF62FE30ABFE9B930C214FA9BD49D0EFC8E1885A");
-                var blockedAddress = Address.CreateFromHex("9066F9F5B10FD7779CDB286CF953C69EB0B7E2EDAD135CED22");
+                var account = PublicAccount.CreateFromPublicKey("EC49CB3C5E0F565F9D27F90FD5830E21DF08205353C837540088C18936E41397", NetworkType.TEST_NET);
+                var blockedAddress = Address.CreateFromHex("A8DE118FEE2EA3EC52C03E37CD5F5764E3CDA9819D497692D5");
+
+                var accountFilter = await _accountHttp.GetAccountProperty(account);
+                accountFilter.Should().NotBeNull();
+
+                var blockAddressFilter =
+                    accountFilter.AccountProperties.Properties.Single(ap =>
+                        ap.PropertyType == PropertyType.BLOCK_ADDRESS);
+
+                foreach (var ba in blockAddressFilter.Values)
+                {
+                    var ad = Address.CreateFromHex(ba.ToString());
+                    ad.Should().NotBeNull();
+                }
+
+                blockAddressFilter.Should().NotBeNull();
+                var resBlockedAddress = blockAddressFilter.Values.Single(a => Address.CreateFromHex(a.ToString()).Plain == blockedAddress.Plain);
+                resBlockedAddress.Should().NotBeNull();
+            }
+        }
+
+        [Fact]
+        public async Task Get_Account_Property_By_Address()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                    TestHelper.LoadJsonFileToObject(@"Testdata\\Account\\GetAccountPropertyByAddress.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                var address = Address.CreateFromHex("A8D9C8B3D22B99C7F0F8B06402BD59495C2EA58202E2F19620");
+                var blockedAddress = Address.CreateFromHex("A8DE118FEE2EA3EC52C03E37CD5F5764E3CDA9819D497692D5");
 
                 var accountFilter = await _accountHttp.GetAccountProperty(address);
                 accountFilter.Should().NotBeNull();
@@ -262,9 +245,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 blockAddressFilter.Should().NotBeNull();
                 var resBlockedAddress = blockAddressFilter.Values.Single(a => Address.CreateFromHex(a.ToString()).Plain == blockedAddress.Plain);
                 resBlockedAddress.Should().NotBeNull();
-
             }
-
         }
 
         [Fact]
@@ -277,7 +258,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var address = Address.CreateFromHex("9031C36EC5207123E20D7FEE91B73284B9B8EC354ADA948147");
+                var address = Address.CreateFromRawAddress("VCRUM4I6M4DDYE3O3LILVIRUAJIGXMVWP3YRIVQC");
 
                 var accountFilter = await _accountHttp.GetAccountProperty(address);
 
@@ -293,18 +274,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                     mosaicId.Should().NotBeNull();
                 }
 
-                var expectedMosaicId = new MosaicId("0DC67FBE1CAD29E3");
-                var allowMosaic = allowMosaicFilter.Values
-                    .Single(a =>
+                var expectedMosaicId = new MosaicId("64D53F46233BA3A0");
+                var allowMosaic = allowMosaicFilter.Values.Single(a =>
                     {
                         var m = JsonConvert.DeserializeObject<UInt64DTO>(a.ToString());
                         return (new MosaicId(m.ToUInt64())).HexId == expectedMosaicId.HexId;
                     });
                 allowMosaic.Should().NotBeNull();
-                
             }
-
         }
-       
     }
 }

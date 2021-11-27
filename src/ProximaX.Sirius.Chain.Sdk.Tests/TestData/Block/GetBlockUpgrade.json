@@ -1,0 +1,6 @@
+{
+  "blockchainUpgrade": {
+    "height": [ 1, 0 ],
+    "blockChainVersion": [ 196608, 4 ]
+  }
+}
