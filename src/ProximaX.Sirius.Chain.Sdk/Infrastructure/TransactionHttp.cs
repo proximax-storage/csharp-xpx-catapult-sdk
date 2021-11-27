@@ -30,22 +30,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
     /// <summary>
     ///     Transaction http
     /// </summary>
-    public class _transactionHttp : BaseHttp
+    public class TransactionHttp : BaseHttp
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="_transactionHttp" /> class.
         /// </summary>
         /// <param name="host">The host</param>
         /// <param name="networkHttp">The network http</param>
-        public _transactionHttp(string host, NetworkHttp networkHttp) : base(host, networkHttp)
+        public TransactionHttp(string host, NetworkHttp networkHttp) : base(host, networkHttp)
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="_transactionHttp" /> class.
+        ///     Initializes a new instance of the <see cref="TransactionHttp" /> class.
         /// </summary>
         /// <param name="host">The host</param>
-        public _transactionHttp(string host) : this(host, new NetworkHttp(host))
+        public TransactionHttp(string host) : this(host, new NetworkHttp(host))
         {
         }
 

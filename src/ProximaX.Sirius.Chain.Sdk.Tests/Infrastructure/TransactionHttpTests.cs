@@ -16,13 +16,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
     {
         private readonly ITestOutputHelper Log;
 
-        private readonly _transactionHttp _transactionHttp;
+        private readonly TransactionHttp _transactionHttp;
 
         public TransactionHttpTests(ITestOutputHelper log)
         {
             Log = log;
 
-            _transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            _transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
         }
 
         [Fact]
@@ -145,7 +145,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_Transfer_Transaction_With_Secure_Message()
         {
-            var transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
 
             using (var httpTest = new HttpTest())
             {
@@ -173,7 +173,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_Embedded_transaction()
         {
-            var transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
 
             using (var httpTest = new HttpTest())
             {
@@ -201,7 +201,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_MosaicLevy_transaction()
         {
-            var transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
 
             using (var httpTest = new HttpTest())
             {
@@ -211,7 +211,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 const string transactionHash = "02D2E02F6162A4CBDAD8703085A2D9DE8E7C938A969071D76D0189858761CD8E";
 
-                var transaction = await _transactionHttp.GetTransaction(transactionHash);
+                var transaction = await transactionHttp.GetTransaction(transactionHash);
                 transaction.Should().NotBeNull();
 
                 transaction.Should().BeOfType<ModifyMosaicLevyTransaction>();
@@ -223,7 +223,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         [Fact]
         public async Task Get_transaction_by_group()
         {
-            var transactionHttp = new _transactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
+            var transactionHttp = new TransactionHttp(BaseUrl) { NetworkType = NetworkType.TEST_NET };
 
             using (var httpTest = new HttpTest())
             {
@@ -231,7 +231,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 httpTest.RespondWithJson(fakeJson);
 
-                var transaction = await _transactionHttp.SearchTransactions(TransactionGroupType.confirmed, "04BEBF85816911E0DFEAA673B6A4141B28B8BC783A994BE074C7E65C9F98DECA");
+                var transaction = await transactionHttp.SearchTransactions(TransactionGroupType.confirmed, "04BEBF85816911E0DFEAA673B6A4141B28B8BC783A994BE074C7E65C9F98DECA");
                 transaction.Should().NotBeNull();
             }
         }
