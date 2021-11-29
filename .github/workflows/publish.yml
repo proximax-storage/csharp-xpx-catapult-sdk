@@ -32,6 +32,4 @@ jobs:
     - name: Build
       run: msbuild ProximaX.Sirius.Chain.Sdk.sln
       
-    - name: Test
-      run: tix-factory/msbuild-project-generator@v1.0.1
       
