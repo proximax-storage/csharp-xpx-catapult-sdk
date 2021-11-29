@@ -32,4 +32,6 @@ jobs:
     - name: Build
       run: msbuild ProximaX.Sirius.Chain.Sdk.sln
       
-      
+    - name: Test
+      run: |
+        dotnet test ProximaX.Sirius.Chain.Sdk.sln
