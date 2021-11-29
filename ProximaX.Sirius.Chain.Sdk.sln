@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProximaX.Sirius.Chain.Sdk", "src\Proximax.Sirius.Chain.Sdk\ProximaX.Sirius.Chain.Sdk.csproj", "{B809FD1A-3F6D-4AFD-8D26-CF761B7E10A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProximaX.Sirius.Chain.Sdk", "src\ProximaX.Sirius.Chain.Sdk\ProximaX.Sirius.Chain.Sdk.csproj", "{B809FD1A-3F6D-4AFD-8D26-CF761B7E10A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProximaX.Sirius.Chain.Sdk.Tests", "src\ProximaX.Sirius.Chain.Sdk.Tests\ProximaX.Sirius.Chain.Sdk.Tests.csproj", "{A902E4F5-2F78-4856-9EA4-0F402A1194BB}"
 EndProject
