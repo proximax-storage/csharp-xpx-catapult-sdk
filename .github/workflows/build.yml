@@ -33,6 +33,6 @@ jobs:
       
     - name: Test
       run: |
-        dotnet build src/ProximaX.Sirius.Chain.Sdk.Tests
+        dotnet build src/ProximaX.Sirius.Chain.Sdk
         dotnet test src/ProximaX.Sirius.Chain.Sdk.Tests
           
