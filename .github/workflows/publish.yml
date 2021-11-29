@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ v0.7.0 ]
+    branches: [ master ]
   pull_request:
-    branches: [ v0.7.0 ]
+    branches: [ master ]
 
 env:
   DOTNET_VERSION: '5.0.x' # The .NET SDK version to use
