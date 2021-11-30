@@ -1,6 +1,5 @@
 {
-  "serverInfo": {
-    "restVersion": "1.0.16",
-    "sdkVersion": "0.7.16"
-  }
+  "numBlocks": 220464,
+  "numTransactions": 9287,
+  "numAccounts": 1987
 }
