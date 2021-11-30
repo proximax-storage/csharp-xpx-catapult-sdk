@@ -73,8 +73,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 const string compositeHash = "5DB111FAFD1CD1AB10747B1BDDF895D6469965A1D11D73E8B74F0D44A16BBE8E";
                 var metadataInfo = await _metadataHttp.GetMetadata(compositeHash);
-                metadataInfo.Should().BeNull();
-                //  metadataInfo.Fields.Should().HaveCount(2);
+                metadataInfo.Should().NotBeNull();
                 metadataInfo.MetadataType.Should().Equals(MetadataType.MOSAIC);
             }
         }
