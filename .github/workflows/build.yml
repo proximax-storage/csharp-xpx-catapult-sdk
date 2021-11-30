@@ -25,15 +25,15 @@ jobs:
         dotnet-version:  ${{ env.DOTNET_VERSION }}
 
     - name: Install Lib Dependencies
-      run: dotnet restore "../src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk"
+      run: dotnet restore "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj"
      
     - name: Build code library
-      run:  dotnet build "../src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk" --configuration Release --no-restore
+      run:  dotnet build "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj" --configuration Release --no-restore
     
     - name: Install Test Dependencies
-      run: dotnet restore "../src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests"
+      run: dotnet restore "src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests.csproj"
   
     - name: Build test
-      run:  dotnet build "../src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests" --configuration Release --no-restore
+      run:  dotnet build "src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests.csproj" --configuration Release --no-restore
   
           
