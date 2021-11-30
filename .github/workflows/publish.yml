@@ -10,12 +10,9 @@ env:
 jobs:
   build:
 
-    name: build-${{matrix.os}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        dotnet-version: ['5.0']
+    name: build-ubuntu
+    runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
     
@@ -30,10 +27,10 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.5
       
     - name: Restore Nuget
-      run: nuget restore ProximaX.Sirius.Chain.Sdk.sln
+      run: nuget restore "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj"
       
     - name: Build
-      run: dotnet build src/ProximaX.Sirius.Chain.Sdk -c Release
+      run: dotnet build "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj" --configuration Release --no-restore
 
     - name: Push generated package to GitHub registry
       run: dotnet nuget push ./src/ProximaX.Sirius.Chain.Sdk/bin/Release/*.nupkg --skip-duplicate
