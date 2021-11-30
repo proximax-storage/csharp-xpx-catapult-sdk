@@ -30,10 +30,4 @@ jobs:
     - name: Build code library
       run:  dotnet build "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj" --configuration Release --no-restore
     
-    - name: Install Test Dependencies
-      run: dotnet restore "src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests.csproj"
-  
-    - name: Build test
-      run:  dotnet build "src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests.csproj" --configuration Release --no-restore
-  
           
