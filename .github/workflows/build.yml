@@ -16,23 +16,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout GitHub actions
+      uses: actions/checkout@v2
     
-    - uses: actions/setup-dotnet@v1
+    - name: Setup .Net
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version:  ${{ env.DOTNET_VERSION }}
-     
-    - name: Setup NuGet.exe for use with actions
-      uses: NuGet/setup-nuget@v1.0.5
 
-    - name: Restore Nuget
-      run: nuget restore ProximaX.Sirius.Chain.Sdk.sln
-      
-    - name: Build
-      run: dotnet build src/ProximaX.Sirius.Chain.Sdk
-      
-    - name: Test
-      run: |
-        dotnet build src/ProximaX.Sirius.Chain.Sdk
-        dotnet test src/ProximaX.Sirius.Chain.Sdk.Tests
+    - name: Install Lib Dependencies
+      run: dotnet restore "./src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk"
+     
+    - name: Build code library
+      run:  dotnet build "./src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk" --configuration Release --no-restore
+    
+    - name: Install Test Dependencies
+      run: dotnet restore "./src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests"
+  
+    - name: Build test
+      run:  dotnet build "./src/ProximaX.Sirius.Chain.Sdk.Tests/ProximaX.Sirius.Chain.Sdk.Tests" --configuration Release --no-restore
+  
           
