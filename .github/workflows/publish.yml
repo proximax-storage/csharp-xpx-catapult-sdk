@@ -10,28 +10,20 @@ env:
 
 jobs:
   build:
+    name: build ubuntu
+    runs-on: ubuntu-latest
 
-    name: build-${{matrix.os}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        dotnet-version: [env.DOTNET_VERSION]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout GitHub actions
+      uses: actions/checkout@v2
     
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1.1
+    - name: Setup .Net
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version:  ${{ env.DOTNET_VERSION }}
+
+    - name: Install Lib Dependencies
+      run: dotnet restore "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj"
      
-    - name: Setup NuGet.exe for use with actions
-      uses: NuGet/setup-nuget@v1.0.5
-      
-    - name: Restore Nuget
-      run: nuget restore ProximaX.Sirius.Chain.Sdk.sln
-      
-    - name: Build
-      run: msbuild ProximaX.Sirius.Chain.Sdk.sln
-      
-    - name: Test
-      run: |
-        dotnet test ProximaX.Sirius.Chain.Sdk.sln
+    - name: Build code library
+      run:  dotnet build "src/ProximaX.Sirius.Chain.Sdk/ProximaX.Sirius.Chain.Sdk.csproj" --configuration Release --no-restore
