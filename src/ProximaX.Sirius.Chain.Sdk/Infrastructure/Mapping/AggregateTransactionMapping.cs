@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 
-
 namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 {
     public class AggregateTransactionMapping : TransactionMapping
@@ -37,8 +36,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
             var transaction = tx["transaction"].ToObject<JObject>();
             var version = transaction["version"];
 
-
-            //Bug - It seems the dotnetcore does not 
+            //Bug - It seems the dotnetcore does not
             //understand the Integer.
             //The workaround it to double cast the version
             int versionValue;
@@ -68,28 +66,28 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
 
         private static List<Transaction> MapInnerTransactions(JObject transaction)
         {
-          
             var txs = new List<Transaction>();
-
-            for (var i = 0; i < transaction["transaction"]["transactions"].ToList().Count; i++)
+            if (transaction["transaction"]["transactions"] != null)
             {
-                var innerTransaction = transaction["transaction"]["transactions"].ToList()[i] as JObject;
-
-                if (innerTransaction != null)
+                for (var i = 0; i < transaction["transaction"]["transactions"].ToList().Count; i++)
                 {
-                    var innerInnerTransaction = innerTransaction["transaction"].ToObject<JObject>();
-                    innerInnerTransaction.Add("deadline", transaction["transaction"]["deadline"]);
-                    innerInnerTransaction.Add("fee", transaction["transaction"]["fee"]);
-                    innerInnerTransaction.Add("signature", transaction["signature"]);
-                    innerTransaction["transaction"] = innerInnerTransaction;
+                    var innerTransaction = transaction["transaction"]["transactions"].ToList()[i] as JObject;
+
+                    if (innerTransaction != null)
+                    {
+                        var innerInnerTransaction = innerTransaction["transaction"].ToObject<JObject>();
+                        innerInnerTransaction.Add("deadline", transaction["transaction"]["deadline"]);
+                        innerInnerTransaction.Add("fee", transaction["transaction"]["fee"]);
+                        innerInnerTransaction.Add("signature", transaction["signature"]);
+                        innerTransaction["transaction"] = innerInnerTransaction;
+                    }
+
+                    if (innerTransaction != null && innerTransaction["meta"] == null)
+                        innerTransaction.Add("meta", transaction["meta"]);
+
+                    if (innerTransaction != null) txs.Add(new TransactionMapping().Apply(innerTransaction));
                 }
-
-                if (innerTransaction != null && innerTransaction["meta"] == null)
-                    innerTransaction.Add("meta", transaction["meta"]);
-
-                if (innerTransaction != null) txs.Add(new TransactionMapping().Apply(innerTransaction));
             }
-
             return txs;
         }
 

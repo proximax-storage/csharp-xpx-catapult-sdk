@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         {
         }
 
-
         /// <summary>
         ///     Gets the namespace.
         /// </summary>
@@ -90,14 +89,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <summary>
         ///     Gets an array of namespaces for a given account address
         /// </summary>
-        /// <param name="account">The address the account.</param>
+        /// <param name="address">The address the account.</param>
         /// <param name="query">The query parameters</param>
-        /// <returns></returns>
-        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(Address account, QueryParams query)
+        /// <returns>IObservable&lt;List&lt;NamespaceInfo&gt;&gt;</returns>
+        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(Address address, QueryParams query = null)
         {
-            if (account == null) throw new ArgumentNullException(nameof(account));
+            if (address == null) throw new ArgumentNullException(nameof(address));
 
-            var route = $"{BasePath}/account/{account.Plain}/namespaces";
+            var route = $"{BasePath}/account/{address.Plain}/namespaces";
 
             if (query != null)
             {
@@ -132,18 +131,61 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         }
 
         /// <summary>
+        ///     Gets an array of namespaces for a given public account
         /// </summary>
-        /// <param name="accounts"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(List<Address> accounts, QueryParams query)
+        /// <param name="account">The address the account.</param>
+        /// <param name="query">The query parameters</param>
+        /// <returns>IObservable&lt;List&lt;NamespaceInfo&gt;&gt;</returns>
+        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(PublicAccount account, QueryParams query = null)
         {
-            if (accounts.Count < 0) throw new ArgumentNullException(nameof(accounts));
+            var route = $"{BasePath}/account/{account.PublicKey}/namespaces";
+            if (account.PublicKey == null) throw new ArgumentNullException(nameof(account.PublicKey));
 
+            if (query != null)
+            {
+                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
+
+                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
+            }
+
+            var networkType = GetNetworkTypeObservable().Take(1);
+
+            return Observable.FromAsync(async ar => await route.GetJsonAsync<List<NamespaceInfoDTO>>())
+                .Select(i => i.Select(info => new NamespaceInfo(
+                    info.Meta.Active,
+                    info.Meta.Index,
+                    info.Meta.Id,
+                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
+                    info.Namespace.Depth,
+                    ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
+                    new NamespaceId(info.Namespace.ParentId.ToUInt64()),
+                    PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
+                    info.Namespace.StartHeight.ToUInt64(),
+                    info.Namespace.EndHeight.ToUInt64(),
+                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
+                        info.Namespace.Alias.Address != null
+                            ? Address.CreateFromRawAddress(info.Namespace.Alias.Address)
+                            : null,
+                        info.Namespace.Alias.MosaicId != null
+                            ? new MosaicId(info.Namespace.Alias.MosaicId.ToUInt64())
+                            : null
+                    )
+                )).ToList());
+        }
+
+        /// <summary>
+        ///     Get namespaces for given array of addresses
+        /// </summary>
+        /// <param name="address">List of addresses</param>
+        /// <param name="query">Query parameters</param>
+        /// <returns>IObservable&lt;List&lt;NamespaceInfo&gt;&gt;</returns>
+        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(List<Address> address, QueryParams query = null)
+        {
+            if (address.Count < 0) throw new ArgumentNullException(nameof(address));
 
             var addresses = new Addresses
             {
-                _Addresses = accounts.Select(a => a.Plain).ToList()
+                _Addresses = address.Select(a => a.Plain).ToList()
             };
 
             var route = $"{BasePath}/account/namespaces";
@@ -182,54 +224,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an array of namespaces for a given account address
-        /// </summary>
-        /// <param name="account">The public the account.</param>
-        /// <param name="query">The query parameters</param>
-        /// <returns></returns>
-        public IObservable<List<NamespaceInfo>> GetNamespacesFromAccount(PublicAccount account, QueryParams query)
-        {
-            if (account == null) throw new ArgumentNullException(nameof(account));
-
-            var route = $"{BasePath}/account/{account.PublicKey}/namespaces";
-
-            if (query != null)
-            {
-                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
-
-                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
-            }
-
-            var networkType = GetNetworkTypeObservable().Take(1);
-
-            return Observable.FromAsync(async ar => await route.GetJsonAsync<List<NamespaceInfoDTO>>())
-                .Select(i => i.Select(info => new NamespaceInfo(
-                    info.Meta.Active,
-                    info.Meta.Index,
-                    info.Meta.Id,
-                    NamespaceTypeExtension.GetRawValue((int)info.Namespace.Type),
-                    info.Namespace.Depth,
-                    ExtractLevels(info.Namespace.Level0, info.Namespace.Level1, info.Namespace.Level2),
-                    new NamespaceId(info.Namespace.ParentId.ToUInt64()),
-                    PublicAccount.CreateFromPublicKey(info.Namespace.Owner, networkType.Wait()),
-                    info.Namespace.StartHeight.ToUInt64(),
-                    info.Namespace.EndHeight.ToUInt64(),
-                    new Alias(AliasTypeExtension.GetRawValue((int)info.Namespace.Alias.Type),
-                        info.Namespace.Alias.Address != null
-                            ? Address.CreateFromRawAddress(info.Namespace.Alias.Address)
-                            : null,
-                        info.Namespace.Alias.MosaicId != null
-                            ? new MosaicId(info.Namespace.Alias.MosaicId.ToUInt64())
-                            : null
-                    )
-                )).ToList());
-        }
-
-        /// <summary>
         ///     Get readable names for a set of namespaces
         /// </summary>
         /// <param name="namespaceIds">The list of namespaceIds</param>
-        /// <returns>IObservable&lt;List&lt;NamespaceId&gt;&gt;</returns>
+        /// <returns>IObservable&lt;List&lt;NamespaceName&gt;&gt;</returns>
         public IObservable<List<NamespaceName>> GetNamespacesNames(List<NamespaceId> namespaceIds)
         {
             if (namespaceIds == null) throw new ArgumentNullException(nameof(namespaceIds));

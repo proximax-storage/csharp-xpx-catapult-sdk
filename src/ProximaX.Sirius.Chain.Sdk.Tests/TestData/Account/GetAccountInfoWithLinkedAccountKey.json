@@ -1,18 +1,12 @@
 ﻿{
   "meta": {},
   "account": {
-    "address": "90506CBD4D664E1FE6897307D461B5A210CEAA9037761C4E39",
-    "addressHeight": [
-      7659,
-      0
-    ],
-    "publicKey": "8FBA5ABC4DBC890BD2182CE92EF7B71CABFCE3ABEFB9C397D1AFDEBF9C228595",
-    "publicKeyHeight": [
-      7659,
-      0
-    ],
+    "address": "A8A1E549A3E22497D6759F0BAEA980DCBEDCCF232CE63894BE",
+    "addressHeight": [ 168301, 0 ],
+    "publicKey": "14581496CAD8229949C261DF2A05DB8E899A355C81B133DF4948E273092A8288",
+    "publicKeyHeight": [ 168301, 0 ],
     "accountType": 1,
-    "linkedAccountKey": "29646721A55041C411BDF5A8428B94CEB47C7B6295F9559C3F3ACD70963321AA",
+    "linkedAccountKey": "E212EFD035396EEF6C9661A546145623E1AEF53129EDA5D7720F1CD79A25AE9C",
     "mosaics": [],
     "snapshots": []
   }

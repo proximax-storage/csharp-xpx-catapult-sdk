@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,28 +15,21 @@
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
     /// <summary>
-    ///     Class AccountPropertiesInfo
+    ///     Class of AccountPropertiesInfo
     /// </summary>
     public class AccountPropertiesInfo
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="AccountPropertiesInfo" /> class.
         /// </summary>
-        /// <param name="metaId">The account property meta id</param>
         /// <param name="accountProperties">The account properties</param>
-        public AccountPropertiesInfo(string metaId, AccountProperties accountProperties)
+        public AccountPropertiesInfo(AccountProperties accountProperties)
         {
-            MetaId = metaId;
             AccountProperties = accountProperties;
         }
 
         /// <summary>
-        ///     The account property meta id
-        /// </summary>
-        public string MetaId { get; }
-
-        /// <summary>
-        ///     The account properties
+        /// The account properties
         /// </summary>
         public AccountProperties AccountProperties { get; }
 
@@ -46,7 +39,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{nameof(MetaId)}: {MetaId}, {nameof(AccountProperties)}: {AccountProperties}";
+            return $"{nameof(AccountProperties)}: {AccountProperties}";
         }
     }
 }

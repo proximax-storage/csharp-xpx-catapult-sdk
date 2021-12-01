@@ -1,11 +1,11 @@
-﻿// Copyright 2019 ProximaX
-// 
+﻿// Copyright 2021 ProximaX
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -102,30 +102,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         LINK_ACCOUNT = 0x414C,
 
         /// <summary>
-        ///     Modify account/address related metadata transaction type
+        ///     Address related metadata transaction type
         /// </summary>
         MODIFY_ADDRESS_METADATA = 0x413D,
 
-        /// <summary>434E
-        ///     Modify mosaic related metadata transaction type
+        /// <summary>
+        ///     Mosaic related metadata transaction type
         /// </summary>
         MODIFY_MOSAIC_METADATA = 0x423D,
 
         /// <summary>
-        ///     Modify namespace related metadata transaction type
+        ///     Namespace related metadata transaction type
         /// </summary>
         MODIFY_NAMESPACE_METADATA = 0x433D,
-
-        /// <summary>
-        ///    Blockchain configuration change transaction
-        /// </summary>
-  
-        BLOCKCHAIN_CONFIG = 0x4159,
 
         /// <summary>
         ///    Blockchain version update transaction
         /// </summary>
         BLOCKCHAIN_UPGRADE = 0x4158,
+
+        /// <summary>
+        ///    Blockchain configuration change transaction
+        /// </summary>
+        BLOCKCHAIN_CONFIG = 0x4159,
 
         /// <summary>
         ///     Add exchange offer
@@ -141,6 +140,31 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Remove exchange offer
         /// </summary>
         EXCHANGE_OFFER_REMOVE = 0x435D,
+
+        /// <summary>
+        ///     Adress related metadata transaction type
+        /// </summary>
+        ACCOUNT_METADATA_V2 = 0x413F,
+
+        /// <summary>
+        ///     Mosaic related metadata transaction type
+        /// </summary>
+        MOSAIC_METADATA_V2 = 0x423F,
+
+        /// <summary>
+        ///    Namespace related metadata transaction type
+        /// </summary>
+        NAMESPACE_METADATA_V2 = 0x433F,
+
+        /// <summary>
+        ///    Modify Mosaic Levy
+        /// </summary>
+        MODIFY_MOSAIC_LEVY = 0x434D,
+
+        /// <summary>
+        ///    Remove Mosaic Levy
+        /// </summary>
+        REMOVE_MOSAIC_LEVY = 0x444D,
     }
 
     public static class EntityTypeExtension
@@ -164,7 +188,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>int</returns>
         public static ushort GetValue(this EntityType type)
         {
-            return (ushort) type;
+            return (ushort)type;
         }
     }
 }

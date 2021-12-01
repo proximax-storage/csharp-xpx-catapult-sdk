@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
     /// <summary>
-    ///     TransactionInfo
+    ///    Class of TransactionInfo
     /// </summary>
     public class TransactionInfo
     {
@@ -29,8 +29,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="merkleComponentHash">The merkle component hash </param>
         /// <param name="aggregateHash">The aggregate hash</param>
         /// <param name="aggregateId">The aggregate id</param>
-        public TransactionInfo(ulong height, int? index, string id, string hash, string merkleComponentHash,
-            string aggregateHash, string aggregateId)
+        public TransactionInfo(ulong height, int? index, string id, string hash, string merkleComponentHash, string aggregateHash, string aggregateId, string uniqueAggregateHash)
         {
             Height = height;
             Index = index;
@@ -39,6 +38,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             MerkleComponentHash = merkleComponentHash;
             AggregateHash = aggregateHash;
             AggregateId = aggregateId;
+            UniqueAggregateHash = uniqueAggregateHash;
         }
 
         /// <summary>
@@ -84,6 +84,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public string AggregateId { get; }
 
         /// <summary>
+        ///     Returns UniqueAggregateHash of the aggregate transaction.
+        /// </summary>
+        /// <value>The Unique Aggregate Hash.</value>
+        public string UniqueAggregateHash { get; }
+
+        /// <summary>
         ///     Create transaction info object for aggregate transaction inner transaction.
         /// </summary>
         /// <param name="height">Block height in which the transaction was included.</param>
@@ -92,10 +98,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="aggregateHash">The hash of the aggregate transaction.</param>
         /// <param name="aggregateId">The id of the aggregate transaction.</param>
         /// <returns>TransactionInfo.</returns>
-        public static TransactionInfo CreateAggregate(ulong height, int? index, string id, string aggregateHash,
-            string aggregateId)
+        public static TransactionInfo CreateAggregate(ulong height, int? index, string id, string aggregateHash, string aggregateId, string uniqueAggregateHash)
         {
-            return new TransactionInfo(height, index, id, null, null, aggregateHash, aggregateId);
+            return new TransactionInfo(height, index, id, null, null, aggregateHash, aggregateId, uniqueAggregateHash);
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public static TransactionInfo Create(ulong height, int? index, string id, string hash,
             string merkleComponentHash)
         {
-            return new TransactionInfo(height, index, id, hash, merkleComponentHash, null, null);
+            return new TransactionInfo(height, index, id, hash, merkleComponentHash, null, null, null);
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <returns>TransactionInfo.</returns>
         public static TransactionInfo Create(ulong height, string hash, string merkleComponentHash)
         {
-            return new TransactionInfo(height, null, null, hash, merkleComponentHash, null, null);
+            return new TransactionInfo(height, null, null, hash, merkleComponentHash, null, null, null);
         }
     }
 }

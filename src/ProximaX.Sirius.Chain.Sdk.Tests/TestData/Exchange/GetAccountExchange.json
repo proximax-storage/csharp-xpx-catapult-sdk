@@ -1,0 +1,34 @@
+{
+  "exchange": {
+    "owner": "D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC",
+    "ownerAddress": "A8998D6DF14E095266CB6E36613F037616C72F224DA95C2BF4",
+    "version": 3,
+    "buyOffers": [],
+    "sellOffers": [
+      {
+        "mosaicId": [ 86679421, 58481398 ],
+        "amount": [ 3567509402, 232 ],
+        "initialAmount": [ 3567587328, 232 ],
+        "initialCost": [ 10000000, 0 ],
+        "deadline": [ 10013286, 0 ],
+        "price": 0.00001
+      },
+      {
+        "mosaicId": [ 171655680, 233174058 ],
+        "amount": [ 3567575279, 232 ],
+        "initialAmount": [ 3567587328, 232 ],
+        "initialCost": [ 10000000, 0 ],
+        "deadline": [ 10013286, 0 ],
+        "price": 0.00001
+      },
+      {
+        "mosaicId": [ 3503219699, 884214666 ],
+        "amount": [ 3567578487, 232 ],
+        "initialAmount": [ 3567587328, 232 ],
+        "initialCost": [ 10000000, 0 ],
+        "deadline": [ 10013286, 0 ],
+        "price": 0.00001
+      }
+    ]
+  }
+}

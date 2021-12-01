@@ -1,6 +1,6 @@
 ﻿{
   "accountProperties": {
-    "address": "9031C36EC5207123E20D7FEE91B73284B9B8EC354ADA948147",
+    "address": "A8A346711E67063C136EDAD0BAA23402506BB2B67EF1145602",
     "properties": [
       {
         "propertyType": 129,
@@ -8,7 +8,12 @@
       },
       {
         "propertyType": 2,
-        "values": [ [ 481110499, 231112638 ] ]
+        "values": [
+          [
+            591111072,
+            1691696966
+          ]
+        ]
       },
       {
         "propertyType": 132,

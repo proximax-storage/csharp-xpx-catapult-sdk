@@ -54,13 +54,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var nodeInfo = await _nodeHttp.GetNodeInfo();
 
                 // Test
-                nodeInfo.PublicKey.Should().BeEquivalentTo("460458B98E2BAA36A8E95DE9B320379E89898885B71CF0174E02F1324FAFFAC1");
+                nodeInfo.PublicKey.Should().BeEquivalentTo("DEE6E5B71F1555D9D62E8A3ED460594606525B6A2AF9EA66EF1027CB99D299EF");
                 nodeInfo.Port.Should().Be(7900);
-                nodeInfo.NetworkIdentifier.Should().Be(144);
+                nodeInfo.NetworkIdentifier.Should().Be(168);
                 nodeInfo.Version.Should().Be(0);
                 nodeInfo.Roles.Should().Be(RoleType.ApiNode);
-                nodeInfo.FriendlyName.Should().BeEquivalentTo("api-node-0");
-                nodeInfo.Host.Should().BeEquivalentTo("catapult-api-node");
+                nodeInfo.FriendlyName.Should().BeEquivalentTo("stg-api-1");
+                nodeInfo.Host.Should().BeEquivalentTo("10.24.8.150");
             }
         }
 

@@ -33,12 +33,31 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var networkType = await _networkHttp.GetNetworkType();
 
                 // Actual
-                var actual = NetworkTypeExtension.GetRawValue("PUBLICTest");
+                var actual = NetworkTypeExtension.GetRawValue("publicTest");
 
                 // Test
                 networkType.Should().BeEquivalentTo(actual);
             }
            
+        }
+        [Fact]
+        public async Task Get_Config_Height()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var fakeJson =
+                  TestHelper.LoadJsonFileToObject(@"Testdata\\Network\\GetBlockConfig.json");
+
+                httpTest.RespondWithJson(fakeJson);
+
+                // Arrange
+                var config_Height = await _networkHttp.GetBlockConfiguration(1);
+
+
+                config_Height.Should().NotBeNull();
+            
+            }
+
         }
     }
 }

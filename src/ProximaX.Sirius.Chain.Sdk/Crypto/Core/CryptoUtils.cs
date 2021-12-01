@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
@@ -51,7 +52,30 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
             var digest = new Sha3Digest(256);
             digest.BlockUpdate(bytes, 0, bytes.Length);
             digest.DoFinal(temp, 0);
+
             return temp;
+        }
+
+        /// <summary>
+        ///     Hash an array of bytes using Sha3 256 algorithm.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <returns>ulong</returns>
+        public static ulong Sha3_256_To_Ulong(byte[] bytes)
+        {
+            var temp = new byte[32];
+            var digest = new Sha3Digest(256);
+            digest.BlockUpdate(bytes, 0, bytes.Length);
+            digest.DoFinal(temp, 0);
+
+            var temp_ulong = BitConverter.ToUInt64(temp);
+            var temp_Array = temp_ulong.ToUInt8Array();
+            temp_Array[1] = (temp_Array[1] | 0x80000000) << 0;
+            var s1 = Convert.ToUInt32(temp_Array[0]);
+            var s2 = Convert.ToUInt32(temp_Array[1]);
+            var result = BitConverter.ToUInt64(BitConverter.GetBytes(s1).Concat(BitConverter.GetBytes(s2)).ToArray(), 0);
+
+            return result;
         }
 
         /// <summary>
@@ -75,7 +99,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
 
             return salt.ToHexLower() + AesEncryptor(key, ivData, privateKey);
         }
-
 
         /// <summary>
         ///     Decrypt a private key for mobile apps (AES_PBKF2)
@@ -150,7 +173,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
 
             var sha3Hasher = new KeccakDigest(256);
             var hash = new byte[32];
-
 
             sha3Hasher.BlockUpdate(password, 0, password.Length);
             sha3Hasher.DoFinal(hash, 0);

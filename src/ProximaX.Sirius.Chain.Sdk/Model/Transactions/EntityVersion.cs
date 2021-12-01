@@ -1,11 +1,11 @@
 ﻿// Copyright 2019 ProximaX
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,6 +40,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         ///     Mosaic supply change transaction.
         /// </summary>
         MOSAIC_SUPPLY_CHANGE = 2,
+
+        /// <summary>
+        ///     Modify mosaic levy transaction version.
+        /// </summary>
+        MODIFY_MOSAIC_LEVY_VERSION = 1,
+
+        /// <summary>
+        ///    Remove mosaic levy transaction version.
+        /// </summary>
+        REMOVE_MOSAIC_LEVY_VERSION = 1,
 
         /// <summary>
         ///     Modify multisig account transaction version.
@@ -102,10 +112,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         LINK_ACCOUNT = 2,
 
         /// <summary>
-        ///     Modify metadata transactions version
+        ///     Modify metadata account version
         /// </summary>
-        MODIFY_METADATA = 1,
+        METADATA_ACCOUNT = 1,
 
+        /// <summary>
+        ///     Modify metadata mosaic version
+        /// </summary>
+        METADATA_MOSAIC = 1,
+
+        /// <summary>
+        ///     Modify metadata namespace version
+        /// </summary>
+        METADATA_NAMESPACE = 1,
 
         /// <summary>
         ///     Blockchain configuration change transaction
