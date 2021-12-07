@@ -387,7 +387,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 switch (query.Order)
                 {
                     case Order.ASC:
-                        route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("ordering", "id");
                         route = route.SetQueryParam("block", "meta.height");
 
                         break;
