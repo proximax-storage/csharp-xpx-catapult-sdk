@@ -25,18 +25,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="entries"></param>
+        /// <param name="data"></param>
         /// <param name="paginations"></param>
-        public MetadataTransactionSearch(List<MetadataEntry> entries, Pagination paginations)
+        public MetadataTransactionSearch(List<MetadataEntry> data, Pagination paginations)
         {
-            Entries = entries;
+            Data = data;
             Paginations = paginations;
         }
 
         /// <summary>
         ///     The Entries
         /// </summary>
-        public List<MetadataEntry> Entries { get; }
+        public List<MetadataEntry> Data { get; }
 
         /// <summary>
         ///     The Paginations
@@ -50,7 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public override string ToString()
         {
             return
-                $"{nameof(Entries)}: {Entries}, {nameof(Paginations)}: {Paginations}";
+                $"{nameof(Data)}: {Data}, {nameof(Paginations)}: {Paginations}";
         }
     }
 }

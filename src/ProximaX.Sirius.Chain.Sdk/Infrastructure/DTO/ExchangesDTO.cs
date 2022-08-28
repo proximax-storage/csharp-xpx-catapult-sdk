@@ -87,7 +87,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class AccountDTO {\n");
+            sb.Append("class ExchangesDTO {\n");
             sb.Append("  MosaicId: ").Append(MosaicId).Append("\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  InitialAmount: ").Append(InitialAmount).Append("\n");

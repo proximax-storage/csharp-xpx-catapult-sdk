@@ -38,8 +38,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <param name="targetKey"></param>
         /// <param name="scopedMetadataKey"></param>
         /// <param name="metadataType"></param>
+        /// <param name="sortField"></param>
 
-        public MetadataQueryParams(int pageSize, Order order, int pageNumber, Address sourceAddress = null, string targetId = null, string targetKey = null, string scopedMetadataKey = null, MetadataType metadataType = MetadataType.NONE)
+        public MetadataQueryParams(int pageSize, Order order, int pageNumber, Address sourceAddress = null, string targetId = null, string targetKey = null, string scopedMetadataKey = null, MetadataType metadataType = MetadataType.NONE, MetadataSortingField sortField= MetadataSortingField.VALUE)
         {
             PageSize = pageSize;
             Order = order;
@@ -49,6 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             TargetKey = targetKey;
             ScopedMetadataKey = scopedMetadataKey;
             Type = metadataType;
+            SortField = sortField;
         }
 
         /// <summary>
@@ -90,5 +92,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         ///    Scoped Metadata Key
         /// </summary>
         public MetadataType Type { get; }
+
+        /// <summary>
+        ///    Scoped Metadata Key
+        /// </summary>
+        public MetadataSortingField SortField { get; }
+        
     }
 }

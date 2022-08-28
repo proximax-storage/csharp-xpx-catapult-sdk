@@ -24,11 +24,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
 {
     public class AccountExchange
     {
-        public AccountExchange(string owner, string ownerAddress, int version, List<OfferInfo> buyOffers, List<OfferInfo> sellOffers)
+        public AccountExchange(string owner, string ownerAddress, List<OfferInfo> buyOffers, List<OfferInfo> sellOffers)
         {
             Owner = owner;
             OwnerAddress = ownerAddress;
-            Version = version;
             BuyOffers = buyOffers;
             SellOffers = sellOffers;
         }
@@ -43,10 +42,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
         /// </summary>
         public string OwnerAddress { get; }
 
-        /// <summary>
-        /// Get and set Version
-        /// </summary>
-        public int Version { get; }
 
         /// <summary>
         /// Get and set BuyOffers
@@ -66,7 +61,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
             var accountexchange = input["exchange"] as JObject;
             var owner = accountexchange["owner"].ToObject<string>();
             var ownerAddress = accountexchange["ownerAddress"].ToObject<string>();
-            var version = accountexchange["version"].ToObject<int>();
             if (accountexchange["buyOffers"] != null)
             {
                 for (var i = 0; i < accountexchange["buyOffers"].ToList().Count; i++)
@@ -99,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Exchange
                 }
             }
 
-            return new AccountExchange(owner, ownerAddress, version, buyOffer, sellOffer);
+            return new AccountExchange(owner, ownerAddress, buyOffer, sellOffer);
         }
     }
 }

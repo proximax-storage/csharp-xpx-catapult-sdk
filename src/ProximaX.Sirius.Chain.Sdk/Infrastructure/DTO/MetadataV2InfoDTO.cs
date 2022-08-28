@@ -47,7 +47,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.DTO
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class MetadataNemInfo {\n");
+            sb.Append("class MetadataV2InfoDTO {\n");
             sb.Append("  MetadataEntry: ").Append(MetadataEntry).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");

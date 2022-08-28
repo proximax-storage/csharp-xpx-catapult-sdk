@@ -62,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             var route = $"{BasePath}/account/{publicAccount.PublicKey}/exchange";
 
             var networkType = GetNetworkTypeObservable().Take(1);
-            return Observable.FromAsync(async ar => await route.GetAsync().ReceiveJson<JObject>()).Select(i => AccountExchange.FromDTO(i));
+            return Observable.FromAsync(async ar => await route.GetAsync().ReceiveJson<JObject>()).Select(exchange =>  AccountExchange.FromDTO(exchange));
         }
 
         /// <summary>
@@ -74,11 +74,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         {
             Guard.NotNull(address, nameof(address), "Account ID should not be null");
 
-            var route = $"{BasePath}/account/{address}/exchange";
+            var route = $"{BasePath}/account/{address.Plain}/exchange";
 
             var networkType = GetNetworkTypeObservable().Take(1);
 
-            return Observable.FromAsync(async ar => await route.GetAsync().ReceiveJson<JObject>()).Select(i => AccountExchange.FromDTO(i));
+            return Observable.FromAsync(async ar => await route.GetAsync().ReceiveJson<JObject>()).Select(exchange => AccountExchange.FromDTO(exchange));
         }
 
         /// <summary>

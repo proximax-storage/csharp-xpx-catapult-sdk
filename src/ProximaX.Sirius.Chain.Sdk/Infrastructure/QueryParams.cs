@@ -22,20 +22,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <summary>
         ///     Initializes a new instance of the <see cref="QueryParams" /> class.
         /// </summary>
+        /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <param name="id"></param>
         /// <param name="order"></param>
-        public QueryParams(int pageSize, string id = null, Order order = Order.DESC)
+        public QueryParams(int pageSize, string id = null,  Order order = Order.DESC, int page = 1)
         {
             PageSize = pageSize;
             Id = id;
             Order = order;
+            Page = page;
         }
 
         /// <summary>
         ///     Page size
         /// </summary>
         public int PageSize { get; }
+
+        /// <summary>
+        ///     Page size
+        /// </summary>
+        public int Page { get; }
 
         /// <summary>
         ///     Identifier
@@ -55,5 +62,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
     {
         DESC,
         ASC
+    }
+
+    public enum MetadataSortingField
+    {
+        VALUE,
+        VALUE_SIZE
     }
 }

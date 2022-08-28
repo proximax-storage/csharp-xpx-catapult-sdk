@@ -63,7 +63,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// </summary>
         /// <param name="compositeHash">The array of composite Hash</param>
         /// <returns>IObservable&lt;IList&lt;MetadataEntry&gt;&gt;</returns>
-        public IObservable<List<MetadataEntry>> GetMetadata(List<string> compositeHash)
+        public IObservable<List<MetadataEntry>> GetMetadatas(List<string> compositeHash)
         {
             if (compositeHash.Count < 0) throw new ArgumentNullException(nameof(compositeHash));
 
@@ -97,6 +97,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         public IObservable<MetadataEntry> GetMetadata(string compositeHash)
         {
             var route = $"{BasePath}/metadata_v2/{compositeHash}";
+            Guard.NotNull(compositeHash, nameof(compositeHash), "compositeHash type should not be null");
 
             return Observable
                 .FromAsync(async ar => await route.GetJsonAsync<MetadataV2InfoDTO>())
@@ -146,22 +147,22 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 if (query.TargetKey != null) route = route.SetQueryParam("targetKey", query.TargetKey);
                 if (!string.IsNullOrEmpty(query.ScopedMetadataKey)) route = route.SetQueryParam("scopeMetadataKey", query.ScopedMetadataKey);
                 if (!string.IsNullOrEmpty(query.TargetId)) route = route.SetQueryParam("targetId", query.TargetId);
-                /*  switch (query.Order)
+                switch (query.Order)
                   {
                       case Order.ASC:
-                          route = route.SetQueryParam("ordering", "id");
+                          route = route.SetQueryParam("ordering", "asc");
                           break;
 
                       case Order.DESC:
-                          route = route.SetQueryParam("ordering", "-id");
+                          route = route.SetQueryParam("ordering", "desc");
                           break;
 
                       default:
-                          route = route.SetQueryParam("ordering", "-id");
+                          route = route.SetQueryParam("ordering", "desc");
                           break;
-                  }*/
+                  }
 
-                /* switch (query.SortField)
+                switch (query.SortField)
                  {
                      case MetadataSortingField.VALUE:
                          route = route.SetQueryParam("ordering", "metadataEntry.value");
@@ -174,7 +175,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                      default:
                          route = route.SetQueryParam("ordering", "metadataEntry.value");
                          break;
-                 }*/
+                 }
             }
             return Observable
                 .FromAsync(async ar => await route.GetJsonAsync<JObject>())

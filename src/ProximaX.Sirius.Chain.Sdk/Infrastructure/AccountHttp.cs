@@ -65,6 +65,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <returns>IObservable&lt;AccountInfo&gt;</returns>
         public IObservable<AccountInfo> GetAccountInfo(Address address)
         {
+            
             Guard.NotNull(address, nameof(address), "Address should not be null");
 
             var route = $"{BasePath}/account/{address.Plain}";
@@ -161,7 +162,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                     )
                 ));
         }
-
+        
         /// <summary>
         ///     Get the account properties by list of addresses
         /// </summary>
@@ -200,7 +201,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <param name="account">The public account</param>
         /// <param name="query">The query parameters</param>
         /// <returns>IObservable&lt;TransactionSearch&gt;</returns>
-        public IObservable<TransactionSearch> Transactions(PublicAccount account, QueryParams query = null)
+        public IObservable<TransactionSearch> Transactions(PublicAccount account, TransactionQueryParams query = null)
         {
             var route = $"{BasePath}/transactions/confirmed";
             if (account == null)
@@ -212,27 +213,76 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 route = route.SetQueryParam("address", account.Address.Plain);
             }
 
+            
             if (query != null)
             {
-                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0)
+                {
+                    if (query.PageSize < 10)
+                    {
+                        route = route.RemoveQueryParam("pageSize");
+                    }
+                    else if (query.PageSize > 100)
+                    {
+                        route = route.SetQueryParam("pageSize", 100);
+                    }
+                }
+                if (query.Type != 0)
+                {
+                    route = route.SetQueryParam("type", query.Type);
+                }
+                if (query.Embedded != false)
+                {
+                    route = route.SetQueryParam("embedded", query.Embedded);
+                }
+                if (query.PageNumber <= 0)
+                {
+                    route = route.SetQueryParam("pageNumber", 1);
+                }
 
-                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
+                if (query.Height > 0)
+                {
+                    if (query.ToHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("toheight");
+                    }
+                    if (query.FromHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("fromHeight");
+                    }
+                }
+                if (query.Address != null)
+                {
+                    if (query.RecipientAddress != null)
+                    {
+                        route = route.RemoveQueryParam("recipientAddress");
+                    }
+                    if (query.SignerPublicKey != null)
+                    {
+                        route = route.RemoveQueryParam("signerPublicKey");
+                    }
+                }
 
                 switch (query.Order)
                 {
                     case Order.ASC:
                         route = route.SetQueryParam("ordering", "id");
+                        route = route.SetQueryParam("block", "meta.height");
+
                         break;
 
                     case Order.DESC:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
 
                     default:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
                 }
             }
+
             return Observable.FromAsync(async ar => await route.GetJsonAsync<JObject>()).Select(t => TransactionSearchMapping.Apply(t));
         }
 
@@ -287,7 +337,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <param name="address">The address</param>
         /// <param name="query">The query parameters</param>
         /// <returns>IObservable&lt;TransactionSearch&gt;</returns>
-        public IObservable<TransactionSearch> IncomingTransactions(Address address, QueryParams query = null)
+        public IObservable<TransactionSearch> IncomingTransactions(Address address, TransactionQueryParams query = null)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
 
@@ -296,27 +346,77 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             {
                 route = route.SetQueryParam("recipientAddress", address.Plain);
             }
+
             if (query != null)
             {
-                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0)
+                {
+                    if (query.PageSize < 10)
+                    {
+                        route = route.RemoveQueryParam("pageSize");
+                    }
+                    else if (query.PageSize > 100)
+                    {
+                        route = route.SetQueryParam("pageSize", 100);
+                    }
+                }
+                if (query.Type != 0)
+                {
+                    route = route.SetQueryParam("type", query.Type);
+                }
+                if (query.Embedded != false)
+                {
+                    route = route.SetQueryParam("embedded", query.Embedded);
+                }
+                if (query.PageNumber <= 0)
+                {
+                    route = route.SetQueryParam("pageNumber", 1);
+                }
 
-                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
+                if (query.Height > 0)
+                {
+                    if (query.ToHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("toheight");
+                    }
+                    if (query.FromHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("fromHeight");
+                    }
+                }
+                if (query.Address != null)
+                {
+                    if (query.RecipientAddress != null)
+                    {
+                        route = route.RemoveQueryParam("recipientAddress");
+                    }
+                    if (query.SignerPublicKey != null)
+                    {
+                        route = route.RemoveQueryParam("signerPublicKey");
+                    }
+                }
 
                 switch (query.Order)
                 {
                     case Order.ASC:
                         route = route.SetQueryParam("ordering", "id");
+                        route = route.SetQueryParam("block", "meta.height");
+
                         break;
 
                     case Order.DESC:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
 
                     default:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
                 }
             }
+
+
             return Observable.FromAsync(async ar => await route.GetJsonAsync<JObject>()).Select(t => TransactionSearchMapping.Apply(t));
         }
 
@@ -412,37 +512,88 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <param name="account">The public account</param>
         /// <param name="query">The query parameters</param>
         /// <returns>IObservable&lt;TransactionSearch&gt;</returns>
-        public IObservable<TransactionSearch> AggregateBondedTransactions(PublicAccount account, QueryParams query = null)
+        public IObservable<TransactionSearch> AggregateBondedTransactions(Address address, TransactionQueryParams query = null)
         {
-            if (account == null) throw new ArgumentNullException(nameof(account));
+            if (address == null) throw new ArgumentNullException(nameof(address));
 
             var route = $"{BasePath}/transactions/partial";
 
-            if (account != null)
+            if (address != null)
             {
-                route = route.SetQueryParam("address", account.Address.Plain);
+                route = route.SetQueryParam("address", address.Plain);
             }
+
+            route = route.SetQueryParam("firstLevel", false);
+
             if (query != null)
             {
-                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0)
+                {
+                    if (query.PageSize < 10)
+                    {
+                        route = route.RemoveQueryParam("pageSize");
+                    }
+                    else if (query.PageSize > 100)
+                    {
+                        route = route.SetQueryParam("pageSize", 100);
+                    }
+                }
+                if (query.Type != 0)
+                {
+                    route = route.SetQueryParam("type", query.Type);
+                }
+                if (query.Embedded != false)
+                {
+                    route = route.SetQueryParam("embedded", query.Embedded);
+                }
+                if (query.PageNumber <= 0)
+                {
+                    route = route.SetQueryParam("pageNumber", 1);
+                }
 
-                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
+                if (query.Height > 0)
+                {
+                    if (query.ToHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("toheight");
+                    }
+                    if (query.FromHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("fromHeight");
+                    }
+                }
+                if (query.Address != null)
+                {
+                    if (query.RecipientAddress != null)
+                    {
+                        route = route.RemoveQueryParam("recipientAddress");
+                    }
+                    if (query.SignerPublicKey != null)
+                    {
+                        route = route.RemoveQueryParam("signerPublicKey");
+                    }
+                }
 
                 switch (query.Order)
                 {
                     case Order.ASC:
                         route = route.SetQueryParam("ordering", "id");
+                        route = route.SetQueryParam("block", "meta.height");
+
                         break;
 
                     case Order.DESC:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
 
                     default:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
                 }
             }
+
             return Observable.FromAsync(async ar => await route.GetJsonAsync<JObject>()).Select(t => TransactionSearchMapping.Apply(t));
         }
 
@@ -452,7 +603,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
         /// <param name="address">The address</param>
         /// <param name="query">The query parameters</param>
         /// <returns>IObservable&lt;TransactionSearch&gt;</returns>
-        public IObservable<TransactionSearch> UnconfirmedTransactions(Address address, QueryParams query = null)
+        public IObservable<TransactionSearch> UnconfirmedTransactions(Address address, TransactionQueryParams query = null)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
 
@@ -461,27 +612,76 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
             {
                 route = route.SetQueryParam("address", address.Plain);
             }
+
             if (query != null)
             {
-                if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
+                if (query.PageSize > 0)
+                {
+                    if (query.PageSize < 10)
+                    {
+                        route = route.RemoveQueryParam("pageSize");
+                    }
+                    else if (query.PageSize > 100)
+                    {
+                        route = route.SetQueryParam("pageSize", 100);
+                    }
+                }
+                if (query.Type != 0)
+                {
+                    route = route.SetQueryParam("type", query.Type);
+                }
+                if (query.Embedded != false)
+                {
+                    route = route.SetQueryParam("embedded", query.Embedded);
+                }
+                if (query.PageNumber <= 0)
+                {
+                    route = route.SetQueryParam("pageNumber", 1);
+                }
 
-                if (!string.IsNullOrEmpty(query.Id)) route = route.SetQueryParam("id", query.Id);
+                if (query.Height > 0)
+                {
+                    if (query.ToHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("toheight");
+                    }
+                    if (query.FromHeight > 0)
+                    {
+                        route = route.RemoveQueryParam("fromHeight");
+                    }
+                }
+                if (query.Address != null)
+                {
+                    if (query.RecipientAddress != null)
+                    {
+                        route = route.RemoveQueryParam("recipientAddress");
+                    }
+                    if (query.SignerPublicKey != null)
+                    {
+                        route = route.RemoveQueryParam("signerPublicKey");
+                    }
+                }
 
                 switch (query.Order)
                 {
                     case Order.ASC:
                         route = route.SetQueryParam("ordering", "id");
+                        route = route.SetQueryParam("block", "meta.height");
+
                         break;
 
                     case Order.DESC:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
 
                     default:
                         route = route.SetQueryParam("ordering", "-id");
+                        route = route.SetQueryParam("block", "meta.height");
                         break;
                 }
             }
+
             return Observable.FromAsync(async ar => await route.GetJsonAsync<JObject>()).Select(t => TransactionSearchMapping.Apply(t));
         }
 

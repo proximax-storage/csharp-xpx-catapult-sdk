@@ -91,6 +91,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             if (query != null)
             {
+                if (query.Page <= 0)
+                {
+                    route = route.SetQueryParam("page", 1);
+                }
+
                 if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
             }
             return Observable.FromAsync(async ar => await route.GetJsonAsync<List<MosaicRichListDTO>>())
