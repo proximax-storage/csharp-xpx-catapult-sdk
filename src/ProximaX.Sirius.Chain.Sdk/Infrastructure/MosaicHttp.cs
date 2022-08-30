@@ -99,7 +99,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
                 if (query.PageSize > 0) route = route.SetQueryParam("pageSize", query.PageSize);
             }
             return Observable.FromAsync(async ar => await route.GetJsonAsync<List<MosaicRichListDTO>>())
-             .Select(i => i.Select(info => new MosaicRichList(Address.CreateFromHex(info.Address), info.PublicKey, info.Amount.ToUInt64())).ToList());
+             .Select(i => i.Select(info => new MosaicRichList(Address.CreateFromHex(info.Address), info.Amount.ToUInt64())).ToList());
         }
 
         /// <summary>

@@ -28,15 +28,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         ///     Constructor
         /// </summary>
         /// <param name="address">The address</param>
-        /// <param name="publicKey">The publicKey</param>
         /// <param name="amount">The mosaic supply</param>
 
-        public MosaicRichList(Address address, string? publicKey, ulong amount)
+        public MosaicRichList(Address address, ulong amount)
                    // public MosaicRichList(Address address, string? publicKey)
 
         {
             Address = address;
-            PublicKey = publicKey;
+            // PublicKey = publicKey;
             Amount = amount;
         }
 
@@ -48,7 +47,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
         /// <summary>
         ///     The PublicKey
         /// </summary>
-        public string PublicKey { get; }
+        // public string PublicKey { get; }
 
         /// <summary>
         ///     The Amount
@@ -59,7 +58,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Mosaics
 
        public override string ToString()
         {
-            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(Amount)}: {Amount}";
+            return $"{nameof(Address)}: {Address}, {nameof(Amount)}: {Amount}";
 
             //return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}";
 
