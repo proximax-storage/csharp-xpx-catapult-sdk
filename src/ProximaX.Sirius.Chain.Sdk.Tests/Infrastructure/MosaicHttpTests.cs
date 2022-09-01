@@ -71,7 +71,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
 
                 mosaicInfo.Should().NotBeNullOrEmpty();
                 mosaicInfo[0].Address.Should().BeEquivalentTo(address1);
-                mosaicInfo[0].PublicKey.Should().Equals("D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC");
+                // mosaicInfo[0].PublicKey.Should().Equals("D9A659A3AA42FD62BE88E1D96B0F10EB91F6097F8D24EC8FD7C94EC6455735EC");
                 mosaicInfo[1].Address.Should().BeEquivalentTo(address2);
             }
         }

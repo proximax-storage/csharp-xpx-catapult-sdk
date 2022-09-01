@@ -55,7 +55,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                     "C24948F9448CDA7F1F0DB671A0BC74402FF424E5F8B310ECA564A6C69D2087E8",
                     "0505D822394D025A67A30967A1DA7ABA59053EFEB63D08A0AF8C8ECDB07FA64E"
                 };
-                var metadataInfo = await _metadataHttp.GetMetadata(compositeHashes);
+                var metadataInfo = await _metadataHttp.GetMetadatas(compositeHashes);
                 metadataInfo.Should().NotBeNull();
                 metadataInfo.Should().HaveCount(3);
             }
@@ -92,12 +92,12 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
                 var address = "VBSI675LOU33SWOVGLSSCQLAKL2QRGJA5AZOFU6N";
                 var targetKey = "359BAB30BF217A592372FADBE1F39C36C7717AC58A592324826A8E50B6829C69";
                 var metadataInfo = await _metadataHttp.SearchMetadata(new MetadataQueryParams(1, Order.ASC, 1, Address.CreateFromRawAddress(address), null, targetKey, null));
-                metadataInfo.Entries.Should().NotBeEmpty();
+                metadataInfo.Data.Should().NotBeEmpty();
                 //  metadataInfo.Fields.Should().HaveCount(2);
                 //  metadataInfo.Type.Should().BeEquivalentTo(MetadataType.MOSAIC);
-                metadataInfo.Entries.Single(ap => ap.ValueSize == 1);
-                metadataInfo.Entries.Single(ap => ap.Value == "74657374");
-                metadataInfo.Entries.Single(ap => ap.TargetKey == "359BAB30BF217A592372FADBE1F39C36C7717AC58A592324826A8E50B6829C69");
+                metadataInfo.Data.Single(ap => ap.ValueSize == 1);
+                metadataInfo.Data.Single(ap => ap.Value == "74657374");
+                metadataInfo.Data.Single(ap => ap.TargetKey == "359BAB30BF217A592372FADBE1F39C36C7717AC58A592324826A8E50B6829C69");
 
                 metadataInfo.Paginations.PageNumber.Equals(1);
                 metadataInfo.Paginations.PageSize.Equals(1);

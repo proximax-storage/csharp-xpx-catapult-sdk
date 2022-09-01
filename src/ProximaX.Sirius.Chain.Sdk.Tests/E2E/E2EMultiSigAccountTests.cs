@@ -122,7 +122,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     // Cosign the aggregate transaction with cosignatory1
                     var cosignatory1Cosigned = Fixture.SiriusWebSocketClient.Listener.CosignatureAdded(Fixture.Cosignatory1.Address).Take(1).Timeout(TimeSpan.FromSeconds(2000));
 
-                    var cosignatory1AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory1.PublicAccount);
+                    var cosignatory1AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory1.Address);
                     foreach (AggregateTransaction tx in cosignatory1AggTxs.Transactions)
                     {
                         if (!tx.IsSignedByAccount(Fixture.Cosignatory1.PublicAccount))
@@ -141,7 +141,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     var cosignatory2Cosigned = Fixture.SiriusWebSocketClient.Listener
                           .CosignatureAdded(Fixture.Cosignatory2.Address).Take(1)
                           .Timeout(TimeSpan.FromSeconds(2000));
-                    var cosignatory2AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory2.PublicAccount);
+                    var cosignatory2AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory2.Address);
 
                     foreach (AggregateTransaction tx in cosignatory2AggTxs.Transactions)
                     {
@@ -351,7 +351,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                     Thread.Sleep(8000);
                     Fixture.WatchForFailure(signedTransaction);
 
-                    var cosignatory3AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory3.PublicAccount);
+                    var cosignatory3AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory3.Address);
                     foreach (AggregateTransaction tx in cosignatory3AggTxs.Transactions)
                     {
                         if (!tx.IsSignedByAccount(Fixture.Cosignatory3.PublicAccount))
@@ -366,7 +366,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
                         }
                     }
 
-                    var cosignatory2AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory2.PublicAccount);
+                    var cosignatory2AggTxs = await Fixture.SiriusClient.AccountHttp.AggregateBondedTransactions(Fixture.Cosignatory2.Address);
                     foreach (AggregateTransaction tx in cosignatory2AggTxs.Transactions)
                     {
                         if (!tx.IsSignedByAccount(Fixture.Cosignatory2.PublicAccount))
