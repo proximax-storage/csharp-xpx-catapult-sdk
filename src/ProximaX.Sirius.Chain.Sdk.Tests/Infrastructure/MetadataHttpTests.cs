@@ -80,7 +80,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Infrastructure
         }
 
         [Fact]
-        public async Task Search_Metadata()
+        public async Task Search_Metadatas()
         {
             using (var httpTest = new HttpTest())
             {
