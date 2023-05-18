@@ -48,12 +48,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Utils
 
         public static string ToHex(this ulong input)
         {
-            var hexLength = input.ToString("X").Length;
-
-            return hexLength % 2 == 0 ? input.ToString("X") : input.ToString("X" + (hexLength + 1));
-
-            /* var uintArr = input.ToUInt8Array();
-             return GetPaddedHex(uintArr[1])  + GetPaddedHex(uintArr[0]);*/
+            return input.ToString("X16");
         }
 
         public static string GetPaddedHex(uint value)
