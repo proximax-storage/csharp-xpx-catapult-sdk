@@ -61,7 +61,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure.Mapping
                 case EntityType.MODIFY_MULTISIG_ACCOUNT:
                     return new ModifyMultisigAccountTransactionMapping().Apply(input);
 
-                case EntityType.LOCK:
+                case EntityType.HASHLOCK:
                     return new LockFundsTransactionMapping().Apply(input);
 
                 case EntityType.SECRET_LOCK:

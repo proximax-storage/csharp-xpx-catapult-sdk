@@ -69,7 +69,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     The lock type
         /// </summary>
-        LOCK = 0x4148,
+        HASHLOCK = 0x4148,
 
         /// <summary>
         ///     The secret lock type
