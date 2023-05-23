@@ -27,7 +27,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions.Builders
         public SignedTransaction SignedTransaction { get; private set; }
 
 
-        public LockFundsTransactionBuilder() : base(EntityType.LOCK, EntityVersion.LOCK.GetValue())
+        public LockFundsTransactionBuilder() : base(EntityType.HASH_LOCK, EntityVersion.HASH_LOCK.GetValue())
         {
         }
 

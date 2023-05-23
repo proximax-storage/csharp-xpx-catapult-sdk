@@ -69,7 +69,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <summary>
         ///     Lock transaction version
         /// </summary>
-        LOCK = 1,
+        HASH_LOCK = 1,
 
         /// <summary>
         ///     Secret Lock transaction version
