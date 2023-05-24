@@ -74,6 +74,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         public PublicAccount PublicAccount { get; set; }
 
+        private readonly signSchema = SignSchema.SHA3;
+
 
         /// <summary>
         ///     Creates from private key.
