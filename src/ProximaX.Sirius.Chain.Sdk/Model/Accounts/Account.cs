@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
@@ -81,9 +82,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="privateKey">The private key.</param>
         /// <param name="networkType">Type of the network.</param>
         /// <returns>Account</returns>
-        public static Account CreateFromPrivateKey(string privateKey, NetworkType networkType)
+        public static Account CreateFromPrivateKeyV1(string privateKey, NetworkType networkType)
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(privateKey);
+            var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha3);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
+
+            return new Account(address, keyPair);
+        }
+
+        public static Account CreateFromPrivateKeyV2(string privateKey, NetworkType networkType)
+        {
+            var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha2);
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
             return new Account(address, keyPair);

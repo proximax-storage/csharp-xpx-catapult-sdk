@@ -15,7 +15,9 @@
 using System;
 //using Chaos.NaCl;
 using GuardNet;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
+using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Nsec.Cryptography;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
@@ -66,15 +68,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="privateKey">The private key</param>
         /// <returns></returns>
-        public static KeyPair CreateFromPrivateKey(string privateKey)
+        public static KeyPair CreateFromPrivateKey(string privateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             Guard.NotNullOrEmpty(privateKey, nameof(privateKey));
             Guard.NotEqualTo(privateKey.Length, 64, new ArgumentOutOfRangeException(nameof(privateKey)));
 
            // var privateKeyArray = privateKey.FromHex();
            // var publicKey = Ed25519.PublicKeyFromSeed(privateKeyArray).ToHexUpper();
+            var publicKey;
             var privateKeyArray = CryptoBytes.FromHexString(privateKey);
-            var publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray));
+            if(dScheme == DerivationScheme.Ed25519Sha3){
+                publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray));
+            }else if(dScheme == DerivationScheme.Ed25519Sha2){
+                publicKey = Ed25519Sha2.PublicKeyFromSeedSha2(privateKeyArray);
+            }
             return new KeyPair(privateKey, publicKey);
         }
 
