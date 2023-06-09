@@ -33,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="address">The address.</param>
         /// <param name="keyPair">The key pair.</param>
         /// <param name="version">The account version.</param>
-        public Account(Address address, KeyPair keyPair, Number version = 1)
+        public Account(Address address, KeyPair keyPair, number version = 1)
         {
             Address = address;
             KeyPair = keyPair;
@@ -60,6 +60,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         ///     The account keyPair, public and private key.
         /// </summary>
         public KeyPair KeyPair { get; }
+
+        /// <summary>
+        ///     The account version.
+        /// </summary>
+        public number version { get; }
 
         /// <summary>
         ///     The private key
@@ -103,8 +108,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         ///     Generates a new account
         /// </summary>
         /// <param name="networkType">The network type</param>
+        /// <param name="version">The account version</param>
         /// <returns>Account</returns>
-        public static Account GenerateNewAccount(NetworkType networkType)
+        public static Account GenerateNewAccount(NetworkType networkType, number version = 1)
         {
             var provider = new RNGCryptoServiceProvider();
 
@@ -119,7 +125,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower());
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
-            return new Account(address, keyPair);
+            return new Account(address, keyPair, version);
         }
 
 
