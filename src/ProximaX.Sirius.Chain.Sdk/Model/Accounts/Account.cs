@@ -32,7 +32,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="address">The address.</param>
         /// <param name="keyPair">The key pair.</param>
-        public Account(Address address, KeyPair keyPair)
+        /// <param name="version">The account version.</param>
+        public Account(Address address, KeyPair keyPair, Number version = 1)
         {
             Address = address;
             KeyPair = keyPair;
@@ -87,7 +88,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha3);
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
-            return new Account(address, keyPair);
+            return new Account(address, keyPair, 1);
         }
 
         public static Account CreateFromPrivateKeyV2(string privateKey, NetworkType networkType)
@@ -95,7 +96,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha2);
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
-            return new Account(address, keyPair);
+            return new Account(address, keyPair, 2);
         }
 
         /// <summary>
