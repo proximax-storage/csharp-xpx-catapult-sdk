@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10;
 
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
@@ -49,7 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
             return Ed25519Operations.crypto_sign_verify(signature, 0, message, 0, message.Length, publicKey, 0);
         }
 
-        public static void Sign(ArraySegment<byte> signature, ArraySegment<byte> message, ArraySegment<byte> expandedPrivateKey)
+        public static void Sign(ArraySegment<byte> signature, ArraySegment<byte> message, ArraySegment<byte> expandedPrivateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             if (signature.Array == null)
                 throw new ArgumentNullException("signature.Array");
@@ -61,13 +62,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
                 throw new ArgumentException("expandedPrivateKey.Count");
             if (message.Array == null)
                 throw new ArgumentNullException("message.Array");
-            Ed25519Operations.crypto_sign2(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, expandedPrivateKey.Array, expandedPrivateKey.Offset);
+            Ed25519Operations.crypto_sign2(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, expandedPrivateKey.Array, expandedPrivateKey.Offset, dScheme);
         }
 
-        public static byte[] Sign(byte[] message, byte[] expandedPrivateKey)
+        public static byte[] Sign(byte[] message, byte[] expandedPrivateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             var signature = new byte[SignatureSizeInBytes];
-            Sign(new ArraySegment<byte>(signature), new ArraySegment<byte>(message), new ArraySegment<byte>(expandedPrivateKey));
+            Sign(new ArraySegment<byte>(signature), new ArraySegment<byte>(message), new ArraySegment<byte>(expandedPrivateKey), dScheme);
             return signature;
         }
 
@@ -80,16 +81,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
             return publicKey;
         }
 
-        public static byte[] ExpandedPrivateKeyFromSeed(byte[] privateKeySeed)
+        public static byte[] ExpandedPrivateKeyFromSeed(byte[] privateKeySeed, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             byte[] privateKey;
             byte[] publicKey;
-            KeyPairFromSeed(out publicKey, out privateKey, privateKeySeed);
+            KeyPairFromSeed(out publicKey, out privateKey, privateKeySeed, dScheme);
             CryptoBytes.Wipe(publicKey);
             return privateKey;
         }
 
-        public static void KeyPairFromSeed(out byte[] publicKey, out byte[] expandedPrivateKey, byte[] privateKeySeed)
+        public static void KeyPairFromSeed(out byte[] publicKey, out byte[] expandedPrivateKey, byte[] privateKeySeed, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             if (privateKeySeed == null)
                 throw new ArgumentNullException("privateKeySeed");
@@ -97,7 +98,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
                 throw new ArgumentException("privateKeySeed");
             var pk = new byte[PublicKeySizeInBytes];
             var sk = new byte[ExpandedPrivateKeySizeInBytes];
-            Ed25519Operations.crypto_sign_keypair(pk, 0, sk, 0, privateKeySeed, 0);
+            Ed25519Operations.crypto_sign_keypair(pk, 0, sk, 0, privateKeySeed, 0, dScheme);
             publicKey = pk;
             expandedPrivateKey = sk;
         }

@@ -14,19 +14,26 @@
 
 using System;
 using Org.BouncyCastle.Crypto.Digests;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
 {
     internal static partial class Ed25519Operations
     {
         internal static void crypto_sign_keypair(byte[] pk, int pkoffset, byte[] sk, int skoffset, byte[] seed,
-            int seedoffset)
+            int seedoffset, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             GroupElementP3 A;
             int i;
 
             Array.Copy(seed, seedoffset, sk, skoffset, 32);
-            var digest = new Sha3Digest(512); //new  // tried and failed -> new Sha3Digest(512);
+            var digest;
+            if(dScheme == DerivationScheme.Ed25519Sha3){
+                digest = new Sha3Digest(512); //new  // tried and failed -> new Sha3Digest(512);
+            }else if(dScheme == DerivationScheme.Ed25519Sha2){
+                digest = new SHA256Digest();
+            }
+            
             var h = new byte[64]; // byte[] ha = Sha512.Hash(sk, skoffset, 32);//ToDo: REMOVE alloc
             digest.BlockUpdate(sk, skoffset, 32); // new
             digest.DoFinal(h, 0); // new

@@ -31,7 +31,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
-        public PublicAccount(string publicKey, NetworkType networkType)
+        public PublicAccount(string publicKey, NetworkType networkType, number version)
         {
             Guard.NotNullOrEmpty(publicKey, nameof(publicKey));
 
@@ -40,7 +40,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Guard.NotEqualTo(publicKey.Length, 64, new ArgumentOutOfRangeException(nameof(publicKey)));
 
-            Address = Address.CreateFromPublicKey(publicKey, networkType);
+            Address = Address.CreateFromPublicKey(publicKey, networkType, version);
             PublicKey = publicKey;
         }
 
@@ -55,14 +55,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public string PublicKey { get; }
 
         /// <summary>
+        ///     version
+        /// </summary>
+        public string version { get; }
+
+        /// <summary>
         ///     Creates from public key
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType)
+        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, number version)
         {
-            return new PublicAccount(publicKey, networkType);
+            return new PublicAccount(publicKey, networkType, version);
         }
 
         /// <summary>

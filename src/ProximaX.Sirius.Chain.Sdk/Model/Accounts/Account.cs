@@ -37,7 +37,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         {
             Address = address;
             KeyPair = keyPair;
-            PublicAccount = new PublicAccount(keyPair.PublicKeyString, address.NetworkType);
+            PublicAccount = new PublicAccount(keyPair.PublicKeyString, address.NetworkType, version);
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="keyPair">The address.</param>
         /// <param name="networkType">The key pair.</param>
-        public Account(KeyPair keyPair, NetworkType networkType)
+        public Account(KeyPair keyPair, NetworkType networkType, number version = 1)
         {
             KeyPair = keyPair;
-            PublicAccount = new PublicAccount(PublicKey, networkType);
+            PublicAccount = new PublicAccount(PublicKey, networkType, version);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static Account CreateFromPrivateKeyV1(string privateKey, NetworkType networkType)
         {
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha3);
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, this.version);
 
             return new Account(address, keyPair, 1);
         }
@@ -99,7 +99,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static Account CreateFromPrivateKeyV2(string privateKey, NetworkType networkType)
         {
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha2);
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, this.version);
 
             return new Account(address, keyPair, 2);
         }
@@ -123,7 +123,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestSha3.DoFinal(bytes, 0);
 
             var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower());
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, this.version);
 
             return new Account(address, keyPair, version);
         }
@@ -137,7 +137,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns>SignedTransaction.</returns>
         public SignedTransaction Sign(Transaction transaction,string generationHash)
         {
-            return transaction.SignWith(this, generationHash);
+            return transaction.SignWith(this, generationHash, DerivationScheme.Ed25519Sha2);
+        }
+
+        /// <summary>
+        ///     Signs the specified transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
+        /// <param name="generationHash">The generation hash</param>
+        /// <returns>SignedTransaction.</returns>
+        public SignedTransaction preV2Sign(Transaction transaction,string generationHash)
+        {
+            return transaction.SignWith(this, generationHash, DerivationScheme.Ed25519Sha3);
         }
 
         /// <summary>
@@ -151,6 +162,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
            List<Account> cosignatories)
         {
             return transaction.SignTransactionWithCosigners(this, cosignatories, generationHash);
+        }
+
+        /**
+        * Sign transaction with cosignatories creating a new SignedTransaction
+        * @param transaction - The aggregate transaction to be signed.
+        * @param cosignatories - The array of accounts that will cosign the transaction
+        * @param generationHash - Network generation hash hex
+        * @return {SignedTransaction}
+        */
+        public SignedTransaction signTransactionWithCosignatoriesV1(AggregateTransaction transaction, string generationHash,
+           List<Account> cosignatories)
+        {
+            return transaction.SignTransactionWithCosigners(this, cosignatories, generationHash);
+        }
+
+        /// <summary>
+        /// Sign aggregate signature transaction 
+        /// </summary>
+        /// <param name="cosignatureTransaction">the aggregate signature transaction</param>
+        /// <returns></returns>
+        public CosignatureSignedTransaction SignCosignatureTransaction(CosignatureTransaction cosignatureTransaction)
+        {
+            return cosignatureTransaction.SignWith(this);
         }
 
         /// <summary>

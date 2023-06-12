@@ -91,7 +91,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="data">The data.</param>
         /// <returns>System.Byte[].</returns>
         /// <exception cref="ArgumentNullException">data</exception>
-        public byte[] Sign(byte[] data)
+        public byte[] Sign(byte[] data, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
            /*
             if (data == null) throw new ArgumentNullException(nameof(data));
@@ -109,9 +109,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             return sig;
            */
 
-            var sk = Ed25519.ExpandedPrivateKeyFromSeed(PrivateKey);
+            var sk = Ed25519.ExpandedPrivateKeyFromSeed(PrivateKey, dScheme);
 
-            var sig = Ed25519.Sign(data, sk);
+            var sig = Ed25519.Sign(data, sk, dScheme);
            
             return sig;
         }
