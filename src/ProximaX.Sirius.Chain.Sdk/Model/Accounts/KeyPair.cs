@@ -78,7 +78,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             var publicKey;
             var privateKeyArray = CryptoBytes.FromHexString(privateKey);
             if(dScheme == DerivationScheme.Ed25519Sha3){
-                publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray));
+                publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray, dScheme));
             }else if(dScheme == DerivationScheme.Ed25519Sha2){
                 publicKey = Ed25519Sha2.PublicKeyFromSeedSha2(privateKeyArray);
             }

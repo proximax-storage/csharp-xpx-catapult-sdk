@@ -14,7 +14,9 @@
 // limitations under the License.
 
 using Org.BouncyCastle.Crypto.Digests;
+
 using System;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
 {
     internal static partial class Ed25519Operations
@@ -23,7 +25,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
         public static bool crypto_sign_verify(
             byte[] sig, int sigoffset,
             byte[] m, int moffset, int mlen,
-            byte[] pk, int pkoffset)
+            byte[] pk, int pkoffset, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
       
             byte[] checkr = new byte[32];
@@ -33,7 +35,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
             if ((sig[sigoffset + 63] & 224) != 0) return false;
             if (GroupOperations.ge_frombytes_negate_vartime(out A, pk, pkoffset) != 0)
                 return false;
-            var hash = new Sha3Digest(512);
+            var hash;
+            if(dScheme == DerivationScheme.Ed25519Sha3){
+                hash= new Sha3Digest(512);
+            }else if(dScheme == DerivationScheme.Ed25519Sha2){
+                hash = new SHA256Digest();
+            }
+
 
             hash.BlockUpdate(sig, sigoffset, 32);
             hash.BlockUpdate(pk, pkoffset, 32);

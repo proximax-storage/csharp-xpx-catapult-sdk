@@ -26,16 +26,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
         public static readonly int PrivateKeySeedSizeInBytes = 32;
         public static readonly int SharedKeySizeInBytes = 32;
 
-        public static bool Verify(ArraySegment<byte> signature, ArraySegment<byte> message, ArraySegment<byte> publicKey)
+        public static bool Verify(ArraySegment<byte> signature, ArraySegment<byte> message, ArraySegment<byte> publicKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             if (signature.Count != SignatureSizeInBytes)
                 throw new ArgumentException(string.Format("Signature size must be {0}", SignatureSizeInBytes), "signature.Count");
             if (publicKey.Count != PublicKeySizeInBytes)
                 throw new ArgumentException(string.Format("Public key size must be {0}", PublicKeySizeInBytes), "publicKey.Count");
-            return Ed25519Operations.crypto_sign_verify(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, publicKey.Array, publicKey.Offset);
+            return Ed25519Operations.crypto_sign_verify(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, publicKey.Array, publicKey.Offset, dScheme);
         }
 
-        public static bool Verify(byte[] signature, byte[] message, byte[] publicKey)
+        public static bool Verify(byte[] signature, byte[] message, byte[] publicKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             if (signature == null)
                 throw new ArgumentNullException("signature");
@@ -47,7 +47,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
                 throw new ArgumentException(string.Format("Signature size must be {0}", SignatureSizeInBytes), "signature.Length");
             if (publicKey.Length != PublicKeySizeInBytes)
                 throw new ArgumentException(string.Format("Public key size must be {0}", PublicKeySizeInBytes), "publicKey.Length");
-            return Ed25519Operations.crypto_sign_verify(signature, 0, message, 0, message.Length, publicKey, 0);
+            return Ed25519Operations.crypto_sign_verify(signature, 0, message, 0, message.Length, publicKey, 0, dScheme);
         }
 
         public static void Sign(ArraySegment<byte> signature, ArraySegment<byte> message, ArraySegment<byte> expandedPrivateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
@@ -72,11 +72,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
             return signature;
         }
 
-        public static byte[] PublicKeyFromSeed(byte[] privateKeySeed)
+        public static byte[] PublicKeyFromSeed(byte[] privateKeySeed, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             byte[] privateKey;
             byte[] publicKey;
-            KeyPairFromSeed(out publicKey, out privateKey, privateKeySeed);
+            KeyPairFromSeed(out publicKey, out privateKey, privateKeySeed, dScheme);
             CryptoBytes.Wipe(privateKey);
             return publicKey;
         }
@@ -103,7 +103,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
             expandedPrivateKey = sk;
         }
 
-        public static void KeyPairFromSeed(ArraySegment<byte> publicKey, ArraySegment<byte> expandedPrivateKey, ArraySegment<byte> privateKeySeed)
+        public static void KeyPairFromSeed(ArraySegment<byte> publicKey, ArraySegment<byte> expandedPrivateKey, ArraySegment<byte> privateKeySeed, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             if (publicKey.Array == null)
                 throw new ArgumentNullException("publicKey.Array");
@@ -120,7 +120,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
             Ed25519Operations.crypto_sign_keypair(
                 publicKey.Array, publicKey.Offset,
                 expandedPrivateKey.Array, expandedPrivateKey.Offset,
-                privateKeySeed.Array, privateKeySeed.Offset);
+                privateKeySeed.Array, privateKeySeed.Offset, dScheme);
         }
 
     }

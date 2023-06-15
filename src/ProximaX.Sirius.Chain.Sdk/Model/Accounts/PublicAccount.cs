@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
@@ -31,7 +32,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
-        public PublicAccount(string publicKey, NetworkType networkType, number version)
+        /// <param name="version"></param>
+        public PublicAccount(string publicKey, NetworkType networkType, int version)
         {
             Guard.NotNullOrEmpty(publicKey, nameof(publicKey));
 
@@ -66,7 +68,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="networkType"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, number version)
+        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, int version)
         {
             return new PublicAccount(publicKey, networkType, version);
         }
@@ -79,8 +81,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public bool VerifySignature(byte[] data, byte[] signature)
         {
+            var dScheme;
+            if(this.version == 1){
+                dScheme = DerivationScheme.Ed25519Sha3;
+            }else if(this.version == 2){
+                dScheme = DerivationScheme.Ed25519Sha2;
+            }
             var pk = CryptoBytes.FromHexString(PublicKey);
-            return Ed25519.Verify(signature, data, pk);
+            return Ed25519.Verify(signature, data, pk, dScheme);
         }
 
 
@@ -93,12 +101,18 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public static bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
         {
-            return Ed25519.Verify(signature, data, publicKey);
+            var dScheme;
+            if(this.version == 1){
+                dScheme = DerivationScheme.Ed25519Sha3;
+            }else if(this.version == 2){
+                dScheme = DerivationScheme.Ed25519Sha2;
+            }
+            return Ed25519.Verify(signature, data, publicKey, dScheme);
         }
 
         public override string ToString()
         {
-            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}";
+            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(version)}: {version}";
         }
     }
 }

@@ -123,7 +123,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType, number version)
+        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType, int version)
         {
             // step 1) sha-3(256) public key
             var digestSha;
