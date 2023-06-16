@@ -105,7 +105,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(version)}: {version}";
         }
 
-        public static number getAccVersionFromDerivationScheme(DerivationScheme dScheme){
+        public static int getAccVersionFromDerivationScheme(DerivationScheme dScheme){
             if(dScheme == DerivationScheme.Ed25519Sha2){
                 return 2;
             }else{
@@ -113,7 +113,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             }
         }
 
-        public static DerivationScheme getDerivationSchemeFromAccVersion(number version){
+        public static DerivationScheme getDerivationSchemeFromAccVersion(int version){
             if(version == 1){
                 return DerivationScheme.Ed25519Sha3;
             }else{

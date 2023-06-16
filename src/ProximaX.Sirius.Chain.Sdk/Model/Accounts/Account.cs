@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
+using ProximaX.Sirius.Chain.Sdk.Model.Accountss;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
@@ -122,7 +123,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestSha3.BlockUpdate(randomBytes, 0, 32);
             digestSha3.DoFinal(bytes, 0);
 
-            var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower());
+            var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower(), PublicAccount.getDerivationSchemeFromAccVersion(version));
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, this.version);
 
             return new Account(address, keyPair, version);
