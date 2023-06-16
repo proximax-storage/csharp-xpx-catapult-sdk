@@ -100,7 +100,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public SignedTransaction SignWith(Account account, string generationHash, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
+        public SignedTransaction SignWith(Account account, string generationHash)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
 
@@ -116,13 +116,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             Buffer.BlockCopy(Bytes, 100, signingBytes, 32, Bytes.Length - 100);
 
-            var version;
-            if(dScheme == DerivationScheme.Ed25519Sha3){
-                version = 1;
-            }else{
-                version = 2;
-            }
-            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType, version);
+            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType, account.version);
+
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.version);
 
             var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes, dScheme);
 

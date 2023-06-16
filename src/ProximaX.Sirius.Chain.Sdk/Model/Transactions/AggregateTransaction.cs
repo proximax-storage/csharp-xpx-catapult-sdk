@@ -141,13 +141,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             if (initiatorAccount == null) throw new ArgumentNullException(nameof(initiatorAccount));
             if (cosignatories == null) throw new ArgumentNullException(nameof(cosignatories));
-            var dScheme;
-            if(initiatorAccount.version == 1){
-                dScheme = DerivationScheme.Ed25519Sha3;
-            }else if(initiatorAccount.version == 2){
-                dScheme = DerivationScheme.Ed25519Sha2;
-            }
-            var signedTransaction = SignWith(initiatorAccount, generationHash, dScheme);
+
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(initiatorAccount.version);
+            var signedTransaction = SignWith(initiatorAccount, generationHash);
             var payload = signedTransaction.Payload.FromHex();
 
             foreach (var cosignatory in cosignatories)

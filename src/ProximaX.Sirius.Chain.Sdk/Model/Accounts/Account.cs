@@ -137,7 +137,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns>SignedTransaction.</returns>
         public SignedTransaction Sign(Transaction transaction,string generationHash)
         {
-            return transaction.SignWith(this, generationHash, DerivationScheme.Ed25519Sha2);
+            return transaction.SignWith(this, generationHash);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns>SignedTransaction.</returns>
         public SignedTransaction preV2Sign(Transaction transaction,string generationHash)
         {
-            return transaction.SignWith(this, generationHash, DerivationScheme.Ed25519Sha3);
+            return transaction.SignWith(this, generationHash);
         }
 
         /// <summary>

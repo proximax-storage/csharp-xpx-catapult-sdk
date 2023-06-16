@@ -81,12 +81,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public bool VerifySignature(byte[] data, byte[] signature)
         {
-            var dScheme;
-            if(this.version == 1){
-                dScheme = DerivationScheme.Ed25519Sha3;
-            }else if(this.version == 2){
-                dScheme = DerivationScheme.Ed25519Sha2;
-            }
+            var dScheme = getDerivationSchemeFromAccVersion(this.version);
             var pk = CryptoBytes.FromHexString(PublicKey);
             return Ed25519.Verify(signature, data, pk, dScheme);
         }
@@ -101,18 +96,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public static bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
         {
-            var dScheme;
-            if(this.version == 1){
-                dScheme = DerivationScheme.Ed25519Sha3;
-            }else if(this.version == 2){
-                dScheme = DerivationScheme.Ed25519Sha2;
-            }
+            var dScheme = getDerivationSchemeFromAccVersion(this.version);
             return Ed25519.Verify(signature, data, publicKey, dScheme);
         }
 
         public override string ToString()
         {
             return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(version)}: {version}";
+        }
+
+        public static number getAccVersionFromDerivationScheme(DerivationScheme dScheme){
+            if(dScheme == DerivationScheme.Ed25519Sha2){
+                return 2;
+            }else{
+                return 1;
+            }
+        }
+
+        public static DerivationScheme getDerivationSchemeFromAccVersion(number version){
+            if(version == 1){
+                return DerivationScheme.Ed25519Sha3;
+            }else{
+                return DerivationScheme.Ed25519Sha2;
+            }
         }
     }
 }
