@@ -17,7 +17,7 @@ using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
-using ProximaX.Sirius.Chain.Sdk.Model.Accountss;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
@@ -188,15 +188,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             return cosignatureTransaction.SignWith(this);
         }
 
-        /// <summary>
-        /// Sign aggregate signature transaction
-        /// </summary>
-        /// <param name="cosignatureTransaction">the aggregate signature transaction</param>
-        /// <returns></returns>
-        public CosignatureSignedTransaction SignCosignatureTransaction(CosignatureTransaction cosignatureTransaction)
-        {
-            return cosignatureTransaction.SignWith(this);
-        }
+ 
 
         /// <summary>
         ///     ToString

@@ -10,14 +10,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Nsec.Cryptography
     {
         public static byte[] PublicKeyFromSeedSha2(byte[] privateKeySeed){
             // byte[] privateKeyBytes = Convert.FromBase64String("..."); // Replace "..." with your private key in Base64 format
-            var publicKey64Str;
+            var publicKey64Str = new byte[64];
             using (var privateKey = Key.Import(SignatureAlgorithm.Ed25519, privateKeySeed, KeyBlobFormat.RawPrivateKey))
-            using (var publicKey = privateKey.PublicKey)
             {
+                var publicKey = privateKey.PublicKey;
                 var publicKeyBytes = publicKey.Export(KeyBlobFormat.RawPublicKey);
 
-                publicKey64Str = Convert.ToBase64String(publicKeyBytes);
+                publicKey64Str = publicKeyBytes;
             }
+
+
             return publicKey64Str;
         }
     }

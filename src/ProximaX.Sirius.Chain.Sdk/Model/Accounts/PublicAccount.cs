@@ -59,7 +59,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <summary>
         ///     version
         /// </summary>
-        public string version { get; }
+        public static string version { get; }
 
         /// <summary>
         ///     Creates from public key
@@ -81,7 +81,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public bool VerifySignature(byte[] data, byte[] signature)
         {
-            var dScheme = getDerivationSchemeFromAccVersion(this.version);
+            var dScheme = getDerivationSchemeFromAccVersion(Int32.Parse(PublicAccount.version));
             var pk = CryptoBytes.FromHexString(PublicKey);
             return Ed25519.Verify(signature, data, pk, dScheme);
         }
@@ -91,6 +91,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// Verify a signature
         /// </summary>
         /// <param name="data">The data to verify</param>
+        
         /// <param name="signature">The signature to verify</param>
         /// <param name="privateKey">The signer public key</param>
         /// <returns></returns>

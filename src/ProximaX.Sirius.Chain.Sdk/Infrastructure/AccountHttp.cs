@@ -504,7 +504,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Infrastructure
 
             return Observable.FromAsync(async ar => await route.GetJsonAsync<MultisigAccountInfoDTO>())
                 .Select(info => new MultisigAccountInfo(
-                    new PublicAccount(info.Multisig.Account, networkType.Wait()),
+                    new PublicAccount(info.Multisig.Account, networkType.Wait(), this.version),
                     info.Multisig.MinApproval.Value,
                     info.Multisig.MinRemoval.Value,
                     info.Multisig.Cosignatories.Select(cos => new PublicAccount(
