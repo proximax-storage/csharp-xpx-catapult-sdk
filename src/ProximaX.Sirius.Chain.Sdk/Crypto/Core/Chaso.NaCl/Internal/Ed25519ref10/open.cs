@@ -35,13 +35,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
             if ((sig[sigoffset + 63] & 224) != 0) return false;
             if (GroupOperations.ge_frombytes_negate_vartime(out A, pk, pkoffset) != 0)
                 return false;
-            var hash;
-            if(dScheme == DerivationScheme.Ed25519Sha3){
-                hash= new Sha3Digest(512);
-            }else if(dScheme == DerivationScheme.Ed25519Sha2){
-                hash = new SHA256Digest();
-            }
-
+            var hash = (dScheme == DerivationScheme.Ed25519Sha3)? new Sha3Digest(512) : new Sha256Digest();
 
             hash.BlockUpdate(sig, sigoffset, 32);
             hash.BlockUpdate(pk, pkoffset, 32);

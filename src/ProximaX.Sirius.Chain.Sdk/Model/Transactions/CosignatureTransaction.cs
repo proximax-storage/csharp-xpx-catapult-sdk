@@ -50,7 +50,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
             var bytes = TransactionToCosign.TransactionInfo.Hash.FromHex();
-            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.version);
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.Version);
             var signatureBytes = TransactionExtensions.SignHash(account.KeyPair, bytes, dScheme);
 
             return new CosignatureSignedTransaction(TransactionToCosign.TransactionInfo.Hash,

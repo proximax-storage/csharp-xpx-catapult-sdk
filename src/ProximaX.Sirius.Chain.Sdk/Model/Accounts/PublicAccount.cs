@@ -33,7 +33,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
         /// <param name="version"></param>
-        public PublicAccount(string publicKey, NetworkType networkType, int version)
+        public PublicAccount(string publicKey, NetworkType networkType, int version = 1)
         {
             Guard.NotNullOrEmpty(publicKey, nameof(publicKey));
 
@@ -44,6 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Address = Address.CreateFromPublicKey(publicKey, networkType, version);
             PublicKey = publicKey;
+            Version = version;
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <summary>
         ///     version
         /// </summary>
-        public string version { get; }
+        public int Version { get; }
 
         /// <summary>
         ///     Creates from public key
@@ -68,7 +69,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="networkType"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, int version)
+        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, int version = 1)
         {
             return new PublicAccount(publicKey, networkType, version);
         }
@@ -81,7 +82,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public bool VerifySignature(byte[] data, byte[] signature)
         {
-            var dScheme = getDerivationSchemeFromAccVersion(this.version);
+            var dScheme = getDerivationSchemeFromAccVersion(Version);
             var pk = CryptoBytes.FromHexString(PublicKey);
             return Ed25519.Verify(signature, data, pk, dScheme);
         }
@@ -96,13 +97,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public static bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
         {
-            var dScheme = getDerivationSchemeFromAccVersion(this.version);
+            var dScheme = getDerivationSchemeFromAccVersion(Version);
             return Ed25519.Verify(signature, data, publicKey, dScheme);
         }
 
         public override string ToString()
         {
-            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(version)}: {version}";
+            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(Version)}: {Version}";
         }
 
         public static int getAccVersionFromDerivationScheme(DerivationScheme dScheme){

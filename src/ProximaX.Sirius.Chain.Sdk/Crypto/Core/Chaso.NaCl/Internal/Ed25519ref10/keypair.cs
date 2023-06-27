@@ -31,7 +31,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
             if(dScheme == DerivationScheme.Ed25519Sha3){
                 digest = new Sha3Digest(512); //new  // tried and failed -> new Sha3Digest(512);
             }else if(dScheme == DerivationScheme.Ed25519Sha2){
-                digest = new SHA256Digest();
+                digest = new Sha256Digest();
             }
             
             var h = new byte[64]; // byte[] ha = Sha512.Hash(sk, skoffset, 32);//ToDo: REMOVE alloc

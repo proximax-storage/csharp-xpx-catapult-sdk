@@ -116,9 +116,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             Buffer.BlockCopy(Bytes, 100, signingBytes, 32, Bytes.Length - 100);
 
-            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType, account.version);
+            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType, account.Version);
 
-            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.version);
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.Version);
 
             var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes, dScheme);
 

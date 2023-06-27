@@ -62,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
                     CryptoBytes.Wipe(s);
                 }
             }else if(dScheme == DerivationScheme.Ed25519Sha2){
-                var hasher2 = new SHA256Digest();
+                var hasher2 = new Sha256Digest();
                 {
                     hasher2.BlockUpdate(sk, 0, 32);
                     hasher2.DoFinal(az, 0);

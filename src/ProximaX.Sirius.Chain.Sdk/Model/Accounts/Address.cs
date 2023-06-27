@@ -123,16 +123,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType, int version)
+        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType, int version = 1)
         {
             // step 1) sha-3(256) public key
-            var digestSha;
-            if(version == 1){
-                digestSha = new Sha3Digest(256);
-            }else{
-                digestSha = new SHA256Digest();
-            }
-            
+            var digestSha = (version == 1) ? new Sha3Digest(256) : new Sha256Digest();
             var stepOne = new byte[Key];
 
             digestSha.BlockUpdate(publicKey.FromHex(), 0, Key);
