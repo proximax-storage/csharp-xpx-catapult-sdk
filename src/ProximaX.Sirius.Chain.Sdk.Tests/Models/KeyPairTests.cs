@@ -37,7 +37,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             
             var publicAccount = PublicAccount.CreateFromPublicKey(pubKey, NetworkType.MIJIN_TEST);
             
-            var isValid = publicAccount.VerifySignature(data, signature);
+            var isValid = publicAccount.VerifySignature(data, signature, publicAccount);
             
             isValid.Should().BeTrue();
 
@@ -63,7 +63,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
             var publicAccount = PublicAccount.CreateFromPublicKey(pubKey, NetworkType.MIJIN_TEST);
 
-            var isValid = publicAccount.VerifySignature(encryptedData, sig2);
+            var isValid = publicAccount.VerifySignature(encryptedData, sig2, publicAccount);
 
             isValid.Should().BeTrue();
 
@@ -89,7 +89,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
             var publicAccount = PublicAccount.CreateFromPublicKey(pubKey, NetworkType.MIJIN_TEST);
 
-            var isValid = publicAccount.VerifySignature(encryptedData, sig2);
+            var isValid = publicAccount.VerifySignature(encryptedData, sig2, publicAccount);
 
             isValid.Should().BeTrue();
 

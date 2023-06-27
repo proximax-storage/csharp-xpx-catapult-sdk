@@ -17,7 +17,6 @@ using System;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
-using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Nsec.Cryptography;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
