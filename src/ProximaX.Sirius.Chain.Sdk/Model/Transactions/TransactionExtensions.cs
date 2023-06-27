@@ -94,8 +94,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             Array.Copy(keyPair.PublicKey, 0, sk, 32, 32);
 
-            // Ed25519.crypto_sign2(sig, Subset(payload, 4 + 64 + 32, payload.Length - (4 + 64 + 32)).ToArray(), sk, 32);
-            Ed25519.crypto_sign2(sig, payload, sk, 32);
+            // Ed25519.crypto_sign(sig, Subset(payload, 4 + 64 + 32, payload.Length - (4 + 64 + 32)).ToArray(), sk, 32);
+            Ed25519.crypto_sign(sig, payload, sk, 32);
             CryptoBytes.Wipe(sk);
 
             return sig;*/

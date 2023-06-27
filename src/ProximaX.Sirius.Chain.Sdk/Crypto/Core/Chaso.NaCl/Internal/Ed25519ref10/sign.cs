@@ -20,7 +20,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
 {
 	internal static partial class Ed25519Operations
 	{
-		public static void crypto_sign2(
+		public static void crypto_sign(
 			byte[] sig, int sigoffset,
 			byte[] m, int moffset, int mlen,
 			byte[] sk, int skoffset,
@@ -92,7 +92,6 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
                     CryptoBytes.Wipe(s);
                 }
             }
-            
         }
 	}
 }

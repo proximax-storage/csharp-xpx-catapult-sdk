@@ -62,7 +62,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl
                 throw new ArgumentException("expandedPrivateKey.Count");
             if (message.Array == null)
                 throw new ArgumentNullException("message.Array");
-            Ed25519Operations.crypto_sign2(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, expandedPrivateKey.Array, expandedPrivateKey.Offset, dScheme);
+            Ed25519Operations.crypto_sign(signature.Array, signature.Offset, message.Array, message.Offset, message.Count, expandedPrivateKey.Array, expandedPrivateKey.Offset, dScheme);
         }
 
         public static byte[] Sign(byte[] message, byte[] expandedPrivateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)

@@ -96,7 +96,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Array.Copy(PublicKey, 0, sk, 32, 32);
 
-            Ed25519.crypto_sign2(sig, data, sk, 32);
+            Ed25519.crypto_sign(sig, data, sk, 32);
 
             CryptoBytes.Wipe(sk);
 
