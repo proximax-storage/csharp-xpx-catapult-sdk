@@ -80,26 +80,27 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="data">The data to verify</param>
         /// <param name="signature">The signature to verify</param>
         /// <returns></returns>
-        public bool VerifySignature(byte[] data, byte[] signature)
+        public bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount)
         {
             var dScheme = getDerivationSchemeFromAccVersion(Version);
-            var pk = CryptoBytes.FromHexString(PublicKey);
+            // var pk = CryptoBytes.FromHexString(PublicKey);
+            var pk = CryptoBytes.FromHexString(PublicAccount.PublicKey);
             return Ed25519.Verify(signature, data, pk, dScheme);
         }
 
 
-        /// <summary>
-        /// Verify a signature
-        /// </summary>
-        /// <param name="data">The data to verify</param>
-        /// <param name="signature">The signature to verify</param>
-        /// <param name="privateKey">The signer public key</param>
-        /// <returns></returns>
-        public static bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount, byte[] publicKey)
-        {
-            var dScheme = getDerivationSchemeFromAccVersion(PublicAccount.Version);
-            return Ed25519.Verify(signature, data, publicKey, dScheme);
-        }
+        // /// <summary>
+        // /// Verify a signature
+        // /// </summary>
+        // /// <param name="data">The data to verify</param>
+        // /// <param name="signature">The signature to verify</param>
+        // /// <param name="privateKey">The signer public key</param>
+        // /// <returns></returns>
+        // public static bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount)
+        // {
+        //     var dScheme = getDerivationSchemeFromAccVersion(PublicAccount.Version);
+        //     return Ed25519.Verify(signature, data, PublicAccount.PublicKey, dScheme);
+        // }
 
         public override string ToString()
         {

@@ -103,7 +103,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             var networkType = await Client.NetworkHttp.GetNetworkType();
 
-            return Account.CreateFromPrivateKey(privateKey, networkType);
+            return Account.CreateFromPrivateKeyV2(privateKey, networkType);
 
         }
 

@@ -25,9 +25,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public async Task Should_Serialize_And_Sign_TransactionAsync()
         {
-            var account2 = Account.CreateFromPrivateKey("D54AC0CB0FF50FB44233782B3A6B5FDE2F1C83B9AE2F1352119F93713F3AB923", NetworkType.TEST_NET);
+            var account2 = Account.CreateFromPrivateKeyV2("D54AC0CB0FF50FB44233782B3A6B5FDE2F1C83B9AE2F1352119F93713F3AB923", NetworkType.TEST_NET);
             // var nonce = MosaicNonce.CreateRandom();
-            var account = Account.CreateFromPrivateKey("feab2970d23c9a6f0170adf9b846575831c63084bcf1f0d7e70644818c546017", NetworkType.TEST_NET);
+            var account = Account.CreateFromPrivateKeyV2("feab2970d23c9a6f0170adf9b846575831c63084bcf1f0d7e70644818c546017", NetworkType.TEST_NET);
             // var mosaicId = MosaicId.CreateFromNonce(nonce, account.PublicAccount.PublicKey);
             var mosaicToTransfer = NetworkCurrencyMosaic.CreateRelative(1000);
 
@@ -54,7 +54,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Serialize_And_Sign_TransactionModifyMultisigAccountTransaction()
         {
-            var account = Account.CreateFromPrivateKey("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
+            var account = Account.CreateFromPrivateKeyV2("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
             var generationHash = "AC87FDA8FD94B72F3D0790A7D62F248111BD5E37B95B16E4216DA99C212530A5";
             var network = NetworkType.TEST_NET;
             var coginatory1 = Account.GenerateNewAccount(network);
@@ -84,7 +84,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Serialize_And_Sign_TransactionModifyMultisigAccountTransaction_AggregateBonded()
         {
-            var account = Account.CreateFromPrivateKey("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
+            var account = Account.CreateFromPrivateKeyV2("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
             var generationHash = "AC87FDA8FD94B72F3D0790A7D62F248111BD5E37B95B16E4216DA99C212530A5";
             var network = NetworkType.TEST_NET;
             var multiSigAccount = Account.GenerateNewAccount(network);
@@ -123,7 +123,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Serialize_And_Sign_LockFundTransaction()
         {
-            var account = Account.CreateFromPrivateKey("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
+            var account = Account.CreateFromPrivateKeyV2("26b64cb10f005e5988a36744ca19e20d835ccc7c105aaa5f3b212da593180930", NetworkType.TEST_NET);
             var generationHash = "AC87FDA8FD94B72F3D0790A7D62F248111BD5E37B95B16E4216DA99C212530A5";
             var network = NetworkType.TEST_NET;
             var multiSigAccount = Account.GenerateNewAccount(network);

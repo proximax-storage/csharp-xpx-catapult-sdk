@@ -125,7 +125,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_New_Account_Using_Private_Key()
         {
-            var account = Account.CreateFromPrivateKey(Constants.PRIVATE_KEY, NetworkType.MIJIN_TEST);
+            var account = Account.CreateFromPrivateKeyV2(Constants.PRIVATE_KEY, NetworkType.MIJIN_TEST);
 
             account.Address.Plain.Should().NotBeEmpty();
             account.PrivateKey.Should().NotBeEmpty();
