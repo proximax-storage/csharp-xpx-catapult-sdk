@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static Account CreateFromPrivateKeyV1(string privateKey, NetworkType networkType)
         {
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha3);
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, 1);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
             return new Account(address, keyPair, 1);
         }
@@ -101,7 +101,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static Account CreateFromPrivateKeyV2(string privateKey, NetworkType networkType)
         {
             var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha2);
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, 2);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
             return new Account(address, keyPair, 2);
         }
@@ -125,7 +125,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestSha3.DoFinal(bytes, 0);
 
             var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower(), PublicAccount.getDerivationSchemeFromAccVersion(version));
-            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType, version);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
             return new Account(address, keyPair, version);
         }

@@ -53,7 +53,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
                 CryptoBytes.Wipe(checkr);
                 return result;
             }else{
-                var hash = new Sha256Digest();
+                var hash = new Sha512Digest();
                 hash.BlockUpdate(sig, sigoffset, 32);
                 hash.BlockUpdate(pk, pkoffset, 32);
                 hash.BlockUpdate(m, moffset, mlen);

@@ -40,7 +40,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
                 for (i = 0; i < 32; ++i) sk[skoffset + 32 + i] = pk[pkoffset + i];
                 CryptoBytes.Wipe(h);
             }else if(dScheme == DerivationScheme.Ed25519Sha2){
-                var digest = new Sha256Digest();
+                var digest = new Sha512Digest();
                 var h = new byte[64]; // byte[] ha = Sha512.Hash(sk, skoffset, 32);//ToDo: REMOVE alloc
                 digest.BlockUpdate(sk, skoffset, 32); // new
                 digest.DoFinal(h, 0); // new

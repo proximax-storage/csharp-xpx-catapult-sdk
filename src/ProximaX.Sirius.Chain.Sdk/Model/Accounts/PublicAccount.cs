@@ -42,7 +42,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Guard.NotEqualTo(publicKey.Length, 64, new ArgumentOutOfRangeException(nameof(publicKey)));
 
-            Address = Address.CreateFromPublicKey(publicKey, networkType, version);
+            Address = Address.CreateFromPublicKey(publicKey, networkType);
             PublicKey = publicKey;
             Version = version;
         }
@@ -82,7 +82,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <returns></returns>
         public bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount)
         {
-            var dScheme = getDerivationSchemeFromAccVersion(Version);
+            var dScheme = getDerivationSchemeFromAccVersion(PublicAccount.Version);
             // var pk = CryptoBytes.FromHexString(PublicKey);
             var pk = CryptoBytes.FromHexString(PublicAccount.PublicKey);
             return Ed25519.Verify(signature, data, pk, dScheme);

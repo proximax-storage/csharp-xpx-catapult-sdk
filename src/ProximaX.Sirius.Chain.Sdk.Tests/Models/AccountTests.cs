@@ -93,7 +93,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Create_New_Address_From_Public_Key_NetworkType_MIJIN_TEST()
         {
-            var address = Address.CreateFromPublicKey(Constants.PUBLIC_TEST_PUBLIC_KEY, NetworkType.TEST_NET, 1);
+            var address = Address.CreateFromPublicKey(Constants.PUBLIC_TEST_PUBLIC_KEY, NetworkType.TEST_NET);
 
             address.NetworkType.Should().BeEquivalentTo(NetworkType.TEST_NET);
         }
@@ -112,7 +112,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
         [Fact]
         public void Should_Create_New_Account_Using_Address_KeyPair()
         {
-            var address = Address.CreateFromPublicKey(Constants.MIJIN_TEST_PUBLIC_KEY, NetworkType.TEST_NET, 1);
+            var address = Address.CreateFromPublicKey(Constants.MIJIN_TEST_PUBLIC_KEY, NetworkType.TEST_NET);
             var keyPair = KeyPair.CreateFromPrivateKey(Constants.PRIVATE_KEY);
             var account = new Account(address, keyPair);
 

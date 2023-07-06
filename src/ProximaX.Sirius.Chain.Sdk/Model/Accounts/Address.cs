@@ -123,74 +123,40 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
         /// <returns></returns>
-        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType, int version = 1)
+        public static Address CreateFromPublicKey(string publicKey, NetworkType networkType)
         {
             // step 1) sha-3(256) public key
-            if(version == 1){
-                var digestSha = new Sha3Digest(256);
-                var stepOne = new byte[Key];
+            var digestSha = new Sha3Digest(256);
+            var stepOne = new byte[Key];
 
-                digestSha.BlockUpdate(publicKey.FromHex(), 0, Key);
-                digestSha.DoFinal(stepOne, 0);
+            digestSha.BlockUpdate(publicKey.FromHex(), 0, Key);
+            digestSha.DoFinal(stepOne, 0);
 
-                // step 2) perform ripemd160 on previous step
-                var digestRipeMd160 = new RipeMD160Digest();
-                var stepTwo = new byte[Ripemd160];
-                digestRipeMd160.BlockUpdate(stepOne, 0, Key);
-                digestRipeMd160.DoFinal(stepTwo, 0);
+            // step 2) perform ripemd160 on previous step
+            var digestRipeMd160 = new RipeMD160Digest();
+            var stepTwo = new byte[Ripemd160];
+            digestRipeMd160.BlockUpdate(stepOne, 0, Key);
+            digestRipeMd160.DoFinal(stepTwo, 0);
 
-                // step3) prepend network byte    
-                var stepThree = new[] {networkType.GetValueInByte()}.Concat(stepTwo).ToArray();
+            // step3) prepend network byte    
+            var stepThree = new[] {networkType.GetValueInByte()}.Concat(stepTwo).ToArray();
 
-                // step 4) perform sha3 on previous step
-                var stepFour = new byte[Key];
-                digestSha.BlockUpdate(stepThree, 0, Ripemd160 + 1);
-                digestSha.DoFinal(stepFour, 0);
+            // step 4) perform sha3 on previous step
+            var stepFour = new byte[Key];
+            digestSha.BlockUpdate(stepThree, 0, Ripemd160 + 1);
+            digestSha.DoFinal(stepFour, 0);
 
-                // step 5) retrieve checksum
-                var stepFive = new byte[Checksum];
-                Array.Copy(stepFour, 0, stepFive, 0, Checksum);
+            // step 5) retrieve checksum
+            var stepFive = new byte[Checksum];
+            Array.Copy(stepFour, 0, stepFive, 0, Checksum);
 
-                // step 6) append stepFive to result of stepThree
-                var stepSix = new byte[AddressDecoded];
-                Array.Copy(stepThree, 0, stepSix, 0, Ripemd160 + 1);
-                Array.Copy(stepFive, 0, stepSix, Ripemd160 + 1, Checksum);
+            // step 6) append stepFive to result of stepThree
+            var stepSix = new byte[AddressDecoded];
+            Array.Copy(stepThree, 0, stepSix, 0, Ripemd160 + 1);
+            Array.Copy(stepFive, 0, stepSix, Ripemd160 + 1, Checksum);
 
-                // step 7) return base 32 encode address byte array
-                return CreateFromRawAddress(stepSix.ToBase32String());
-            }else{
-                var digestSha = new Sha256Digest();
-                var stepOne = new byte[Key];
-
-                digestSha.BlockUpdate(publicKey.FromHex(), 0, Key);
-                digestSha.DoFinal(stepOne, 0);
-
-                // step 2) perform ripemd160 on previous step
-                var digestRipeMd160 = new RipeMD160Digest();
-                var stepTwo = new byte[Ripemd160];
-                digestRipeMd160.BlockUpdate(stepOne, 0, Key);
-                digestRipeMd160.DoFinal(stepTwo, 0);
-
-                // step3) prepend network byte    
-                var stepThree = new[] {networkType.GetValueInByte()}.Concat(stepTwo).ToArray();
-
-                // step 4) perform sha3 on previous step
-                var stepFour = new byte[Key];
-                digestSha.BlockUpdate(stepThree, 0, Ripemd160 + 1);
-                digestSha.DoFinal(stepFour, 0);
-
-                // step 5) retrieve checksum
-                var stepFive = new byte[Checksum];
-                Array.Copy(stepFour, 0, stepFive, 0, Checksum);
-
-                // step 6) append stepFive to result of stepThree
-                var stepSix = new byte[AddressDecoded];
-                Array.Copy(stepThree, 0, stepSix, 0, Ripemd160 + 1);
-                Array.Copy(stepFive, 0, stepSix, Ripemd160 + 1, Checksum);
-
-                // step 7) return base 32 encode address byte array
-                return CreateFromRawAddress(stepSix.ToBase32String());
-            }
+            // step 7) return base 32 encode address byte array
+            return CreateFromRawAddress(stepSix.ToBase32String());
         }
 
 
