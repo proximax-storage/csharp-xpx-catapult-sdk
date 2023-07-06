@@ -138,7 +138,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestRipeMd160.BlockUpdate(stepOne, 0, Key);
             digestRipeMd160.DoFinal(stepTwo, 0);
 
-            // step3) prepend network byte    
+            // step3) prepend network byte
             var stepThree = new[] {networkType.GetValueInByte()}.Concat(stepTwo).ToArray();
 
             // step 4) perform sha3 on previous step

@@ -53,7 +53,5 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             var version = ver.GetVersionValue();
             version.Should().Be(expectedValue);
         }
-
-       
     }
 }

@@ -98,7 +98,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             var keyPair = KeyPair.CreateFromPrivateKey(pk);
             var message = "This is a test data";
             var data = Encoding.UTF8.GetBytes(message);
-          
+
             var encryptedData = CryptoUtils.Sha3_256(data);
             var encryptedHex = CryptoBytes.ToHexStringUpper(encryptedData);
 
@@ -116,6 +116,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
         }
 
+        [Fact]
         public void Should_Sign_Data_And_Verify_Signature_SHA2_512()
         {
             var pk = "5B0E3FA5D3B49A79022D7C1E121BA1CBBF4DB5821F47AB8C708EF88DEFC29BFE";
@@ -123,8 +124,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
             var keyPair = KeyPair.CreateFromPrivateKey(pk, DerivationScheme.Ed25519Sha2);
             var message = "This is a test data";
             var data = Encoding.UTF8.GetBytes(message);
-          
-            var encryptedData = CryptoUtils.Sha3_256(data);
+
+            var encryptedData = CryptoUtils.Sha2_512(data);
             var encryptedHex = CryptoBytes.ToHexStringUpper(encryptedData);
 
             var signature = keyPair.Sign(encryptedData, DerivationScheme.Ed25519Sha2);
