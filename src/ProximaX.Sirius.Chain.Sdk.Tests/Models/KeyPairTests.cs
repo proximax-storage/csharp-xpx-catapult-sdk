@@ -116,7 +116,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
         }
 
-        [Fact]
+        [Fact]        
         public void Should_Sign_Data_And_Verify_Signature_SHA2_512()
         {
             var pk = "5B0E3FA5D3B49A79022D7C1E121BA1CBBF4DB5821F47AB8C708EF88DEFC29BFE";
@@ -134,7 +134,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.Models
 
             var sig2 = CryptoBytes.FromHexString(sigHex);
 
-            var publicAccount = PublicAccount.CreateFromPublicKey(pubKey, NetworkType.MIJIN_TEST);
+            var publicAccount = PublicAccount.CreateFromPublicKey(pubKey, NetworkType.MIJIN_TEST, 2);
 
             var isValid = publicAccount.VerifySignature(encryptedData, sig2, publicAccount);
 
