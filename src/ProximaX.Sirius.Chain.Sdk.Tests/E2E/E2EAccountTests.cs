@@ -35,7 +35,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         {
             // var aliceAccount = await Fixture.GenerateAccountWithCurrency(100000);
 
-            var aliceAccount = Account.CreateFromPrivateKey("101a4dfcffe3d5abddee535c0c7fa7bb386b99eb7c19f0c73cdc3837c5844477", Fixture.NetworkType);
+            var aliceAccount = Account.CreateFromPrivateKeyV2("101a4dfcffe3d5abddee535c0c7fa7bb386b99eb7c19f0c73cdc3837c5844477", Fixture.NetworkType);
 
             var tx = Fixture.SiriusWebSocketClient.Listener.ConfirmedTransactionsGiven(aliceAccount.Address).Take(1);
 
@@ -183,7 +183,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
         public async Task Should_Add_Account_Filter_With_Allow_Entity_Type()
         {
             // var company = await Fixture.GenerateAccountWithCurrency(10000);
-            var company = Account.CreateFromPrivateKey("101a4dfcffe3d5abddee535c0c7fa7bb386b99eb7c19f0c73cdc3837c5844477", Fixture.NetworkType);
+            var company = Account.CreateFromPrivateKeyV2("101a4dfcffe3d5abddee535c0c7fa7bb386b99eb7c19f0c73cdc3837c5844477", Fixture.NetworkType);
 
             Log.WriteLine($"Company Account {company.Address.Plain} \r\n Private Key: {company.PrivateKey} \r\n Public Key {company.PublicKey}");
             //    var allowedMosaic = await Fixture.CreateMosaic(company);

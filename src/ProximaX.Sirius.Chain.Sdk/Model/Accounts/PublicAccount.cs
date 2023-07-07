@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using GuardNet;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 {
@@ -31,7 +32,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
-        public PublicAccount(string publicKey, NetworkType networkType)
+        /// <param name="version"></param>
+        public PublicAccount(string publicKey, NetworkType networkType, int version = 1)
         {
             Guard.NotNullOrEmpty(publicKey, nameof(publicKey));
 
@@ -42,6 +44,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Address = Address.CreateFromPublicKey(publicKey, networkType);
             PublicKey = publicKey;
+            Version = version;
         }
 
         /// <summary>
@@ -55,14 +58,20 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public string PublicKey { get; }
 
         /// <summary>
+        ///     version
+        /// </summary>
+        public int Version { get; }
+
+        /// <summary>
         ///     Creates from public key
         /// </summary>
         /// <param name="publicKey"></param>
         /// <param name="networkType"></param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType)
+        public static PublicAccount CreateFromPublicKey(string publicKey, NetworkType networkType, int version = 1)
         {
-            return new PublicAccount(publicKey, networkType);
+            return new PublicAccount(publicKey, networkType, version);
         }
 
         /// <summary>
@@ -71,28 +80,47 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="data">The data to verify</param>
         /// <param name="signature">The signature to verify</param>
         /// <returns></returns>
-        public bool VerifySignature(byte[] data, byte[] signature)
+        public bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount)
         {
-            var pk = CryptoBytes.FromHexString(PublicKey);
-            return Ed25519.Verify(signature, data, pk);
+            var dScheme = getDerivationSchemeFromAccVersion(PublicAccount.Version);
+            // var pk = CryptoBytes.FromHexString(PublicKey);
+            var pk = CryptoBytes.FromHexString(PublicAccount.PublicKey);
+            return Ed25519.Verify(signature, data, pk, dScheme);
         }
 
 
-        /// <summary>
-        /// Verify a signature
-        /// </summary>
-        /// <param name="data">The data to verify</param>
-        /// <param name="signature">The signature to verify</param>
-        /// <param name="privateKey">The signer public key</param>
-        /// <returns></returns>
-        public static bool VerifySignature(byte[] data, byte[] signature, byte[] publicKey)
-        {
-            return Ed25519.Verify(signature, data, publicKey);
-        }
+        // /// <summary>
+        // /// Verify a signature
+        // /// </summary>
+        // /// <param name="data">The data to verify</param>
+        // /// <param name="signature">The signature to verify</param>
+        // /// <param name="privateKey">The signer public key</param>
+        // /// <returns></returns>
+        // public static bool VerifySignature(byte[] data, byte[] signature, PublicAccount PublicAccount)
+        // {
+        //     var dScheme = getDerivationSchemeFromAccVersion(PublicAccount.Version);
+        //     return Ed25519.Verify(signature, data, PublicAccount.PublicKey, dScheme);
+        // }
 
         public override string ToString()
         {
-            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}";
+            return $"{nameof(Address)}: {Address}, {nameof(PublicKey)}: {PublicKey}, {nameof(Version)}: {Version}";
+        }
+
+        public static int getAccVersionFromDerivationScheme(DerivationScheme dScheme){
+            if(dScheme == DerivationScheme.Ed25519Sha2){
+                return 2;
+            }else{
+                return 1;
+            }
+        }
+
+        public static DerivationScheme getDerivationSchemeFromAccVersion(int version){
+            if(version == 1){
+                return DerivationScheme.Ed25519Sha3;
+            }else{
+                return DerivationScheme.Ed25519Sha2;
+            }
         }
     }
 }

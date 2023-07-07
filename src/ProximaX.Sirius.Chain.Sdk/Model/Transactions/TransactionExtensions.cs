@@ -73,9 +73,9 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="account">The account.</param>
         /// <param name="hash">The hash.</param>
         /// <returns>The signature.</returns>
-        public static byte[] SignHash(KeyPair account, byte[] hash)
+        public static byte[] SignHash(KeyPair account, byte[] hash, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
-            return account.Sign(hash);
+            return account.Sign(hash, dScheme);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         /// <param name="keyPair">The key pair.</param>
         /// <param name="payload">The payload.</param>
         /// <returns>The signature.</returns>
-        public static byte[] SignTransaction(KeyPair keyPair, byte[] payload)
+        public static byte[] SignTransaction(KeyPair keyPair, byte[] payload, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             /*
             var sig = new byte[64];
@@ -94,14 +94,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             Array.Copy(keyPair.PublicKey, 0, sk, 32, 32);
 
-            // Ed25519.crypto_sign2(sig, Subset(payload, 4 + 64 + 32, payload.Length - (4 + 64 + 32)).ToArray(), sk, 32);
-            Ed25519.crypto_sign2(sig, payload, sk, 32);
+            // Ed25519.crypto_sign(sig, Subset(payload, 4 + 64 + 32, payload.Length - (4 + 64 + 32)).ToArray(), sk, 32);
+            Ed25519.crypto_sign(sig, payload, sk, 32);
             CryptoBytes.Wipe(sk);
 
             return sig;*/
-            var sk = Ed25519.ExpandedPrivateKeyFromSeed(keyPair.PrivateKey);
+            var sk = Ed25519.ExpandedPrivateKeyFromSeed(keyPair.PrivateKey, dScheme);
 
-            var sig = Ed25519.Sign(payload, sk);
+            var sig = Ed25519.Sign(payload, sk, dScheme);
 
             return sig;
             

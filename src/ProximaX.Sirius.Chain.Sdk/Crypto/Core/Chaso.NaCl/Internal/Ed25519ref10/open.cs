@@ -14,7 +14,9 @@
 // limitations under the License.
 
 using Org.BouncyCastle.Crypto.Digests;
+
 using System;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
 {
     internal static partial class Ed25519Operations
@@ -23,7 +25,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
         public static bool crypto_sign_verify(
             byte[] sig, int sigoffset,
             byte[] m, int moffset, int mlen,
-            byte[] pk, int pkoffset)
+            byte[] pk, int pkoffset, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
       
             byte[] checkr = new byte[32];
@@ -33,25 +35,41 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
             if ((sig[sigoffset + 63] & 224) != 0) return false;
             if (GroupOperations.ge_frombytes_negate_vartime(out A, pk, pkoffset) != 0)
                 return false;
-            var hash = new Sha3Digest(512);
+            if(dScheme == DerivationScheme.Ed25519Sha3){
+                var hash = new Sha3Digest(512);
+                hash.BlockUpdate(sig, sigoffset, 32);
+                hash.BlockUpdate(pk, pkoffset, 32);
+                hash.BlockUpdate(m, moffset, mlen);
+                var b = new byte[64];
+                hash.DoFinal(b, 0);
 
-            hash.BlockUpdate(sig, sigoffset, 32);
-            hash.BlockUpdate(pk, pkoffset, 32);
-            hash.BlockUpdate(m, moffset, mlen);
-            var b = new byte[64];
-            hash.DoFinal(b, 0);
+                ScalarOperations.sc_reduce(b);
+                var sm32 = new byte[32];//todo: remove allocation
+                Array.Copy(sig, sigoffset + 32, sm32, 0, 32);
+                GroupOperations.ge_double_scalarmult_vartime(out R, b, ref A, sm32);
+                GroupOperations.ge_tobytes(checkr, 0, ref R);
+                var result = CryptoBytes.ConstantTimeEquals(checkr, 0, sig, sigoffset, 32);
+                CryptoBytes.Wipe(b);
+                CryptoBytes.Wipe(checkr);
+                return result;
+            }else{
+                var hash = new Sha512Digest();
+                hash.BlockUpdate(sig, sigoffset, 32);
+                hash.BlockUpdate(pk, pkoffset, 32);
+                hash.BlockUpdate(m, moffset, mlen);
+                var b = new byte[64];
+                hash.DoFinal(b, 0);
 
-
-            ScalarOperations.sc_reduce(b);
-
-            var sm32 = new byte[32];//todo: remove allocation
-            Array.Copy(sig, sigoffset + 32, sm32, 0, 32);
-            GroupOperations.ge_double_scalarmult_vartime(out R, b, ref A, sm32);
-            GroupOperations.ge_tobytes(checkr, 0, ref R);
-            var result = CryptoBytes.ConstantTimeEquals(checkr, 0, sig, sigoffset, 32);
-            CryptoBytes.Wipe(b);
-            CryptoBytes.Wipe(checkr);
-            return result;
+                ScalarOperations.sc_reduce(b);
+                var sm32 = new byte[32];//todo: remove allocation
+                Array.Copy(sig, sigoffset + 32, sm32, 0, 32);
+                GroupOperations.ge_double_scalarmult_vartime(out R, b, ref A, sm32);
+                GroupOperations.ge_tobytes(checkr, 0, ref R);
+                var result = CryptoBytes.ConstantTimeEquals(checkr, 0, sig, sigoffset, 32);
+                CryptoBytes.Wipe(b);
+                CryptoBytes.Wipe(checkr);
+                return result;
+            }
         }
     }
 }

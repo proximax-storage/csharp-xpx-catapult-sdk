@@ -41,6 +41,15 @@ namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core
             return temp;
         }
 
+        public static byte[] Sha2_512(byte[] bytes)
+        {
+            var temp = new byte[64];
+            var digest = new Sha512Digest();
+            digest.BlockUpdate(bytes, 0, bytes.Length);
+            digest.DoFinal(temp, 0);
+            return temp;
+        }
+
         /// <summary>
         ///     Hash an array of bytes using Sha3 256 algorithm.
         /// </summary>

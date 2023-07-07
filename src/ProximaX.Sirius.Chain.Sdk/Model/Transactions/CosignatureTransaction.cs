@@ -16,6 +16,7 @@ using System;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 {
@@ -49,7 +50,8 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
             var bytes = TransactionToCosign.TransactionInfo.Hash.FromHex();
-            var signatureBytes = TransactionExtensions.SignHash(account.KeyPair, bytes);
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.Version);
+            var signatureBytes = TransactionExtensions.SignHash(account.KeyPair, bytes, dScheme);
 
             return new CosignatureSignedTransaction(TransactionToCosign.TransactionInfo.Hash,
                 signatureBytes.ToHexLower(), account.PublicKey);

@@ -103,7 +103,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
         public SignedTransaction SignWith(Account account, string generationHash)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
-            
+
             var generationHashBytes = generationHash.DecodeHexString();
             //Org.BouncyCastle.Utilities.Encoders.Hex.Decode(generationHash);
             ///var testHash = generationHash.DecodeHexString();
@@ -116,9 +116,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
 
             Buffer.BlockCopy(Bytes, 100, signingBytes, 32, Bytes.Length - 100);
 
-            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType);
+            Signer = PublicAccount.CreateFromPublicKey(account.KeyPair.PublicKeyString, NetworkType, account.Version);
 
-            var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes);
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(account.Version);
+
+            var signature = TransactionExtensions.SignTransaction(account.KeyPair, signingBytes, dScheme);
 
             var payload = new byte[Bytes.Length];
 

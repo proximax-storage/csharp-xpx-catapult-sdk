@@ -142,6 +142,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             if (initiatorAccount == null) throw new ArgumentNullException(nameof(initiatorAccount));
             if (cosignatories == null) throw new ArgumentNullException(nameof(cosignatories));
 
+            var dScheme = PublicAccount.getDerivationSchemeFromAccVersion(initiatorAccount.Version);
             var signedTransaction = SignWith(initiatorAccount, generationHash);
             var payload = signedTransaction.Payload.FromHex();
 
@@ -149,13 +150,14 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Transactions
             {
                 var bytes = signedTransaction.Hash.FromHex();
 
-                var signatureBytes = TransactionExtensions.SignHash(cosignatory.KeyPair, bytes);
+                var signatureBytes = TransactionExtensions.SignHash(cosignatory.KeyPair, bytes, dScheme);
 
                 payload = payload.Concat(cosignatory.KeyPair.PublicKey.Concat(signatureBytes)).ToArray();
 
                 Cosignatures.Add(new AggregateTransactionCosignature(signatureBytes.ToHexLower(),
                     new PublicAccount(cosignatory.KeyPair.PublicKey.ToHexLower(),
-                        initiatorAccount.Address.NetworkType)));
+                        initiatorAccount.Address.NetworkType,
+                        initiatorAccount.Version)));
             }
 
             payload = BitConverter.GetBytes(payload.Length).Concat(payload.Take(4, payload.Length - 4).ToArray())

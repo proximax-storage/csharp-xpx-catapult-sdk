@@ -126,11 +126,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public static Address CreateFromPublicKey(string publicKey, NetworkType networkType)
         {
             // step 1) sha-3(256) public key
-            var digestSha3 = new Sha3Digest(256);
+            var digestSha = new Sha3Digest(256);
             var stepOne = new byte[Key];
 
-            digestSha3.BlockUpdate(publicKey.FromHex(), 0, Key);
-            digestSha3.DoFinal(stepOne, 0);
+            digestSha.BlockUpdate(publicKey.FromHex(), 0, Key);
+            digestSha.DoFinal(stepOne, 0);
 
             // step 2) perform ripemd160 on previous step
             var digestRipeMd160 = new RipeMD160Digest();
@@ -138,13 +138,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestRipeMd160.BlockUpdate(stepOne, 0, Key);
             digestRipeMd160.DoFinal(stepTwo, 0);
 
-            // step3) prepend network byte    
+            // step3) prepend network byte
             var stepThree = new[] {networkType.GetValueInByte()}.Concat(stepTwo).ToArray();
 
             // step 4) perform sha3 on previous step
             var stepFour = new byte[Key];
-            digestSha3.BlockUpdate(stepThree, 0, Ripemd160 + 1);
-            digestSha3.DoFinal(stepFour, 0);
+            digestSha.BlockUpdate(stepThree, 0, Ripemd160 + 1);
+            digestSha.DoFinal(stepFour, 0);
 
             // step 5) retrieve checksum
             var stepFive = new byte[Checksum];

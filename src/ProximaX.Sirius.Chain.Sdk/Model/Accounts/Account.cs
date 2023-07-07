@@ -15,7 +15,9 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Org.BouncyCastle.Crypto.Digests;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
+using ProximaX.Sirius.Chain.Sdk.Model.Accounts;
 using ProximaX.Sirius.Chain.Sdk.Model.Blockchain;
 using ProximaX.Sirius.Chain.Sdk.Model.Transactions;
 
@@ -31,11 +33,13 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="address">The address.</param>
         /// <param name="keyPair">The key pair.</param>
-        public Account(Address address, KeyPair keyPair)
+        /// <param name="version">The account version.</param>
+        public Account(Address address, KeyPair keyPair, int version = 1)
         {
             Address = address;
             KeyPair = keyPair;
-            PublicAccount = new PublicAccount(keyPair.PublicKeyString, address.NetworkType);
+            Version = version;
+            PublicAccount = new PublicAccount(keyPair.PublicKeyString, address.NetworkType, version);
         }
 
         /// <summary>
@@ -43,10 +47,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="keyPair">The address.</param>
         /// <param name="networkType">The key pair.</param>
-        public Account(KeyPair keyPair, NetworkType networkType)
+        public Account(KeyPair keyPair, NetworkType networkType, int version = 1)
         {
             KeyPair = keyPair;
-            PublicAccount = new PublicAccount(PublicKey, networkType);
+            PublicAccount = new PublicAccount(PublicKey, networkType, version);
         }
 
         /// <summary>
@@ -58,6 +62,11 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         ///     The account keyPair, public and private key.
         /// </summary>
         public KeyPair KeyPair { get; }
+
+        /// <summary>
+        ///     The account version.
+        /// </summary>
+        public int Version { get; }
 
         /// <summary>
         ///     The private key
@@ -81,20 +90,29 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="privateKey">The private key.</param>
         /// <param name="networkType">Type of the network.</param>
         /// <returns>Account</returns>
-        public static Account CreateFromPrivateKey(string privateKey, NetworkType networkType)
+        public static Account CreateFromPrivateKeyV1(string privateKey, NetworkType networkType)
         {
-            var keyPair = KeyPair.CreateFromPrivateKey(privateKey);
+            var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha3);
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
-            return new Account(address, keyPair);
+            return new Account(address, keyPair, 1);
+        }
+
+        public static Account CreateFromPrivateKeyV2(string privateKey, NetworkType networkType)
+        {
+            var keyPair = KeyPair.CreateFromPrivateKey(privateKey, DerivationScheme.Ed25519Sha2);
+            var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
+
+            return new Account(address, keyPair, 2);
         }
 
         /// <summary>
         ///     Generates a new account
         /// </summary>
         /// <param name="networkType">The network type</param>
+        /// <param name="version">The account version</param>
         /// <returns>Account</returns>
-        public static Account GenerateNewAccount(NetworkType networkType)
+        public static Account GenerateNewAccount(NetworkType networkType, int version = 1)
         {
             var provider = new RNGCryptoServiceProvider();
 
@@ -106,10 +124,10 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
             digestSha3.BlockUpdate(randomBytes, 0, 32);
             digestSha3.DoFinal(bytes, 0);
 
-            var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower());
+            var keyPair = KeyPair.CreateFromPrivateKey(bytes.ToHexLower(), PublicAccount.getDerivationSchemeFromAccVersion(version));
             var address = Address.CreateFromPublicKey(keyPair.PublicKeyString, networkType);
 
-            return new Account(address, keyPair);
+            return new Account(address, keyPair, version);
         }
 
 
@@ -125,6 +143,17 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         }
 
         /// <summary>
+        ///     Signs the specified transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction.</param>
+        /// <param name="generationHash">The generation hash</param>
+        /// <returns>SignedTransaction.</returns>
+        public SignedTransaction preV2Sign(Transaction transaction,string generationHash)
+        {
+            return transaction.SignWith(this, generationHash);
+        }
+
+        /// <summary>
         /// Sign transaction with cosignatories creating a new SignedTransaction.
         /// </summary>
         /// <param name="transaction">The transaction</param>
@@ -132,6 +161,19 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="cosignatories">The list of cosginatories</param>
         /// <returns></returns>
         public SignedTransaction SignTransactionWithCosignatories(AggregateTransaction transaction, string generationHash,
+           List<Account> cosignatories)
+        {
+            return transaction.SignTransactionWithCosigners(this, cosignatories, generationHash);
+        }
+
+        /**
+        * Sign transaction with cosignatories creating a new SignedTransaction
+        * @param transaction - The aggregate transaction to be signed.
+        * @param cosignatories - The array of accounts that will cosign the transaction
+        * @param generationHash - Network generation hash hex
+        * @return {SignedTransaction}
+        */
+        public SignedTransaction signTransactionWithCosignatoriesV1(AggregateTransaction transaction, string generationHash,
            List<Account> cosignatories)
         {
             return transaction.SignTransactionWithCosigners(this, cosignatories, generationHash);
@@ -154,7 +196,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         public override string ToString()
         {
             return
-                $"{nameof(Address)}: {Address}, {nameof(KeyPair)}: {KeyPair}, {nameof(PrivateKey)}: {PrivateKey}, {nameof(PublicKey)}: {PublicKey}, {nameof(PublicAccount)}: {PublicAccount}";
+                $"{nameof(Address)}: {Address}, {nameof(KeyPair)}: {KeyPair}, {nameof(Version)}: {Version}, {nameof(PrivateKey)}: {PrivateKey}, {nameof(PublicKey)}: {PublicKey}, {nameof(PublicAccount)}: {PublicAccount}";
         }
     }
 }

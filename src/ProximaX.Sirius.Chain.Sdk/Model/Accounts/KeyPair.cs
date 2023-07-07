@@ -15,6 +15,7 @@
 using System;
 //using Chaos.NaCl;
 using GuardNet;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 using ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl;
 
 namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
@@ -66,7 +67,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// </summary>
         /// <param name="privateKey">The private key</param>
         /// <returns></returns>
-        public static KeyPair CreateFromPrivateKey(string privateKey)
+        public static KeyPair CreateFromPrivateKey(string privateKey, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
             Guard.NotNullOrEmpty(privateKey, nameof(privateKey));
             Guard.NotEqualTo(privateKey.Length, 64, new ArgumentOutOfRangeException(nameof(privateKey)));
@@ -74,7 +75,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
            // var privateKeyArray = privateKey.FromHex();
            // var publicKey = Ed25519.PublicKeyFromSeed(privateKeyArray).ToHexUpper();
             var privateKeyArray = CryptoBytes.FromHexString(privateKey);
-            var publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray));
+            var publicKey = CryptoBytes.ToHexStringUpper(Ed25519.PublicKeyFromSeed(privateKeyArray, dScheme));
             return new KeyPair(privateKey, publicKey);
         }
 
@@ -84,7 +85,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
         /// <param name="data">The data.</param>
         /// <returns>System.Byte[].</returns>
         /// <exception cref="ArgumentNullException">data</exception>
-        public byte[] Sign(byte[] data)
+        public byte[] Sign(byte[] data, DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
         {
            /*
             if (data == null) throw new ArgumentNullException(nameof(data));
@@ -95,16 +96,16 @@ namespace ProximaX.Sirius.Chain.Sdk.Model.Accounts
 
             Array.Copy(PublicKey, 0, sk, 32, 32);
 
-            Ed25519.crypto_sign2(sig, data, sk, 32);
+            Ed25519.crypto_sign(sig, data, sk, 32);
 
             CryptoBytes.Wipe(sk);
 
             return sig;
            */
 
-            var sk = Ed25519.ExpandedPrivateKeyFromSeed(PrivateKey);
+            var sk = Ed25519.ExpandedPrivateKeyFromSeed(PrivateKey, dScheme);
 
-            var sig = Ed25519.Sign(data, sk);
+            var sig = Ed25519.Sign(data, sk, dScheme);
            
             return sig;
         }

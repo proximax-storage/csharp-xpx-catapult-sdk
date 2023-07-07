@@ -15,49 +15,82 @@
 
 using Org.BouncyCastle.Crypto.Digests;
 using System;
+using ProximaX.Sirius.Chain.Sdk.Utils;
 namespace ProximaX.Sirius.Chain.Sdk.Crypto.Core.Chaso.NaCl.Internal.Ed25519ref10
 {
 	internal static partial class Ed25519Operations
 	{
-		public static void crypto_sign2(
+		public static void crypto_sign(
 			byte[] sig, int sigoffset,
 			byte[] m, int moffset, int mlen,
-			byte[] sk, int skoffset)
+			byte[] sk, int skoffset,
+            DerivationScheme dScheme = DerivationScheme.Ed25519Sha3)
 		{
             byte[] az = new byte[64];
             byte[] r = new byte[64];
             byte[] hram = new byte[64];
             GroupElementP3 R;
  
-            
-            var hasher2 = new Sha3Digest(512);
-            {
-                hasher2.BlockUpdate(sk, 0, 32);
-                hasher2.DoFinal(az, 0);
-                ScalarOperations.sc_clamp(az, 0);
+            if(dScheme == DerivationScheme.Ed25519Sha3){
+                var hasher3 = new Sha3Digest(512);
+                {
+                    hasher3.BlockUpdate(sk, 0, 32);
+                    hasher3.DoFinal(az, 0);
+                    ScalarOperations.sc_clamp(az, 0);
 
-                hasher2.Reset();
-                hasher2.BlockUpdate(az, 32, 32);
-                hasher2.BlockUpdate(m, moffset, mlen);
-                hasher2.DoFinal(r, 0);
+                    hasher3.Reset();
+                    hasher3.BlockUpdate(az, 32, 32);
+                    hasher3.BlockUpdate(m, moffset, mlen);
+                    hasher3.DoFinal(r, 0);
 
-                ScalarOperations.sc_reduce(r);
-                GroupOperations.ge_scalarmult_base(out R, r, 0);
-                GroupOperations.ge_p3_tobytes(sig, sigoffset, ref R);
+                    ScalarOperations.sc_reduce(r);
+                    GroupOperations.ge_scalarmult_base(out R, r, 0);
+                    GroupOperations.ge_p3_tobytes(sig, sigoffset, ref R);
 
-                hasher2.Reset();
-                hasher2.BlockUpdate(sig, sigoffset, 32);
-                hasher2.BlockUpdate(sk, skoffset + 32, 32);
-                hasher2.BlockUpdate(m, moffset, mlen);
-                hasher2.DoFinal(hram, 0);
+                    hasher3.Reset();
+                    hasher3.BlockUpdate(sig, sigoffset, 32);
+                    hasher3.BlockUpdate(sk, skoffset + 32, 32);
+                    hasher3.BlockUpdate(m, moffset, mlen);
+                    hasher3.DoFinal(hram, 0);
 
-                ScalarOperations.sc_reduce(hram);
-                var s = new byte[32];
-                Array.Copy(sig, sigoffset + 32, s, 0, 32);
-                ScalarOperations.sc_muladd(s, hram, az, r);
-                Array.Copy(s, 0, sig, sigoffset + 32, 32);
+                    ScalarOperations.sc_reduce(hram);
+                    var s = new byte[32];
+                    Array.Copy(sig, sigoffset + 32, s, 0, 32);
+                    ScalarOperations.sc_muladd(s, hram, az, r);
+                    Array.Copy(s, 0, sig, sigoffset + 32, 32);
 
-                CryptoBytes.Wipe(s);
+                    CryptoBytes.Wipe(s);
+                }
+            }else if(dScheme == DerivationScheme.Ed25519Sha2){
+                var hasher2 = new Sha512Digest();
+                {
+                    hasher2.BlockUpdate(sk, 0, 32);
+                    hasher2.DoFinal(az, 0);
+                    ScalarOperations.sc_clamp(az, 0);
+
+                    hasher2.Reset();
+                    hasher2.BlockUpdate(az, 32, 32);
+                    hasher2.BlockUpdate(m, moffset, mlen);
+                    hasher2.DoFinal(r, 0);
+
+                    ScalarOperations.sc_reduce(r);
+                    GroupOperations.ge_scalarmult_base(out R, r, 0);
+                    GroupOperations.ge_p3_tobytes(sig, sigoffset, ref R);
+
+                    hasher2.Reset();
+                    hasher2.BlockUpdate(sig, sigoffset, 32);
+                    hasher2.BlockUpdate(sk, skoffset + 32, 32);
+                    hasher2.BlockUpdate(m, moffset, mlen);
+                    hasher2.DoFinal(hram, 0);
+
+                    ScalarOperations.sc_reduce(hram);
+                    var s = new byte[32];
+                    Array.Copy(sig, sigoffset + 32, s, 0, 32);
+                    ScalarOperations.sc_muladd(s, hram, az, r);
+                    Array.Copy(s, 0, sig, sigoffset + 32, 32);
+
+                    CryptoBytes.Wipe(s);
+                }
             }
         }
 	}

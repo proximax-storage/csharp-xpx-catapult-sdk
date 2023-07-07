@@ -45,7 +45,7 @@ namespace ProximaX.Sirius.Chain.Sdk.Tests.E2E
 
             NetworkType = SiriusClient.NetworkHttp.GetNetworkType().Wait();
 
-            SeedAccount = Account.CreateFromPrivateKey(env.SeedAccountPK, NetworkType);
+            SeedAccount = Account.CreateFromPrivateKeyV2(env.SeedAccountPK, NetworkType);
 
             Task.Run(() => InitializeAccounts()).Wait();
         }
